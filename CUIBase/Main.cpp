@@ -3,6 +3,8 @@
 #include<time.h>
 #include<conio.h>
 
+#include"src/Game/Game.h"
+
 int main(void)
 {
 	int a=0,b=0,c=0,d=0,f=0,ep=0,dou=0,psn=0,esn=0,pss=0,ess=0,ppn=0,epn=0,etd=0,turn=0;
