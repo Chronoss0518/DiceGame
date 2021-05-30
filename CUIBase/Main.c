@@ -1,2389 +1,1812 @@
-#include<stdio.h>
-#include<stdlib.h>
-#include<time.h>
-#include<conio.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+typedef struct CharactorData
+{
+	char* name;
+	int hp;
+	int stan;
+	int nodamage;
+	int ice;
+} CharaData;
+
+int a = 0, b = 0;
+int c = 0, d = 0, f = 0, ep = 0, dou = 0, psn = 0, esn = 0, pss = 0, ess = 0, ppn = 0, epn = 0, etd = 0, turn = 0;
+int ph = 30, eh = 30;
+char ps = 0, es = 0;
+
+CharaData charas;
+
+//s=ã‚¹ã‚¿ãƒ³ã€n=ãƒŽãƒ¼ãƒ€ãƒ¡ãƒ¼ã‚¸ã€dou=å€ãƒ€ãƒ¡ãƒ¼ã‚¸,
+//pst1,est1=n;pst2,est2=s
+//c=ã‚¯ãƒªãƒ†ã‚£ã‚«ãƒ«,m=ãƒžã‚¸ãƒƒã‚¯,g=ã‚¬ãƒ¼ãƒ‰,h=ãƒ’ãƒ¼ãƒªãƒ³ã‚°,
+void Helps();
+void StartDice();
+void Game();
+void FirstPlayer();
+void FirstEnemy();
+void DicePlayer();
+void DiceEnemy();
+void Result();
+
+void CriticalDice(char* _name,int* _hp, int* _stn, int* _nod,int* _thisHp,int* _thisNod);
+void MagicDice(char* _name,int* _hp, int* _stn, int* _nod,int* _thisHp,int* _thisNod);
+void GuardDice(char* _name,int* _hp, int* _stn, int* _nod,int* _thisHp,int* _thisNod);
+void HearingDice(char* _name,int* _hp, int* _stn, int* _nod,int* _thisHp,int* _thisNod);
+void Pandora
 
 int main(void)
 {
-	int a=0,b=0,c=0,d=0,f=0,ep=0,dou=0,psn=0,esn=0,pss=0,ess=0,ppn=0,epn=0,etd=0,turn=0;
-	int ph=30,eh=30;
-	char ps,es;
-	dou>=0;
-	//s=ƒXƒ^ƒ“An=ƒm[ƒ_ƒ[ƒWAdou=”{ƒ_ƒ[ƒW,
-	//pst1,est1=n;pst2,est2=s
-	//c=ƒNƒŠƒeƒBƒJƒ‹,m=ƒ}ƒWƒbƒN,g=ƒK[ƒh,h=ƒq[ƒŠƒ“ƒO,
 	srand(time(0));
 	rand();
 
-	printf("ƒXƒLƒ‹ƒ_ƒCƒX‚ð—p‚¢‚ÄA‘ŠŽè‚ÌLP‚ð0‚É‚µ‚Ä‚­‚¾‚³‚¢\n");
-	printf("ƒXƒLƒ‹ƒ_ƒCƒX‚ÍˆÈ‰º‚ÌƒXƒyƒ‹‚ð‰Ÿ‚µ‚Ä‚©‚çenter key‚ð‰Ÿ‚·‚ÆA\n‚»‚ê‚¼‚ê‚Ìƒ_ƒCƒX‚ðU‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·B\n");
-	printf("\nc:ƒNƒŠƒeƒBƒJƒ‹ƒ_ƒCƒX(ƒNƒŠƒeƒBƒJƒ‹ƒqƒbƒg‚ð‘_‚¤‚½‚ß‚Ìƒ_ƒCƒX‚Å‚·B\n");
-	printf("ŠO‚ê‚é‰Â”\«‚Í‚ ‚è‚Ü‚·‚ªA“–‚½‚ê‚Î‹­—Í‚ÈˆêŒ‚‚É“ÁŽê”\—Í‚ª•t—^‚³‚ê‚Ü‚·B)\n");
-	printf("\nm:ƒ}ƒWƒbƒNƒ_ƒCƒX(–‚–@‚ðˆµ‚¤ƒ_ƒCƒX‚Å‚·B–‚–@‚ÍŠî–{“I‚ÉŠO‚ê‚é‚±‚Æ‚Í‚ ‚è‚Ü‚¹‚ñ‚ªA\n");
-	printf("–‚–@‚Ì’†‚Å‚ÍAŽ©‚ç‚Éƒ_ƒ[ƒW‚ð“–‚Ä‚é‚à‚Ì‚ª‚ ‚è‚Ü‚·B)\n");
-	printf("\ng:ƒK[ƒhƒ_ƒCƒX(Žå‚ÉŽç‚è‚ð‹­‰»‚·‚é‚±‚Æ‚ð–Ú“I‚Æ‚µ‚½ƒ_ƒCƒX‚Å‚·\n");
-	printf("ƒK[ƒh‚ðs‚¤‚±‚Æ‚ÅŽó‚¯‚éƒ_ƒ[ƒW‚ð0‚É‚Å‚«‚Ü‚·B)\n");
-	printf("\nh:ƒq[ƒŠƒ“ƒOƒ_ƒCƒX(‘½l”í‚ÅŽg—p‚³‚ê‚é‰ñ•œ—pƒ_ƒCƒX‚Å‚·B\n");
-	printf("–{í‚Å‚Í‘ŠŽè‚ð‰ñ•œ‚³‚¹‚Ä‚µ‚Ü‚¤‹°‚ê‚ª‚ ‚é‚½‚ßA’ˆÓ‚ª•K—v‚Å‚·B)\n");
-	printf("\nã‹L‚Ì‚à‚ÌˆÈŠO‚É‚à“Á•Ê‚Èƒ_ƒCƒX‚ª‘¶Ý‚µ‚Ü‚·\n");
-	printf("\n‘I‘ðŽˆ‚Ì‚È‚¢ƒ_ƒCƒX‚ÅAƒpƒ“ƒhƒ‰‚Ìƒ_ƒCƒX‚ÆŒ¾‚¢‚Ü‚·B\n");
-	printf("‚±‚Ìƒ_ƒCƒX‚Í“Á’èðŒ‚É’B‚µ‚½ê‡‚ÉU‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·B\n");
-	printf("‹­—Í‚ÈŒø‰Ê‚Ì‚à‚Ì‚µ‚©‚È‚¢‚½‚ßAˆê‹C‚ÉŒˆ‚ß‚éê‡‚É‚Í‚±‚ê‚ªo‚é‚±‚Æ‚ð–]‚Þ‚Æ—Ç‚¢‚Å‚µ‚å‚¤B\n");
-	printf("‚±‚Ìƒ_ƒCƒX‚ðU‚éðŒ‚ÍA’Êí‚ÌƒXƒLƒ‹ƒ_ƒCƒX‚É‚æ‚Á‚Ä‚±‚Ìƒ_ƒCƒX‚ðU‚éŽwŽ¦‚ðŽó‚¯‚½ê‡‚©A\n");
-	printf("‚±‚Ìƒ_ƒCƒX‚ðU‚ç‚¸‚É6‰ñ’Êíƒ_ƒCƒX‚Ì‚Ý‚ðU‚Á‚½ê‡‚É‚±‚Ìƒ_ƒCƒX‚ðU‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·B\n");
-	printf("\nˆÈã‚ªŠÈ’P‚Èƒ‹[ƒ‹à–¾‚Æ‚È‚è‚Ü‚·B\n");
-	printf("æsŒãU‚ðŒˆ‚ß‚éƒ_ƒCƒX‚Å‚·\n");
-	printf("enter key‚ð‰Ÿ‚µ‚Äƒ_ƒCƒX‚ðU‚Á‚Ä‚­‚¾‚³‚¢\n");
+	Helps();
+
+	StartDice();
+
+	Game();
+
+	Result();
+
 	
-	while(a==b){
-		
-		scanf("\n");
-		a=rand()%20+1;
-		b=rand()%20+1;
-		
-		if(a>b){
-			printf("‚ ‚È‚½‚Ì–Ú‚Í%d‚Å‚·B\n",a);
-			printf("‘ŠŽè‚Ì–Ú‚Í%d‚Å‚·B\n",b);
-			printf("‚ ‚È‚½‚ªæs‚Å‚·B\n");
-		}if(a<b){//if(a>b)
-			printf("‚ ‚È‚½‚Ì–Ú‚Í%d‚Å‚·B\n",a);
-			printf("‘ŠŽè‚Ì–Ú‚Í%d‚Å‚·B\n",b);
-			printf("‚ ‚È‚½‚ÍŒãU‚Å‚·B\n");	
-		}if(a==b){//if(a<b)
-			printf("‚ ‚È‚½‚Ì–Ú‚Í%d‚Å‚·B\n",a);
-			printf("‘ŠŽè‚Ì–Ú‚Í%d‚Å‚·B\n",b);
-			printf("‚ ‚¢‚±‚Å‚·A‚à‚¤ˆê“xU‚Á‚Ä‚­‚¾‚³‚¢B\n");
-		}//if(a==b)
-		printf("next\n");
-		getch();
-	}while(ph>0&&eh>0){//while(a==b)
-		if(a>b){
-			dou--;
-			psn=0;
-			system("clear");
-			printf("\n¢‚ ‚È‚½‚ÌLP:%d\nü‘ŠŽè‚ÌLP:%d\n",ph,eh);
-			printf("next\n");
-			getch();
-			printf("¢QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ\n");
-			if(pss!=1){
-				if(f==1){
-					printf("ƒtƒ@ƒCƒA[ƒ{[ƒ‹‚Ì—¬‚ê’e‚ª“–‚½‚Á‚½!!\n");
-					ph=ph-2;
-					if(dou>0){
-						ph=ph-2;
-					}//if(dou>0)
-					f=0;
-				}//if(f==1)
-				printf("\n¢‚ ‚È‚½‚Ìƒ^[ƒ“‚Å‚·\n");
-				if(ppn!=6){
-					printf("c;ƒNƒŠƒeƒBƒJƒ‹ƒ_ƒCƒX\n");
-					printf("m;ƒ}ƒWƒbƒNƒ_ƒCƒX\n");
-					printf("h;ƒq[ƒŠƒ“ƒOƒ_ƒCƒX\n");
-					printf("g;ƒK[ƒhƒ_ƒCƒX\n");
-					printf("\nŽg‚¤ƒ_ƒCƒX‚ðéŒ¾‚µ‚ÄAƒ_ƒCƒX‚ðU‚Á‚Ä‚­‚¾‚³‚¢:");
-					scanf("%c",&ps);
-					if(ps=='c'){
-						printf("‚ ‚È‚½‚ÍƒNƒŠƒeƒBƒJƒ‹ƒ_ƒCƒX‚ðU‚è‚Ü‚µ‚½B\n");
-						c=rand()%6+1;
-						if(c==1){
-							printf("ƒNƒŠƒeƒBƒJƒ‹ƒqƒbƒg!!\n");
-							printf("‘ŠŽè‚É7‚Ìƒ_ƒ[ƒW!!\n");
-							if(esn!=1){
-								eh=eh-7;
-								if(dou>0){
-									eh=eh-7;
-								}//if(dou>0)
-							}//if(esn!=1)
-							ppn++;
-						}if(c==2){//if(c==1)
-							printf("ƒ~ƒX!‘ŠŽè‚É0ƒ_ƒ[ƒW\n");
-							ppn++;
-						}if(c==3){//if(c==2)
-							printf("ƒNƒŠƒeƒBƒJƒ‹ƒqƒbƒg!!\n");
-							printf("‘ŠŽè‚É5‚Ìƒ_ƒ[ƒW!!ŽŸ‚Ì‘ŠŽè‚Ìƒ^[ƒ“‚ðƒXƒLƒbƒv‚·‚éB\n");
-							if(esn!=1){
-								eh=eh-5;
-								if(dou>0){
-									eh=eh-5;
-								}//if(dou>0)
-								ess=1;
-							}//if(esn!=1)
-							ppn++;
-						}if(c==4){//if(c==3)
-							printf("‘ŠŽè‚É2‚Ìƒ_ƒ[ƒW\n");
-							if(esn!=1){
-								eh=eh-2;
-								if(dou>0){
-									eh=eh-2;
-								}//if(dou>0)
-							}//if(esn!=1)
-							ppn++;
-						}if(c==5){//if(c==4)
-							printf("ƒpƒ“ƒhƒ‰‚Ìƒ_ƒCƒXŽn“®!!\nenter key‚ð‰Ÿ‚µ‚Äƒ_ƒCƒX‚ðˆê‰ñU‚ê!!\n");
-							ppn=0;
-							scanf("\n");
-							d=rand()%6+1;
-							if(d==1){
-								printf("ƒMƒKƒhƒŒƒCƒ“Žn“®!!\n‘ŠŽè‚ÌLP‚©‚ç10ƒ|ƒCƒ“ƒg‹z‚¢Žæ‚é!!\n");
-								if(esn!=1){
-									ph=ph+10;
-									eh=eh-10;
-								}//if(esn!=1)
-							}if(d==2){//if(c==1)
-								printf("‰F’ˆ–‚–@Aƒuƒ‰ƒbƒNƒz[ƒ‹Žn“®!!\nŽ©•ª‚ÌLP1‚É‚µ‚ÄA‘ŠŽè‚É15‚Ìƒ_ƒ[ƒW!!\n");
-								ph=1;
-								if(esn!=1){
-									eh=eh-15;
-									if(dou>0){
-										eh=eh-15;
-									}//if(dou>0)
-								}//if(esn!=1)
-							}if(d==3){//if(c==2)
-								printf("‘ŠŽè‚ÆŽ©•ª‚ÌLP‚ð“ü‚ê‘Ö‚¦‚é!\n");
-								ph=ph+eh;
-								eh=ph-eh;
-								ph=ph-eh;
-							}if(d==4){//if(c==3)
-								printf("ƒ[ƒEƒX‚ð¢Š«‚µ‚½!!\n‘ŠŽè‚É13‚Ìƒ_ƒ[ƒW!!\n");
-								if(esn!=1){
-									eh=eh-13;
-									if(dou>0){
-										eh=eh-13;
-									}//if(dou>0)
-								}//if(esn!=1)
-							}if(d==5){//if(c==4)
-								printf("ƒq[ƒŠƒ“ƒOEƒmƒ”ƒ@Žn“®\nŽ©•ª‚ÌLP‚ð10‰ñ•œ!!\n");
-								ph=ph+10;
-							}if(d==6){//if(c==5)
-								printf("ŽŸ‚ÌŽ©•ª‚Ìƒ^[ƒ“I—¹Žž‚Ü‚ÅA”­¶‚·‚é‘S‚Ä‚Ìƒ_ƒ[ƒW‚Í2”{‚É‚È‚é\n");
-								while(dou<3){
-									dou++;
-								}//while(dou<3)
-							}//if(c==6)
-						}if(c==6){//if(c==5)
-							printf("ƒNƒŠƒeƒBƒJƒ‹ƒqƒbƒg!!\n");
-							printf("‘ŠŽè‚É5‚Ìƒ_ƒ[ƒW!!ŽŸ‚Ì‘ŠŽè‚Ìƒ^[ƒ“‚ðƒXƒLƒbƒv‚·‚éB\n");
-							if(esn!=1){
-								eh=eh-5;
-								if(dou>0){
-									eh=eh-5;
-								}//if(dou>0)
-								ess=1;
-							}//if(esn!=1)
-							ppn++;
-						}//if(c==6)
-					}if(ps=='m'){//if(ps=='c')
-						printf("‚ ‚È‚½‚Íƒ}ƒWƒbƒNƒ_ƒCƒX‚ðU‚è‚Ü‚µ‚½B\n");
-						c=rand()%6+1;
-						if(c==1){
-							printf("‰Š–‚–@Aƒtƒ@ƒCƒA[ƒ{[ƒ‹”­“®!!\n");
-							printf("‘ŠŽè‚É2‚Ìƒ_ƒ[ƒW!!,ŽŸ‚Éƒ_ƒCƒX‚ðU‚éƒvƒŒƒCƒ„[‚É2‚Ìƒ_ƒ[ƒW‚ð—^‚¦‚éB\n");
-							if(esn!=1){
-								eh=eh-2;
-								if(dou>0){
-									eh=eh-2;
-								}//if(dou>0)
-							}//if(esn!=1)
-							f=1;
-							ppn++;
-						}if(c==2){//if(c==1)
-							printf("—‹–‚–@AƒTƒ“ƒ_[ƒ{ƒ‹ƒg”­“®!!\n");
-							printf("‚¨ŒÝ‚¢‚É4‚Ìƒ_ƒ[ƒW!!\n");
-							ph=ph-4;
-							if(dou>0){
-								ph=ph-4;
-							}//if(dou>0)
-							if(esn!=1){
-								eh=eh-4;
-								if(dou>0){
-									eh=eh-4;
-								}//if(dou>0)
-							}//if(esn!=1)
-							ppn++;
-						}if(c==3){//if(c==2)
-							printf("ƒ~ƒX!A‘ŠŽè‚É0‚Ìƒ_ƒ[ƒW\n");
-							ppn++;
-						}if(c==4){//if(c==3)
-							printf("ƒpƒ“ƒhƒ‰‚Ìƒ_ƒCƒXŽn“®!!\nenter key‚ð‰Ÿ‚µ‚Äƒ_ƒCƒX‚ðˆê‰ñU‚ê!!\n");
-							scanf("\n");
-							d=rand()%6+1;
-							ppn=0;
-							if(d==1){
-								printf("ƒMƒKƒhƒŒƒCƒ“Žn“®!!\n‘ŠŽè‚ÌLP‚©‚ç10ƒ|ƒCƒ“ƒg‹z‚¢Žæ‚é!!\n");
-								if(esn!=1){
-									ph=ph+10;
-									eh=eh-10;
-								}//if(esn!=1)
-							}if(d==2){//if(c==1)
-								printf("‰F’ˆ–‚–@Aƒuƒ‰ƒbƒNƒz[ƒ‹Žn“®!!\nŽ©•ª‚ÌLP1‚É‚µ‚ÄA‘ŠŽè‚É15‚Ìƒ_ƒ[ƒW!!\n");
-								ph=1;
-								if(esn!=1){
-									eh=eh-15;
-									if(dou>0){
-										eh=eh-15;
-									}//if(dou>0)
-								}//if(esn!=1)
-							}if(d==3){//if(c==2)
-								printf("‘ŠŽè‚ÆŽ©•ª‚ÌLP‚ð“ü‚ê‘Ö‚¦‚é!\n");
-								ph=ph+eh;
-								eh=ph-eh;
-								ph=ph-eh;
-							}if(d==4){//if(c==3)
-								printf("ƒ[ƒEƒX‚ð¢Š«‚µ‚½!!\n‘ŠŽè‚É13‚Ìƒ_ƒ[ƒW!!\n");
-								if(esn!=1){
-									eh=eh-13;
-									if(dou>0){
-										eh=eh-13;
-									}//if(dou>0
-								}//if(esn!=1)
-							}if(d==5){//if(c==4)
-								printf("ƒq[ƒŠƒ“ƒOEƒmƒ”ƒ@Žn“®\nŽ©•ª‚ÌLP‚ð10‰ñ•œ!!\n");
-								ph=ph+10;
-							}if(d==6){//if(c==5)
-								printf("ŽŸ‚ÌŽ©•ª‚Ìƒ^[ƒ“I—¹Žž‚Ü‚ÅA”­¶‚·‚é‘S‚Ä‚Ìƒ_ƒ[ƒW‚Í2”{‚É‚È‚é\n");
-								while(dou<3){
-									dou++;
-								}//while(dou<3)
-							}//if(c==6)
-						}if(c==5){
-							printf("•X–‚–@AƒT[ƒNƒ‹ƒtƒƒXƒg”­“®!!\n");
-							printf("‘ŠŽè‚É3‚Ìƒ_ƒ[ƒW!!ŽŸ‚Ì‘ŠŽè‚Ìƒ^[ƒ“‚ðƒXƒLƒbƒv‚·‚éB\n");
-							if(esn!=1){
-								eh=eh-3;
-								if(dou>0){
-									eh=eh-3;
-								}//if(dou>0)
-								ess=1;
-							}//if(esn!=1)
-							ppn++;
-						}if(c==6){//if(c==5)
-							printf("‰F’ˆ–‚–@AƒƒeƒI”­“®!!\n");
-							printf("Ž©g‚ÌLP‚ð1‚É‚µ‚ÄA‘ŠŽè‚É10‚Ìƒ_ƒ[ƒW!!\n");
-							ph=1;
-							if(esn!=1){
-								eh=eh-10;
-								if(dou>0){
-									eh=eh-10;
-								}//if(dou>0)
-							}//if(esn!=1)
-							ppn++;
-						}//if(c==6)
-					}if(ps=='g'){//if(ps=='m')
-						printf("‚ ‚È‚½‚ÍƒK[ƒhƒ_ƒCƒX‚ðU‚è‚Ü‚µ‚½B\n");
-						c=rand()%6+1;
-						if(c==1){
-							printf("ƒNƒŠƒeƒBƒJƒ‹ƒqƒbƒg!!\n");
-							printf("‘ŠŽè‚É4‚Ìƒ_ƒ[ƒW!!AŽŸ‚ÌŽ©•ª‚Ìƒ^[ƒ“‚Ü‚ÅŽó‚¯‚éƒ_ƒ[ƒW‚Í0‚É‚È‚éB\n");
-							psn=1;
-							if(esn!=1){
-								eh=eh-4;
-								if(dou>0){
-									eh=eh-4;
-								}//if(dou>0)
-							}//if(esn!=1)
-							ppn++;
-						}if(c==2){//if(c==1)
-							printf("Žç‚è‚ðŒÅ‚ß‚½!!\n(ŽŸ‚ÌŽ©•ª‚Ìƒ^[ƒ“‚Ü‚ÅŽ©g‚ªŽó‚¯‚éƒ_ƒ[ƒW‚Í0‚É‚È‚é)\n");
-							psn=1;
-							ppn++;
-						}if(c==3){//if(c==2)
-							printf("ƒpƒ“ƒhƒ‰‚Ìƒ_ƒCƒXŽn“®!!\nenter key‚ð‰Ÿ‚µ‚Äƒ_ƒCƒX‚ðˆê‰ñU‚ê!!\n");
-							ppn=0;
-							scanf("\n");
-							d=rand()%6+1;
-							if(d==1){
-								printf("ƒMƒKƒhƒŒƒCƒ“Žn“®!!\n‘ŠŽè‚ÌLP‚©‚ç10ƒ|ƒCƒ“ƒg‹z‚¢Žæ‚é!!\n");
-								if(esn!=1){
-									ph=ph+10;
-									eh=eh-10;
-								}//if(esn!=1)
-							}if(d==2){//if(c==1)
-								printf("‰F’ˆ–‚–@Aƒuƒ‰ƒbƒNƒz[ƒ‹Žn“®!!\nŽ©•ª‚ÌLP1‚É‚µ‚ÄA‘ŠŽè‚É15‚Ìƒ_ƒ[ƒW!!\n");
-								ph=1;
-								if(esn!=1){
-									eh=eh-15;
-									if(dou>0){
-										eh=eh-15;
-									}//if(dou>0)
-								}//if(esn!=1)
-							}if(d==3){//if(c==2)
-								printf("‘ŠŽè‚ÆŽ©•ª‚ÌLP‚ð“ü‚ê‘Ö‚¦‚é!\n");
-								ph=ph+eh;
-								eh=ph-eh;
-								ph=ph-eh;
-							}if(d==4){//if(c==3)
-								printf("ƒ[ƒEƒX‚ð¢Š«‚µ‚½!!\n‘ŠŽè‚É13‚Ìƒ_ƒ[ƒW!!\n");
-								if(esn!=1){
-									eh=eh-13;
-									if(dou>0){
-										eh=eh-13;
-									}//if(dou>0)
-								}//if(esn!=1)
-							}if(d==5){//if(c==4)
-								printf("ƒq[ƒŠƒ“ƒOEƒmƒ”ƒ@Žn“®\nŽ©•ª‚ÌLP‚ð10‰ñ•œ!!\n");
-								ph=ph+10;
-							}if(d==6){//if(c==5)
-								printf("ŽŸ‚ÌŽ©•ª‚Ìƒ^[ƒ“I—¹Žž‚Ü‚ÅA”­¶‚·‚é‘S‚Ä‚Ìƒ_ƒ[ƒW‚Í2”{‚É‚È‚é\n");
-								while(dou<3){
-									dou++;
-								}//while(dou<3)
-							}//if(c==6)
-						}if(c==4){//if(c==3)
-							printf("ƒ~ƒX!A‰½‚à‹N‚±‚ç‚È‚©‚Á‚½B\n");
-							ppn++;
-						}if(c==5){//if(c==4)
-							printf("‘ŠŽè‚É1‚Ìƒ_ƒ[ƒW!\n");
-							if(esn!=1){
-								eh=eh-1;
-								if(dou>0){
-									eh=eh-1;
-								}//if(dou>0)
-							}//if(esn!=1)
-							ppn++;
-						}if(c==6){//if(c==5)
-							printf("Žç‚è‚ðŒÅ‚ß‚½!!\n(ŽŸ‚ÌŽ©•ª‚Ìƒ^[ƒ“‚Ü‚ÅAŽ©g‚ªŽó‚¯‚éƒ_ƒ[ƒW‚Í0‚É‚È‚é)\n");
-							psn=1;
-							ppn++;
-						}//if(c==6)
-					}if(ps=='h'){//if(ps=='g')
-						printf("‚ ‚È‚½‚Íƒq[ƒŠƒ“ƒOƒ_ƒCƒX‚ðU‚è‚Ü‚µ‚½B\n");
-						c=rand()%6+1;
-						if(c==1){
-							printf("ƒhƒŒƒCƒ“”­“®!!\n‘ŠŽè‚ÌLP‚©‚ç4ƒ|ƒCƒ“ƒg‹z‚¢Žæ‚é\n");
-							if(esn!=1){
-								eh=eh-4;
-								ph=ph+4;
-							}//if(esn!=1)
-							ppn++;
-						}if(c==2){//if(c==1)
-							printf("ƒpƒ“ƒhƒ‰‚Ìƒ_ƒCƒXŽn“®!!\nenter key‚ð‰Ÿ‚µ‚Äƒ_ƒCƒX‚ðˆê‰ñU‚ê!!\n");
-							ppn=0;
-							scanf("\n");
-							d=rand()%6+1;
-							if(d==1){
-								printf("ƒMƒKƒhƒŒƒCƒ“Žn“®!!\n‘ŠŽè‚ÌLP‚©‚ç10ƒ|ƒCƒ“ƒg‹z‚¢Žæ‚é!!\n");
-								if(esn!=1){
-									ph=ph+10;
-									eh=eh-10;
-								}//if(esn!=1)
-							}if(d==2){//if(c==1)
-								printf("‰F’ˆ–‚–@Aƒuƒ‰ƒbƒNƒz[ƒ‹Žn“®!!\nŽ©•ª‚ÌLP1‚É‚µ‚ÄA‘ŠŽè‚É15‚Ìƒ_ƒ[ƒW!!\n");
-								ph=1;
-								if(esn!=1){
-									eh=eh-15;
-									if(dou>0){
-										eh=eh-15;
-									}//if(dou>0)
-								}//if(esn!=1)
-							}if(d==3){//if(c==2)
-								printf("‘ŠŽè‚ÆŽ©•ª‚ÌLP‚ð“ü‚ê‘Ö‚¦‚é!\n");
-								ph=ph+eh;
-								eh=ph-eh;
-								ph=ph-eh;
-							}if(d==4){//if(c==3)
-								printf("ƒ[ƒEƒX‚ð¢Š«‚µ‚½!!\n‘ŠŽè‚É13‚Ìƒ_ƒ[ƒW!!\n");
-								if(esn!=1){
-									eh=eh-13;
-									if(dou>0){
-										eh=eh-13;
-									}//if(dou>0)
-								}//if(esn!=1)
-							}if(d==5){//if(c==4)
-								printf("ƒq[ƒŠƒ“ƒOEƒmƒ”ƒ@Žn“®\nŽ©•ª‚ÌLP‚ð10‰ñ•œ!!\n");
-								ph=ph+10;
-							}if(d==6){//if(c==5)
-								printf("ŽŸ‚ÌŽ©•ª‚Ìƒ^[ƒ“I—¹Žž‚Ü‚ÅA”­¶‚·‚é‘S‚Ä‚Ìƒ_ƒ[ƒW‚Í2”{‚É‚È‚é\n");
-								while(dou<3){
-									dou++;
-								}//while(dou<3)
-							}//if(c==6)
-						}if(c==3){//if(c==2)
-							printf("‘ŠŽè‚É2‚Ìƒ_ƒ[ƒW!!\n");
-							if(esn!=1){
-								eh=eh-2;
-								if(dou>0){
-									eh=eh-2;
-								}//if(dou>0)
-							}//if(esn!=1)
-							ppn++;
-						}if(c==4){//if(c==3)
-							printf("Ž©g‚ÌLP‚ð3‰ñ•œ!!\n");
-							ph=ph+3;
-							ppn++;
-						}if(c==5){//if(c==4)
-							printf("Žç‚è‚ðŒÅ‚ß‚½!!/n");
-							printf("(ŽŸ‚ÌŽ©•ª‚Ìƒ^[ƒ“‚Ü‚ÅŽ©g‚ªŽó‚¯‚éƒ_ƒ[ƒW‚Í0‚Æ‚È‚é)\n");
-							psn=1;
-							ppn++;
-						}if(c==6){//if(c==5)
-							printf("ƒ~ƒX!,‰½‚à‹N‚±‚ç‚È‚©‚Á‚½\n");
-							ppn++;
-						}//if(c==6)
-					}if(ps!='c'&&ps!='m'&&ps!='g'&&ps!='h'){//if(ps=='h')
-						printf("ƒRƒ}ƒ“ƒh‚ð‰Ÿ‚µ‚Ä‚¢‚È‚¢‚½‚ßA‚±‚Ìƒ^[ƒ“‚Ís“®‚Å‚«‚Ü‚¹‚ñ\n");
-					}//if()
-				}if(ppn==6){//if(ppn!=6)
-					printf("ƒpƒ“ƒhƒ‰‚Ìƒ_ƒCƒX‹­§Žn“®!!\nenter key‚ð‰Ÿ‚µ‚Äƒ_ƒCƒX‚ðˆê‰ñU‚ê!!\n");
-					ppn=0;
-					scanf("\n");
-					d=rand()%6+1;
-					if(d==1){
-						printf("ƒMƒKƒhƒŒƒCƒ“Žn“®!!\n‘ŠŽè‚ÌLP‚©‚ç10ƒ|ƒCƒ“ƒg‹z‚¢Žæ‚é!!\n");
-						if(esn!=1){
-							ph=ph+10;
-							eh=eh-10;
-						}//if(esn!=1)
-					}if(d==2){//if(d==1)
-						printf("‰F’ˆ–‚–@Aƒuƒ‰ƒbƒNƒz[ƒ‹Žn“®!!\nŽ©•ª‚ÌLP1‚É‚µ‚ÄA‘ŠŽè‚É15‚Ìƒ_ƒ[ƒW!!\n");
-						ph=1;
-						if(esn!=1){
-							eh=eh-15;
-							if(dou>0){
-								eh=eh-15;
-							}//if(dou>0)
-						}//if(esn!=1)
-					}if(d==3){//if(d==2)
-						printf("‘ŠŽè‚ÆŽ©•ª‚ÌLP‚ð“ü‚ê‘Ö‚¦‚é!\n");
-						ph=ph+eh;
-						eh=ph-eh;
-						ph=ph-eh;
-					}if(d==4){//if(d==3)
-						printf("ƒ[ƒEƒX‚ð¢Š«‚µ‚½!!\n‘ŠŽè‚É13‚Ìƒ_ƒ[ƒW!!\n");
-						if(esn!=1){
-							eh=eh-13;
-							if(dou>0){
-								eh=eh-13;
-							}//if(dou>0)
-						}//if(esn!=1)
-					}if(d==5){//if(d==4)
-						printf("ƒq[ƒŠƒ“ƒOEƒmƒ”ƒ@Žn“®\nŽ©•ª‚ÌLP‚ð10‰ñ•œ!!\n");
-						ph=ph+10;
-					}if(d==6){//if(d==5)
-						printf("ŽŸ‚ÌŽ©•ª‚Ìƒ^[ƒ“I—¹Žž‚Ü‚ÅA”­¶‚·‚é‘S‚Ä‚Ìƒ_ƒ[ƒW‚Í2”{‚É‚È‚é\n");
-						while(dou<3){
-							dou++;
-						}//while(dou<3)
-					}//if(d==6)
-				}//(ppn==6)
-			}if(pss==1){//if(pss!=1)
-				printf("\n‚ ‚È‚½‚Í‚±‚Ìƒ^[ƒ“s“®‚Å‚«‚Ü‚¹‚ñ\n");
-				pss=0;
-			}//if(pss==1)
-			printf("next\n");
-			getch();
-			dou--;
-			esn=0;
-			
-			printf("\n¢‚ ‚È‚½‚ÌLP:%d\nü‘ŠŽè‚ÌLP:%d\n",ph,eh);
-			printf("next\n");
-			getch();
-			system("clear");
-			printf("üQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ\n");
-			if(eh>0&&ph>0){
-				if(ess!=1){
-					if(f==1){
-						printf("ƒtƒ@ƒCƒA[ƒ{[ƒ‹‚Ì—¬‚ê’e‚ª“–‚½‚Á‚½!!\n");
-						eh=eh-2;
-						if(dou>0){
-							eh=eh-2;
-						}//if(dou>0)
-						f=0;
-					}//if(==1)
-					printf("\nü‘ŠŽè‚Ìƒ^[ƒ“‚Å‚·\n");
-					getch();	
-					etd=1;
-					if(epn!=6){
-						if(10>eh&&eh>0&&etd==1){
-							etd=0;
-							ep=rand()%2+1;
-							if(ep==1){
-								printf("‘ŠŽè‚ÍƒK[ƒhƒ_ƒCƒX‚ðU‚è‚Ü‚µ‚½\n");
-								c=rand()%6+1;
-								if(c==1){
-									printf("ƒNƒŠƒeƒBƒJƒ‹ƒqƒbƒg!!\n");
-									printf("‚ ‚È‚½‚É4‚Ìƒ_ƒ[ƒW!!AŽŸ‚Ì‘ŠŽè‚Ìƒ^[ƒ“‚Ü‚Å‘ŠŽè‚ªŽó‚¯‚éƒ_ƒ[ƒW‚Í0‚É‚È‚éB\n");
-									esn=1;
-									if(psn!=1){
-										ph=ph-4;
-										if(dou>0){
-											ph=ph-4;
-										}//if(dou>0)
-									}//if(psn!=1)
-									epn++;
-								}if(c==2){//if(c==1)
-									printf("Žç‚è‚ðŒÅ‚ß‚½!!\n(ŽŸ‚Ì‘ŠŽè‚Ìƒ^[ƒ“‚Ü‚Å‘ŠŽè‚ªŽó‚¯‚éƒ_ƒ[ƒW‚Í0‚É‚È‚é)\n");
-									esn=1;
-									epn++;
-								}if(c==3){//if(c==2)
-									epn=0;
-									printf("ƒpƒ“ƒhƒ‰‚Ìƒ_ƒCƒXŽn“®!!\nƒ_ƒCƒX‚ðˆê‰ñU‚ê!!\n");
-									d=rand()%6+1;
-									if(d==1){
-									printf("ƒMƒKƒhƒŒƒCƒ“Žn“®!!\n‚ ‚È‚½‚ÌLP‚©‚ç10ƒ|ƒCƒ“ƒg‹z‚¢Žæ‚é!!\n");
-										if(psn!=1){
-											eh=eh+10;
-											ph=ph-10;
-										}//if(ps1!='n')
-									}if(d==2){//if(c==1)
-										printf("‰F’ˆ–‚–@Aƒuƒ‰ƒbƒNƒz[ƒ‹Žn“®!!\nŽ©•ª‚ÌLP1‚É‚µ‚ÄA‚ ‚È‚½‚É15‚Ìƒ_ƒ[ƒW!!\n");
-										eh=1;
-										if(psn!=1){
-											ph=ph-15;
-											if(dou>0){
-												ph=ph-15;
-											}//if(dou>0)
-										}//if(psn!=1)
-									}if(d==3){//if(c==2)
-										printf("‘ŠŽè‚ÆŽ©•ª‚ÌLP‚ð“ü‚ê‘Ö‚¦‚é!\n");
-										ph=ph+eh;
-										eh=ph-eh;
-										ph=ph-eh;
-									}if(d==4){//if(c==3)
-										printf("ƒ[ƒEƒX‚ð¢Š«‚µ‚½!!\n‚ ‚È‚½‚É13‚Ìƒ_ƒ[ƒW!!\n");
-										if(psn!=1){
-											ph=ph-13;
-											if(dou>0){
-												ph=ph-13;
-											}//if(dou>0)
-										}//if(psn!=1)
-									}if(d==5){//if(c==4)
-										printf("ƒq[ƒŠƒ“ƒOEƒmƒ”ƒ@Žn“®\n‘ŠŽè‚ÍLP‚ð10‰ñ•œ!!\n");
-										eh=eh+10;
-									}if(d==6){//if(c==5)
-										printf("ŽŸ‚Ì‘ŠŽè‚Ìƒ^[ƒ“I—¹Žž‚Ü‚ÅA”­¶‚·‚é‘S‚Ä‚Ìƒ_ƒ[ƒW‚Í2”{‚É‚È‚é\n");
-										while(dou<3){
-											dou++;
-										}//while(dou<3)
-									}//if(c==6)
-								}if(c==4){//if(c==3)
-									printf("ƒ~ƒX!A‰½‚à‹N‚±‚ç‚È‚©‚Á‚½B\n");
-									epn++;
-								}if(c==5){//if(c==4)
-									printf("‚ ‚È‚½‚É1‚Ìƒ_ƒ[ƒW!\n");
-									if(psn!=1){
-										ph=ph-1;
-										if(dou>0){
-											ph=ph-1;
-										}//if(dou>0)
-									}//if(psn!=1)
-									epn++;
-								}if(c==6){//if(c==5)
-									printf("Žç‚è‚ðŒÅ‚ß‚½!!\n(ŽŸ‚ÌŽ©•ª‚Ìƒ^[ƒ“‚Ü‚ÅAŽ©g‚ªŽó‚¯‚éƒ_ƒ[ƒW‚Í0‚É‚È‚é)\n");
-									esn=1;
-									epn++;
-								}//if(c==6)
-							}if(ep==2){//if(ep==1)
-								printf("‘ŠŽè‚Íƒq[ƒŠƒ“ƒOƒ_ƒCƒX‚ðU‚è‚Ü‚µ‚½\n");
-								c=rand()%6+1;
-								if(c==1){
-									printf("ƒhƒŒƒCƒ“”­“®!!\n‚ ‚È‚½‚ÌLP‚©‚ç4ƒ|ƒCƒ“ƒg‹z‚¢Žæ‚é\n");
-									if(psn!=1){
-										ph=ph-4;
-										eh=eh+4;
-									}//if(psn!=1)
-									epn++;
-								}if(c==2){//if(c==1)
-									epn=0;
-									printf("ƒpƒ“ƒhƒ‰‚Ìƒ_ƒCƒXŽn“®!!\nƒ_ƒCƒX‚ðˆê‰ñU‚ê!!\n");
-									d=rand()%6+1;
-									if(d==1){
-										printf("ƒMƒKƒhƒŒƒCƒ“Žn“®!!\n‚ ‚È‚½‚ÌLP‚©‚ç10ƒ|ƒCƒ“ƒg‹z‚¢Žæ‚é!!\n");
-										if(psn!=1){
-											eh=eh+10;
-											ph=ph-10;
-										}//if(psn!=1)
-									}if(d==2){//if(c==1)
-										printf("‰F’ˆ–‚–@Aƒuƒ‰ƒbƒNƒz[ƒ‹Žn“®!!\nŽ©•ª‚ÌLP1‚É‚µ‚ÄA‚ ‚È‚½‚É15‚Ìƒ_ƒ[ƒW!!\n");
-										eh=1;
-										if(psn!=1){
-											ph=ph-15;
-											if(dou>0){
-												ph=ph-15;
-											}//if(dou>0)
-										}//if(psn!=1)
-									}if(d==3){//if(c==2)
-										printf("‘ŠŽè‚ÆŽ©•ª‚ÌLP‚ð“ü‚ê‘Ö‚¦‚é!\n");
-										ph=ph+eh;
-										eh=ph-eh;
-										ph=ph-eh;
-									}if(d==4){//if(c==3)
-										printf("ƒ[ƒEƒX‚ð¢Š«‚µ‚½!!\n‚ ‚È‚½‚É13‚Ìƒ_ƒ[ƒW!!\n");
-										if(psn!=1){
-											ph=ph-13;
-											if(dou>0){
-												ph=ph-13;
-											}//if(dou>0)
-										}//if(psn!=1)
-									}if(d==5){//if(c==4)
-										printf("ƒq[ƒŠƒ“ƒOEƒmƒ”ƒ@Žn“®\n‚ ‚¢‚Ä‚ÍLP‚ð10‰ñ•œ!!\n");
-										eh=eh+10;
-									}if(d==6){//if(c==5)
-										printf("ŽŸ‚Ì‘ŠŽè‚Ìƒ^[ƒ“I—¹Žž‚Ü‚ÅA”­¶‚·‚é‘S‚Ä‚Ìƒ_ƒ[ƒW‚Í2”{‚É‚È‚é\n");
-										while(dou<3){
-											dou++;
-										}//while(dou<3)
-									}//if(c==6)
-								}if(c==3){//if(c==2)
-									printf("‚ ‚È‚½‚É2‚Ìƒ_ƒ[ƒW!!\n");
-									if(psn!=1){
-										ph=eh-2;
-										if(dou>0){
-											ph=ph-2;
-										}//if(dou>0)
-									}//if(psn!=1)
-									epn++;
-								}if(c==4){//if(c==3)
-									printf("‚ ‚¢‚Ä‚ÍLP‚ð3‰ñ•œ!!\n");
-									eh=eh+3;
-									epn++;
-								}if(c==5){//if(c==4)
-									printf("Žç‚è‚ðŒÅ‚ß‚½!!/n");
-									printf("(ŽŸ‚Ì‘ŠŽè‚Ìƒ^[ƒ“‚Ü‚Å‘ŠŽè‚ªŽó‚¯‚éƒ_ƒ[ƒW‚Í0‚Æ‚È‚é)\n");
-									esn=1;
-									epn++;
-								}if(c==6){//if(c==5)
-									printf("ƒ~ƒX!,‰½‚à‹N‚±‚ç‚È‚©‚Á‚½\n");
-									epn++;
-								}//if(c==6)
-							}//if(ep==2)
-						}if(20>eh&&eh>=10&&etd==1){//if(10>eh&&eh>0&&etd==1)
-							etd=0;
-							ep=rand()%4+1;
-							if(ep==1){
-								printf("‘ŠŽè‚ÍƒNƒŠƒeƒBƒJƒ‹ƒ_ƒCƒX‚ðU‚è‚Ü‚µ‚½B\n");
-								c=rand()%6+1;
-								if(c==1){
-									printf("ƒNƒŠƒeƒBƒJƒ‹ƒqƒbƒg!!\n");
-									printf("‚ ‚È‚½‚É7‚Ìƒ_ƒ[ƒW!!\n");
-									if(psn!=1){
-										ph=ph-7;
-										if(dou>0){
-											ph=ph-7;
-										}//if(dou>0)
-									}//if(psn!=1)
-									epn++;
-								}if(c==2){//if(c==1)
-									printf("ƒ~ƒX!‚ ‚È‚½‚É0ƒ_ƒ[ƒW\n");
-									epn++;
-								}if(c==3){//if(c==2)
-									printf("ƒNƒŠƒeƒBƒJƒ‹ƒqƒbƒg!!\n");
-									printf("‚ ‚È‚½‚É5‚Ìƒ_ƒ[ƒW!!ŽŸ‚Ì‚ ‚È‚½‚Ìƒ^[ƒ“‚ðƒXƒLƒbƒv‚·‚éB\n");
-									if(psn!=1){
-										ph=ph-5;
-										if(dou>0){
-											ph=ph-5;
-										}//if(dou>0)
-										pss=1;
-									}//if(psn!=1)
-									epn++;
-								}if(c==4){//if(c==3)
-									printf("‚ ‚È‚½‚É2‚Ìƒ_ƒ[ƒW\n");
-									if(psn!=1){
-										ph=ph-2;
-										if(dou>0){
-											ph=ph-2;
-										}//if(dou>0)
-									}//if(psn!=1)
-									epn++;
-								}if(c==5){//if(c==4)
-									epn=0;
-									printf("ƒpƒ“ƒhƒ‰‚Ìƒ_ƒCƒXŽn“®!!\nƒ_ƒCƒX‚ðˆê‰ñU‚ê!!");
-									d=rand()%6+1;
-									if(d==1){
-										printf("ƒMƒKƒhƒŒƒCƒ“Žn“®!!\n‚ ‚È‚½‚ÌLP‚©‚ç10ƒ|ƒCƒ“ƒg‹z‚¢Žæ‚é!!\n");
-										if(psn!=1){
-											eh=eh+10;
-											ph=ph-10;
-										}//if(psn!=1)
-									}if(d==2){//if(c==1)
-										printf("‰F’ˆ–‚–@Aƒuƒ‰ƒbƒNƒz[ƒ‹Žn“®!!\nŽ©•ª‚ÌLP1‚É‚µ‚ÄA‘ŠŽè‚É15‚Ìƒ_ƒ[ƒW!!\n");
-										eh=1;
-										if(psn!=1){
-											ph=ph-15;
-											if(dou>0){
-												ph=ph-15;
-											}//ih(dou>0)
-										}//if(psn!=1)
-									}if(d==3){//if(c==2)
-										printf("‘ŠŽè‚ÆŽ©•ª‚ÌLP‚ð“ü‚ê‘Ö‚¦‚é!\n");
-										ph=ph+eh;
-										eh=ph-eh;
-										ph=ph-eh;
-									}if(d==4){//if(c==3)
-										printf("ƒ[ƒEƒX‚ð¢Š«‚µ‚½!!\n‚ ‚È‚½‚É13‚Ìƒ_ƒ[ƒW!!\n");
-										if(psn!=1){
-											ph=ph-13;
-											if(dou>0){
-												ph=ph-13;
-											}///if(dou>0)
-										}//if(psn!=1)
-									}if(d==5){//if(c==4)
-										printf("ƒq[ƒŠƒ“ƒOEƒmƒ”ƒ@Žn“®\n‘ŠŽè‚ÍLP‚ð10‰ñ•œ!!\n");
-										eh=eh+10;
-									}if(d==6){//if(c==5)
-										printf("ŽŸ‚Ì‘ŠŽè‚Ìƒ^[ƒ“I—¹Žž‚Ü‚ÅA”­¶‚·‚é‘S‚Ä‚Ìƒ_ƒ[ƒW‚Í2”{‚É‚È‚é\n");
-										while(dou<3){
-											dou++;
-										}//while(dou<3)
-									}//if(c==6)
-								}if(c==6){//if(c==5)
-									printf("ƒNƒŠƒeƒBƒJƒ‹ƒqƒbƒg!!\n");
-									printf("‚ ‚È‚½‚É5‚Ìƒ_ƒ[ƒW!!ŽŸ‚Ì‚ ‚È‚½‚Ìƒ^[ƒ“‚ðƒXƒLƒbƒv‚·‚éB\n");
-									if(psn!=1){
-										ph=ph-5;
-										if(dou>0){
-											ph=ph-5;
-										}//if(dou>0)
-										pss=1;
-									}//if(pstn!=1)
-									epn++;
-								}//if(c==6)
-							}if(ep==2){//if(ep==1)
-								printf("‘ŠŽè‚Íƒ}ƒWƒbƒNƒ_ƒCƒX‚ðU‚è‚Ü‚µ‚½B\n");
-								c=rand()%6+1;
-								if(c==1){
-									printf("‰Š–‚–@Aƒtƒ@ƒCƒA[ƒ{[ƒ‹”­“®!!\n");
-									printf("‚ ‚È‚½‚É2‚Ìƒ_ƒ[ƒW!!,ŽŸ‚Éƒ_ƒCƒX‚ðU‚éƒvƒŒƒCƒ„[‚É2‚Ìƒ_ƒ[ƒW‚ð—^‚¦‚éB!");
-									if(psn!=1){
-										ph=ph-2;
-										if(dou>0){
-											ph=ph-2;
-										}//if(dou>0)
-									}//if(psn!=1)
-									f=1;
-									epn++;
-								}if(c==2){//if(c==1)
-									printf("—‹–‚–@AƒTƒ“ƒ_[ƒ{ƒ‹ƒg”­“®!!\n");
-									printf("‚¨ŒÝ‚¢‚É4‚Ìƒ_ƒ[ƒW!!\n");
-									eh=eh-4;
-									if(dou>0){
-										eh=eh-4;
-									}//if(dou>0)
-									if(psn!=1){
-										ph=ph-4;
-										if(dou>0){
-											ph=ph-4;
-										}//if(dou>0)
-									}//if(psn!=1)
-									epn++;
-								}if(c==3){//if(c==2)
-									printf("ƒ~ƒX!A‚ ‚È‚½‚É0‚Ìƒ_ƒ[ƒW\n");
-									epn++;
-								}if(c==4){//if(c==3)
-									epn=0;
-									printf("ƒpƒ“ƒhƒ‰‚Ìƒ_ƒCƒXŽn“®!!\nƒ_ƒCƒX‚ðˆê‰ñU‚ê!!\n");
-									d=rand()%6+1;
-									if(d==1){
-										printf("ƒMƒKƒhƒŒƒCƒ“Žn“®!!\n‚ ‚È‚½‚ÌLP‚©‚ç10ƒ|ƒCƒ“ƒg‹z‚¢Žæ‚é!!\n");
-										if(psn!=1){
-											eh=eh+10;
-											ph=ph-10;
-										}//if(psn!=1)
-									}if(d==2){//if(c==1)
-										printf("‰F’ˆ–‚–@Aƒuƒ‰ƒbƒNƒz[ƒ‹Žn“®!!\nŽ©•ª‚ÌLP1‚É‚µ‚ÄA‘ŠŽè‚É15‚Ìƒ_ƒ[ƒW!!\n");
-										eh=1;
-										if(psn!=1){
-											ph=ph-15;
-											if(dou>0){
-												ph=ph-15;
-											}//if(dou>0)
-										}//if(psn!=1)
-									}if(d==3){//if(c==2)
-										printf("‘ŠŽè‚ÆŽ©•ª‚ÌLP‚ð“ü‚ê‘Ö‚¦‚é!\n");
-										ph=ph+eh;
-										eh=ph-eh;
-										ph=ph-eh;
-									}if(d==4){//if(c==3)
-										printf("ƒ[ƒEƒX‚ð¢Š«‚µ‚½!!\n‚ ‚È‚½‚É13‚Ìƒ_ƒ[ƒW!!\n");
-										if(psn!=1){
-											ph=ph-13;
-											if(dou>0){
-												ph=ph-13;
-											}//if(dou>0)
-										}//if(psn!=1)
-									}if(d==5){//if(c==4)
-										printf("ƒq[ƒŠƒ“ƒOEƒmƒ”ƒ@Žn“®\n‘ŠŽè‚ÍLP‚ð10‰ñ•œ!!\n");
-										eh=eh+10;
-									}if(d==6){//if(c==5)
-										printf("ŽŸ‚Ì‘ŠŽè‚Ìƒ^[ƒ“I—¹Žž‚Ü‚ÅA”­¶‚·‚é‘S‚Ä‚Ìƒ_ƒ[ƒW‚Í2”{‚É‚È‚é\n");
-										while(dou<3){
-											dou++;
-										}//while(dou<3)
-									}//if(c==6)
-								}if(c==5){
-									printf("•X–‚–@AƒT[ƒNƒ‹ƒtƒƒXƒg”­“®!!\n");
-									printf("‚ ‚È‚½‚É3‚Ìƒ_ƒ[ƒW!!ŽŸ‚Ì‚ ‚È‚½‚Ìƒ^[ƒ“‚ðƒXƒLƒbƒv‚·‚éB\n");
-									if(psn!=1){
-										ph=ph-3;
-										if(dou>0){
-											ph=ph-3;
-										}//if(dou>0)
-										pss=1;
-									}//if(psn!=1)
-									epn++;
-								}if(c==6){//if(c==5)
-									printf("‰F’ˆ–‚–@AƒƒeƒI”­“®!!\n");
-									printf("Ž©g‚ÌLP‚ð1‚É‚µ‚ÄA‚ ‚È‚½‚É‚É10‚Ìƒ_ƒ[ƒW!!\n");
-									eh=1;
-									if(psn!=1){
-										ph=ph-10;
-										if(dou>0){
-											ph=ph-10;
-										}//if(dou>0)
-									}//if(psn!=1)
-									epn++;
-								}//if(c==6)
-							}if(ep==3){//if(ep==2)
-								printf("‘ŠŽè‚ÍƒK[ƒhƒ_ƒCƒX‚ðU‚è‚Ü‚µ‚½\n");
-								c=rand()%6+1;
-								if(c==1){
-									printf("ƒNƒŠƒeƒBƒJƒ‹ƒqƒbƒg!!\n");
-									printf("‚ ‚È‚½‚É4‚Ìƒ_ƒ[ƒW!!AŽŸ‚Ì‘ŠŽè‚Ìƒ^[ƒ“‚Ü‚Å‘ŠŽè‚ªŽó‚¯‚éƒ_ƒ[ƒW‚Í0‚É‚È‚éB\n");
-									esn=1;
-									if(psn!=1){
-										ph=ph-4;
-										if(dou>0){
-											ph=ph-4;
-										}//if(dou>0)
-									}//if(psn!=1)
-									epn++;
-								}if(c==2){//if(c==1)
-									printf("Žç‚è‚ðŒÅ‚ß‚½!!\n(ŽŸ‚Ì‘ŠŽè‚Ìƒ^[ƒ“‚Ü‚Å‘ŠŽè‚ªŽó‚¯‚éƒ_ƒ[ƒW‚Í0‚É‚È‚é)\n");
-									esn=1;
-									epn++;
-								}if(c==3){//if(c==2)
-									epn=0;
-									printf("ƒpƒ“ƒhƒ‰‚Ìƒ_ƒCƒXŽn“®!!\nƒ_ƒCƒX‚ðˆê‰ñU‚ê!!\n");
-									d=rand()%6+1;
-									if(d==1){
-										printf("ƒMƒKƒhƒŒƒCƒ“Žn“®!!\n‚ ‚È‚½‚ÌLP‚©‚ç10ƒ|ƒCƒ“ƒg‹z‚¢Žæ‚é!!\n");
-										if(psn!=1){
-											eh=eh+10;
-											ph=ph-10;
-										}//if(psn!=1)
-									}if(d==2){//if(c==1)
-										printf("‰F’ˆ–‚–@Aƒuƒ‰ƒbƒNƒz[ƒ‹Žn“®!!\nŽ©•ª‚ÌLP1‚É‚µ‚ÄA‚ ‚È‚½‚É15‚Ìƒ_ƒ[ƒW!!\n");
-										eh=1;
-										if(psn!=1){
-											ph=ph-15;
-											if(dou>0){
-												ph=ph-15;
-											}//if(dou>0)
-										}//if(psn!=1)
-									}if(d==3){//if(c==2)
-										printf("‘ŠŽè‚ÆŽ©•ª‚ÌLP‚ð“ü‚ê‘Ö‚¦‚é!\n");
-										ph=ph+eh;
-										eh=ph-eh;
-										ph=ph-eh;
-									}if(d==4){//if(c==3)
-										printf("ƒ[ƒEƒX‚ð¢Š«‚µ‚½!!\n‚ ‚È‚½‚É13‚Ìƒ_ƒ[ƒW!!\n");
-										if(psn!=1){
-											ph=ph-13;
-											if(dou>0){
-												ph=ph-13;
-											}//if(dou>0)
-										}//if(psn!=1)
-									}if(d==5){//if(c==4)
-										printf("ƒq[ƒŠƒ“ƒOEƒmƒ”ƒ@Žn“®\n‘ŠŽè‚ÍLP‚ð10‰ñ•œ!!\n");
-										eh=eh+10;
-									}if(d==6){//if(c==5)
-										printf("ŽŸ‚Ì‘ŠŽè‚Ìƒ^[ƒ“I—¹Žž‚Ü‚ÅA”­¶‚·‚é‘S‚Ä‚Ìƒ_ƒ[ƒW‚Í2”{‚É‚È‚é\n");
-										while(dou<3){
-											dou++;
-										}//while(dou<3)
-									}//if(c==6)
-								}if(c==4){//if(c==3)
-									printf("ƒ~ƒX!A‰½‚à‹N‚±‚ç‚È‚©‚Á‚½B\n");
-									epn++;
-								}if(c==5){//if(c==4)
-									printf("‚ ‚È‚½‚É1‚Ìƒ_ƒ[ƒW!\n");
-									if(psn!=1){
-										ph=ph-1;
-										if(dou>0){
-											ph=ph-1;
-										}//if(dou>0)
-									}//if(psn!=1)
-									epn++;
-								}if(c==6){//if(c==5)
-									printf("Žç‚è‚ðŒÅ‚ß‚½!!\n(ŽŸ‚Ì‘ŠŽè‚Ìƒ^[ƒ“‚Ü‚ÅA‘ŠŽè‚ªŽó‚¯‚éƒ_ƒ[ƒW‚Í0‚É‚È‚é)\n");
-									esn=1;
-									epn++;
-								}//if(c==6)
-							}if(ep==4){//if(ep==3)
-								printf("‘ŠŽè‚Íƒq[ƒŠƒ“ƒOƒ_ƒCƒX‚ðU‚è‚Ü‚µ‚½\n");
-								c=rand()%6+1;
-								if(c==1){
-									printf("ƒhƒŒƒCƒ“”­“®!!\n‚ ‚È‚½‚ÌLP‚©‚ç4ƒ|ƒCƒ“ƒg‹z‚¢Žæ‚é\n");
-									if(psn!=1){
-										ph=ph-4;
-										eh=eh+4;
-									}//if(psn!=1)
-									epn++;
-								}if(c==2){//if(c==1)
-									epn=0;
-									printf("ƒpƒ“ƒhƒ‰‚Ìƒ_ƒCƒXŽn“®!!\nƒ_ƒCƒX‚ðˆê‰ñU‚ê!!\n");
-									d=rand()%6+1;
-									if(d==1){
-										printf("ƒMƒKƒhƒŒƒCƒ“Žn“®!!\n‚ ‚È‚½‚ÌLP‚©‚ç10ƒ|ƒCƒ“ƒg‹z‚¢Žæ‚é!!\n");
-										if(psn!=1){
-											eh=eh+10;
-											ph=ph-10;
-										}//if(psn!=1)
-									}if(d==2){//if(c==1)
-										printf("‰F’ˆ–‚–@Aƒuƒ‰ƒbƒNƒz[ƒ‹Žn“®!!\nŽ©•ª‚ÌLP1‚É‚µ‚ÄA‚ ‚È‚½‚É15‚Ìƒ_ƒ[ƒW!!\n");
-										eh=1;
-										if(psn!=1){
-											ph=ph-15;
-											if(dou>0){
-												ph=ph-15;
-											}//if(dou>0)
-										}//if(psn!=1)
-									}if(d==3){//if(c==2)
-										printf("‘ŠŽè‚ÆŽ©•ª‚ÌLP‚ð“ü‚ê‘Ö‚¦‚é!\n");
-										ph=ph+eh;
-										eh=ph-eh;
-										ph=ph-eh;
-									}if(d==4){//if(c==3)
-										printf("ƒ[ƒEƒX‚ð¢Š«‚µ‚½!!\n‚ ‚È‚½‚É13‚Ìƒ_ƒ[ƒW!!\n");
-										if(psn!=1){
-											ph=ph-13;
-											if(dou>0){
-												ph=ph-13;
-											}//if(dou>0)
-										}//if(psn!=1)
-									}if(d==5){//if(c==4)
-										printf("ƒq[ƒŠƒ“ƒOEƒmƒ”ƒ@Žn“®\nŽ©•ª‚ÌLP‚ð10‰ñ•œ!!\n");
-										ph=ph+10;
-									}if(d==6){//if(c==5)
-										printf("ŽŸ‚Ì‘ŠŽè‚Ìƒ^[ƒ“I—¹Žž‚Ü‚ÅA”­¶‚·‚é‘S‚Ä‚Ìƒ_ƒ[ƒW‚Í2”{‚É‚È‚é\n");
-										while(dou<3){
-											dou++;
-										}//while(dou<3)
-									}//if(c==6)
-								}if(c==3){//if(c==2)
-									printf("‚ ‚È‚½‚É2‚Ìƒ_ƒ[ƒW!!\n");
-									if(psn!=1){
-										ph=ph-2;
-										if(dou>0){
-											ph=ph-2;
-										}//if(dou>0)
-									}//if(psn!=1)
-									epn++;
-								}if(c==4){//if(c==3)
-									printf("‚ ‚¢‚Ä‚ÍLP‚ð3‰ñ•œ!!\n");
-									eh=eh+3;
-									epn++;
-								}if(c==5){//if(c==4)
-									printf("Žç‚è‚ðŒÅ‚ß‚½!!/n");
-									printf("(ŽŸ‚ÌŽ©•ª‚Ìƒ^[ƒ“‚Ü‚ÅŽ©g‚ªŽó‚¯‚éƒ_ƒ[ƒW‚Í0‚Æ‚È‚é)\n");
-									esn=1;
-									epn++;
-								}if(c==6){//if(c==5)
-									printf("ƒ~ƒX!,‰½‚à‹N‚±‚ç‚È‚©‚Á‚½\n");
-									epn++;
-								}//if(c==6)
-							}//if(ep==4)
-						}if(eh>=20&&etd==1){//if(20>eh&&eh=>10&&etd==1)
-							etd=0;
-							ep=rand()%2+1;
-							if(ep==1){
-								printf("‘ŠŽè‚ÍƒNƒŠƒeƒBƒJƒ‹ƒ_ƒCƒX‚ðU‚è‚Ü‚µ‚½B\n");
-								c=rand()%6+1;
-								if(c==1){
-								printf("ƒNƒŠƒeƒBƒJƒ‹ƒqƒbƒg!!\n");
-									printf("‚ ‚È‚½‚É7‚Ìƒ_ƒ[ƒW!!\n");
-									if(psn!=1){
-										ph=ph-7;
-										if(dou>0){
-											ph=ph-7;
-										}//if(dou>0)
-									}//if(psn!=1)
-									epn++;
-								}if(c==2){//if(c==1)
-									printf("ƒ~ƒX!‚ ‚È‚½‚É0ƒ_ƒ[ƒW\n");
-									epn++;
-								}if(c==3){//if(c==3)
-									printf("ƒNƒŠƒeƒBƒJƒ‹ƒqƒbƒg!!\n");
-									printf("‚ ‚È‚½‚É5‚Ìƒ_ƒ[ƒW!!ŽŸ‚Ì‚ ‚È‚½‚Ìƒ^[ƒ“‚ðƒXƒLƒbƒv‚·‚éB\n");
-									if(psn!=1){
-										ph=ph-5;
-										if(dou>0){
-											ph=ph-5;
-										}//if(dou>0)
-										pss=1;
-									}//if(psn!=1)
-									epn++;
-								}if(c==4){//if(c==3)
-									printf("‚ ‚È‚½‚É2‚Ìƒ_ƒ[ƒW\n");
-									if(psn!=1){
-										ph=ph-2;
-										if(dou>0){
-											ph=ph-2;
-										}//if(dou>0)
-									}//if(psn!=1)
-									epn++;
-								}if(c==5){//if(c==4)
-									epn=0;
-									printf("ƒpƒ“ƒhƒ‰‚Ìƒ_ƒCƒXŽn“®!!\nƒ_ƒCƒX‚ðˆê‰ñU‚ê!!");
-									d=rand()%6+1;
-									if(d==1){
-										printf("ƒMƒKƒhƒŒƒCƒ“Žn“®!!\n‚ ‚È‚½‚ÌLP‚©‚ç10ƒ|ƒCƒ“ƒg‹z‚¢Žæ‚é!!\n");
-										if(psn!=1){
-											eh=eh+10;
-											ph=ph-10;
-										}//if(psn!=1)
-									}if(d==2){//if(c==1)
-										printf("‰F’ˆ–‚–@Aƒuƒ‰ƒbƒNƒz[ƒ‹Žn“®!!\nŽ©•ª‚ÌLP1‚É‚µ‚ÄA‚ ‚È‚½‚É15‚Ìƒ_ƒ[ƒW!!\n");
-										eh=1;
-										if(psn!=1){
-											ph=ph-15;
-											if(dou>0){
-												ph=ph-15;
-											}//if(dou>0)
-										}//if(psn!=1)
-									}if(d==3){//if(c==2)
-										printf("‘ŠŽè‚ÆŽ©•ª‚ÌLP‚ð“ü‚ê‘Ö‚¦‚é!\n");
-										ph=ph+eh;
-										eh=ph-eh;
-										ph=ph-eh;
-									}if(d==4){//if(c==3)
-										printf("ƒ[ƒEƒX‚ð¢Š«‚µ‚½!!\n‚ ‚È‚½‚É13‚Ìƒ_ƒ[ƒW!!\n");
-										if(psn!=1){
-											ph=ph-13;
-											if(dou>0){
-												ph=ph-13;
-											}//if(dou>0)
-										}//if(psn!=1)
-									}if(d==5){//if(c==4)
-										printf("ƒq[ƒŠƒ“ƒOEƒmƒ”ƒ@Žn“®\n‘ŠŽè‚ÍLP‚ð10‰ñ•œ!!\n");
-										eh=eh+10;
-									}if(d==6){//if(c==5)
-										printf("ŽŸ‚Ì‘ŠŽè‚Ìƒ^[ƒ“I—¹Žž‚Ü‚ÅA”­¶‚·‚é‘S‚Ä‚Ìƒ_ƒ[ƒW‚Í2”{‚É‚È‚é\n");
-									}//if(c==6)
-								}if(c==6){//if(c==5)
-									printf("ƒNƒŠƒeƒBƒJƒ‹ƒqƒbƒg!!\n");
-									printf("‚ ‚È‚½‚É5‚Ìƒ_ƒ[ƒW!!ŽŸ‚Ì‚ ‚È‚½‚Ìƒ^[ƒ“‚ðƒXƒLƒbƒv‚·‚éB\n");
-									if(psn!=1){
-										ph=ph-5;
-										if(dou>0){
-											ph=ph-5;
-										}//if(dou>0)
-										pss=1;
-									}//if(psn!=1)
-									epn++;
-								}//if(c==6)
-							}if(ep==2){//if(ep==1)
-								printf("‘ŠŽè‚Íƒ}ƒWƒbƒNƒ_ƒCƒX‚ðU‚è‚Ü‚µ‚½B\n");
-								c=rand()%6+1;
-								if(c==1){
-									printf("‰Š–‚–@Aƒtƒ@ƒCƒA[ƒ{[ƒ‹”­“®!!\n");
-									printf("‚ ‚È‚½‚É2‚Ìƒ_ƒ[ƒW!!,ŽŸ‚Éƒ_ƒCƒX‚ðU‚éƒvƒŒƒCƒ„[‚É2‚Ìƒ_ƒ[ƒW‚ð—^‚¦‚éB!");
-									if(psn!=1){
-										ph=ph-2;
-										if(dou>0){
-											ph=ph-2;
-										}//if(dou>0)
-									}//if(psn!=1)
-									f=1;
-									epn++;
-								}if(c==2){//if(c==1)
-									printf("—‹–‚–@AƒTƒ“ƒ_[ƒ{ƒ‹ƒg”­“®!!\n");
-									printf("‚¨ŒÝ‚¢‚É4‚Ìƒ_ƒ[ƒW!!\n");
-									eh=eh-4;
-									if(dou>0){
-										eh=eh-4;
-									}//if(dou>0)
-									if(psn!=1){
-										ph=ph-4;
-										if(dou>0){
-											ph=ph-4;
-										}//if(dou>0)
-									}//if(psn!=1)
-									epn++;
-								}if(c==3){//if(c==2)
-									printf("ƒ~ƒX!A‚ ‚È‚½‚É0‚Ìƒ_ƒ[ƒW\n");
-									epn++;
-								}if(c==4){//if(c==3)
-									epn=0;
-									printf("ƒpƒ“ƒhƒ‰‚Ìƒ_ƒCƒXŽn“®!!\nƒ_ƒCƒX‚ðˆê‰ñU‚ê!!\n");
-									d=rand()%6+1;
-									if(d==1){
-										printf("ƒMƒKƒhƒŒƒCƒ“Žn“®!!\n‚ ‚È‚½‚ÌLP‚©‚ç10ƒ|ƒCƒ“ƒg‹z‚¢Žæ‚é!!\n");
-										if(psn!=1){
-											eh=eh+10;
-											ph=ph-10;
-										}//if(psn!=1)
-									}if(d==2){//if(c==1)
-										printf("‰F’ˆ–‚–@Aƒuƒ‰ƒbƒNƒz[ƒ‹Žn“®!!\nŽ©•ª‚ÌLP1‚É‚µ‚ÄA‚ ‚È‚½‚É15‚Ìƒ_ƒ[ƒW!!\n");
-										eh=1;
-										if(psn!=1){
-											ph=ph-15;
-											if(dou>0){
-												ph=ph-15;
-											}//if(dou>0)
-										}//if(psn!=1)
-									}if(d==3){//if(c==2)
-										printf("‘ŠŽè‚ÆŽ©•ª‚ÌLP‚ð“ü‚ê‘Ö‚¦‚é!\n");
-										ph=ph+eh;
-										eh=ph-eh;
-										ph=ph-eh;
-									}if(d==4){//if(c==3)
-										printf("ƒ[ƒEƒX‚ð¢Š«‚µ‚½!!\n‚ ‚È‚½‚É13‚Ìƒ_ƒ[ƒW!!\n");
-										if(psn!=1){
-											ph=ph-13;
-											if(dou>0){
-												ph=ph-13;
-											}//if(dou>0)
-										}//if(psn!=1)
-									}if(d==5){//if(c==4)
-										printf("ƒq[ƒŠƒ“ƒOEƒmƒ”ƒ@Žn“®\n‘ŠŽè‚ÍLP‚ð10‰ñ•œ!!\n");
-										eh=eh+10;
-									}if(d==6){//if(c==5)
-										printf("ŽŸ‚ÌŽ©•ª‚Ìƒ^[ƒ“I—¹Žž‚Ü‚ÅA”­¶‚·‚é‘S‚Ä‚Ìƒ_ƒ[ƒW‚Í2”{‚É‚È‚é\n");
-										while(dou<3){
-											dou++;
-										}//while(dou<3)
-									}//if(c==6)
-								}if(c==5){
-									printf("•X–‚–@AƒT[ƒNƒ‹ƒtƒƒXƒg”­“®!!\n");
-									printf("‚ ‚È‚½‚É3‚Ìƒ_ƒ[ƒW!!ŽŸ‚Ì‚ ‚È‚½‚Ìƒ^[ƒ“‚ðƒXƒLƒbƒv‚·‚éB\n");
-									if(psn!=1){
-										ph=ph-3;
-										if(dou>0){
-											ph=ph-3;
-										}//if(dou>0)
-										pss=1;
-									}//if(psn!=1)
-									epn++;
-								}if(c==6){//if(c==5)
-									printf("‰F’ˆ–‚–@AƒƒeƒI”­“®!!\n");
-									printf("Ž©g‚ÌLP‚ð1‚É‚µ‚ÄA‚ ‚È‚½‚É‚É10‚Ìƒ_ƒ[ƒW!!\n");
-									eh=1;
-									if(psn!=1){
-										ph=ph-10;
-										if(dou>0){
-											ph=ph-10;
-										}//if(dou>0)
-									}//if(psn!=1)
-									epn++;
-								}//if(c==6)
-							}//if(ep==2)
-						}//if(eh>=20)
-					}if(epn==6){//if(epn!=6)
-						epn=0;
-						printf("ƒpƒ“ƒhƒ‰‚Ìƒ_ƒCƒX‹­§Žn“®!!\nƒ_ƒCƒX‚ðˆê‰ñU‚ê!!");
-						d=rand()%6+1;
-						if(d==1){
-							printf("ƒMƒKƒhƒŒƒCƒ“Žn“®!!\n‚ ‚È‚½‚ÌLP‚©‚ç10ƒ|ƒCƒ“ƒg‹z‚¢Žæ‚é!!\n");
-							if(psn!=1){
-								eh=eh+10;
-								ph=ph-10;
-							}//if(psn!=1)
-						}if(d==2){//if(c==1)
-							printf("‰F’ˆ–‚–@Aƒuƒ‰ƒbƒNƒz[ƒ‹Žn“®!!\nŽ©•ª‚ÌLP1‚É‚µ‚ÄA‚ ‚È‚½‚É15‚Ìƒ_ƒ[ƒW!!\n");
-							eh=1;
-							if(psn!=1){
-								ph=ph-15;
-								if(dou>0){
-									ph=ph-15;
-								}//if(dou>0)
-							}//if(psn!=1)
-						}if(d==3){//if(c==2)
-							printf("‘ŠŽè‚ÆŽ©•ª‚ÌLP‚ð“ü‚ê‘Ö‚¦‚é!\n");
-							ph=ph+eh;
-							eh=ph-eh;
-							ph=ph-eh;
-						}if(d==4){//if(c==3)
-							printf("ƒ[ƒEƒX‚ð¢Š«‚µ‚½!!\n‚ ‚È‚½‚É13‚Ìƒ_ƒ[ƒW!!\n");
-							if(psn!=1){
-								ph=ph-13;
-								if(dou>0){
-									ph=ph-13;
-								}//if(dou>0)
-							}//if(psn!=1)
-						}if(d==5){//if(c==4)
-							printf("ƒq[ƒŠƒ“ƒOEƒmƒ”ƒ@Žn“®\n‘ŠŽè‚ÍLP‚ð10‰ñ•œ!!\n");
-							eh=eh+20;
-						}if(d==6){//if(c==5)
-							printf("ŽŸ‚Ì‘ŠŽè‚Ìƒ^[ƒ“I—¹Žž‚Ü‚ÅA”­¶‚·‚é‘S‚Ä‚Ìƒ_ƒ[ƒW‚Í2”{‚É‚È‚é\n");
-							while(dou<3){
-								dou++;
-							}//while(dou<3)
-						}//if(c==6)
-					}//if(epn==6)
-				}if(ess==1){//if(ess!=1)
-					printf("\n‘ŠŽè‚Í‚±‚Ìƒ^[ƒ“s“®‚Å‚«‚È‚©‚Á‚½B\n");
-					ess=0;
-				}//if(ess==1)
-				printf("next\n");
-				getch();
-			}//if(eh>0&&ph>0)
-		}if(b>a){//if(a>b)
-			dou--;
-			esn=0;
-			printf("üQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ\n");
-			printf("\n¢‚ ‚È‚½‚ÌLP:%d\nü‘ŠŽè‚ÌLP:%d\n",ph,eh);
-			printf("next\n");
-			getch();
-			if(ess!=1){
-				if(f==1){
-					printf("ƒtƒ@ƒCƒA[ƒ{[ƒ‹‚Ì—¬‚ê’e‚ª“–‚½‚Á‚½!!\n");
-					eh=eh-2;
-					if(dou>0){
-						eh=eh-2;
-					}//if(dou>0)
-					f=0;
-				}//f==1
-				printf("\n¢‘ŠŽè‚Ìƒ^[ƒ“‚Å‚·\n");
-				etd=1;
-				if(epn!=6){
-					if(10>eh&&eh>0&&ph>0&&etd==1){
-						etd=0;
-						ep=rand()%2+1;
-						if(ep==1){
-							printf("‘ŠŽè‚ÍƒK[ƒhƒ_ƒCƒX‚ðU‚è‚Ü‚µ‚½\n");
-							c=rand()%6+1;
-							if(c==1){
-								printf("ƒNƒŠƒeƒBƒJƒ‹ƒqƒbƒg!!\n");
-								printf("‚ ‚È‚½‚É4‚Ìƒ_ƒ[ƒW!!AŽŸ‚Ì‘ŠŽè‚Ìƒ^[ƒ“‚Ü‚Å‘ŠŽè‚ªŽó‚¯‚éƒ_ƒ[ƒW‚Í0‚É‚È‚éB\n");
-								esn=1;
-								if(psn!=1){
-									ph=ph-4;
-								}//if(psn!=1)
-								epn++;
-							}if(c==2){//if(c==1)
-								printf("Žç‚è‚ðŒÅ‚ß‚½!!\n(ŽŸ‚Ì‘ŠŽè‚Ìƒ^[ƒ“‚Ü‚Å‘ŠŽè‚ªŽó‚¯‚éƒ_ƒ[ƒW‚Í0‚É‚È‚é)\n");
-								esn=1;
-								epn++;
-							}if(c==3){//if(c==2)
-								epn=0;
-								printf("ƒpƒ“ƒhƒ‰‚Ìƒ_ƒCƒXŽn“®!!\nƒ_ƒCƒX‚ðˆê‰ñU‚ê!!\n");
-								d=rand()%6+1;
-								if(d==1){
-									printf("ƒMƒKƒhƒŒƒCƒ“Žn“®!!\n‚ ‚È‚½‚ÌLP‚©‚ç10ƒ|ƒCƒ“ƒg‹z‚¢Žæ‚é!!\n");
-									if(psn!=1){
-										eh=eh+10;
-										ph=ph-10;
-									}//if(psn!=1)
-								}if(d==2){//if(c==1)
-									printf("‰F’ˆ–‚–@Aƒuƒ‰ƒbƒNƒz[ƒ‹Žn“®!!\nŽ©•ª‚ÌLP1‚É‚µ‚ÄA‚ ‚È‚½‚É15‚Ìƒ_ƒ[ƒW!!\n");
-									eh=1;
-									if(psn!=1){
-										ph=ph-15;
-										if(dou>0){
-											ph=ph-15;
-										}//if(dou>0)
-									}//if(psn!=1)
-								}if(d==3){//if(c==2)
-									printf("‘ŠŽè‚ÆŽ©•ª‚ÌLP‚ð“ü‚ê‘Ö‚¦‚é!\n");
-									ph=ph+eh;
-									eh=ph-eh;
-									ph=ph-eh;
-								}if(d==4){//if(c==3)
-									printf("ƒ[ƒEƒX‚ð¢Š«‚µ‚½!!\n‚ ‚È‚½‚É13‚Ìƒ_ƒ[ƒW!!\n");
-									if(psn!=1){
-										ph=ph-13;
-										if(dou>0){
-											ph=ph-13;
-										}//if(dou>0)
-									}//if(psn!=1)
-								}if(d==5){//if(c==4)
-									printf("ƒq[ƒŠƒ“ƒOEƒmƒ”ƒ@Žn“®\n‘ŠŽè‚ÍLP‚ð10‰ñ•œ!!\n");
-									eh=eh+10;
-								}if(d==6){//if(c==5)
-									printf("ŽŸ‚Ì‘ŠŽè‚Ìƒ^[ƒ“I—¹Žž‚Ü‚ÅA”­¶‚·‚é‘S‚Ä‚Ìƒ_ƒ[ƒW‚Í2”{‚É‚È‚é\n");
-									while(dou<3){
-										dou++;
-									}//while(dou<3)
-								}//if(c==6)
-							}if(c==4){//if(c==3)
-								printf("ƒ~ƒX!A‰½‚à‹N‚±‚ç‚È‚©‚Á‚½B\n");
-								epn++;
-							}if(c==5){//if(c==4)
-								printf("‚ ‚È‚½‚É1‚Ìƒ_ƒ[ƒW!\n");
-								if(psn!=1){
-									ph=ph-1;
-									if(dou>0){
-										ph=ph-1;
-									}//if(dou>0)
-								}//if(psn!=1)
-								epn++;
-							}if(c==6){//if(c==5)
-								printf("Žç‚è‚ðŒÅ‚ß‚½!!\n(ŽŸ‚ÌŽ©•ª‚Ìƒ^[ƒ“‚Ü‚ÅAŽ©g‚ªŽó‚¯‚éƒ_ƒ[ƒW‚Í0‚É‚È‚é)\n");
-								esn=1;
-								epn++;
-							}//if(c==6)
-						}if(ep==2){//if(ep==1)
-							printf("‘ŠŽè‚Íƒq[ƒŠƒ“ƒOƒ_ƒCƒX‚ðU‚è‚Ü‚µ‚½\n");
-							c=rand()%6+1;
-							if(c==1){
-								printf("ƒhƒŒƒCƒ“”­“®!!\n‚ ‚È‚½‚ÌLP‚©‚ç4ƒ|ƒCƒ“ƒg‹z‚¢Žæ‚é\n");
-								if(psn!=1){
-									ph=ph-4;
-									eh=eh+4;
-								}//if(psn!=1)
-								epn++;
-							}if(c==2){//if(c==1)
-								printf("ƒpƒ“ƒhƒ‰‚Ìƒ_ƒCƒXŽn“®!!\nƒ_ƒCƒX‚ðˆê‰ñU‚ê!!\n");
-								d=rand()%6+1;
-								if(d==1){
-									printf("ƒMƒKƒhƒŒƒCƒ“Žn“®!!\n‚ ‚È‚½‚ÌLP‚©‚ç10ƒ|ƒCƒ“ƒg‹z‚¢Žæ‚é!!\n");
-									if(psn!=1){
-										eh=eh+10;
-										ph=ph-10;
-									}//if(psn!=1)
-								}if(d==2){//if(c==1)
-									printf("‰F’ˆ–‚–@Aƒuƒ‰ƒbƒNƒz[ƒ‹Žn“®!!\nŽ©•ª‚ÌLP1‚É‚µ‚ÄA‚ ‚È‚½‚É15‚Ìƒ_ƒ[ƒW!!\n");
-									eh=1;
-									if(psn!=1){
-										ph=ph-15;
-										if(dou>0){
-											ph=ph-15;
-										}//if(dou>0)
-									}//if(psn!=1)
-								}if(d==3){//if(c==2)
-									printf("‘ŠŽè‚ÆŽ©•ª‚ÌLP‚ð“ü‚ê‘Ö‚¦‚é!\n");
-									ph=ph+eh;
-									eh=ph-eh;
-									ph=ph-eh;
-								}if(d==4){//if(c==3)
-									printf("ƒ[ƒEƒX‚ð¢Š«‚µ‚½!!\n‚ ‚È‚½‚É13‚Ìƒ_ƒ[ƒW!!\n");
-									if(psn!=1){
-										ph=ph-13;
-										if(dou>0){
-											ph=ph-13;
-										}//if(dou>0)
-									}//if(psn!=1)
-								}if(d==5){//if(c==4)
-									printf("ƒq[ƒŠƒ“ƒOEƒmƒ”ƒ@Žn“®\n‚ ‚¢‚Ä‚ÍLP‚ð10‰ñ•œ!!\n");
-									eh=eh+10;
-								}if(d==6){//if(c==5)
-									printf("ŽŸ‚Ì‘ŠŽè‚Ìƒ^[ƒ“I—¹Žž‚Ü‚ÅA”­¶‚·‚é‘S‚Ä‚Ìƒ_ƒ[ƒW‚Í2”{‚É‚È‚é\n");
-									while(dou<3){
-										dou++;
-									}//while(dou<3)
-								}//if(c==6)
-							}if(c==3){//if(c==2)
-								printf("‚ ‚È‚½‚É2‚Ìƒ_ƒ[ƒW!!\n");
-								if(psn!=1){
-									ph=ph-2;
-									if(dou>0){
-										ph=ph-2;
-									}//if(dou>0)
-								}//if(psn!=1)
-								epn++;
-							}if(c==4){//if(c==3)
-								printf("‚ ‚¢‚Ä‚ÍLP‚ð3‰ñ•œ!!\n");
-								eh=eh+3;
-								epn++;
-							}if(c==5){//if(c==4)
-								printf("Žç‚è‚ðŒÅ‚ß‚½!!/n");
-								printf("(ŽŸ‚Ì‘ŠŽè‚Ìƒ^[ƒ“‚Ü‚Å‘ŠŽè‚ªŽó‚¯‚éƒ_ƒ[ƒW‚Í0‚Æ‚È‚é)\n");
-								esn=1;
-								epn++;
-							}if(c==6){//if(c==5)
-								printf("ƒ~ƒX!,‰½‚à‹N‚±‚ç‚È‚©‚Á‚½\n");
-								epn++;
-							}//if(c==6)
-						}//if(ep==2)
-					}if(20>eh&&eh>=10&&ph>0&&etd==1){//if(10>eh&&eh>0&&ph>0&&etd==1)
-						etd=0;
-						ep=rand()%4+1;
-						if(ep==1){
-							printf("‘ŠŽè‚ÍƒNƒŠƒeƒBƒJƒ‹ƒ_ƒCƒX‚ðU‚è‚Ü‚µ‚½B\n");
-							c=rand()%6+1;
-							if(c==1){
-								printf("ƒNƒŠƒeƒBƒJƒ‹ƒqƒbƒg!!\n");
-								printf("‚ ‚È‚½‚É7‚Ìƒ_ƒ[ƒW!!\n");
-								if(psn!=1){
-									ph=ph-7;
-									if(dou>0){
-										ph=ph-7;
-									}//if(dou>0)
-								}//if(psn!=1)
-								epn++;
-							}if(c==2){//if(c==1)
-								printf("ƒ~ƒX!‚ ‚È‚½‚É0ƒ_ƒ[ƒW\n");
-								epn++;
-							}if(c==3){//if(c==2)
-								printf("ƒNƒŠƒeƒBƒJƒ‹ƒqƒbƒg!!\n");
-								printf("‚ ‚È‚½‚É5‚Ìƒ_ƒ[ƒW!!ŽŸ‚Ì‚ ‚È‚½‚Ìƒ^[ƒ“‚ðƒXƒLƒbƒv‚·‚éB\n");
-								if(psn!=1){
-									ph=ph-5;
-									if(dou>0){
-										ph=ph-5;
-									}//if(dou>0)
-									pss=1;
-								}//if(psn!=1)
-								epn++;
-							}if(c==4){//if(c==3)
-								printf("‚ ‚È‚½‚É2‚Ìƒ_ƒ[ƒW\n");
-								if(psn!=1){
-									ph=ph-2;
-									if(dou>0){
-										ph=ph-2;
-									}//if(dou>0)
-								}//if(psn!=1)
-								epn++;
-							}if(c==5){//if(c==4)
-								epn=0;
-								printf("ƒpƒ“ƒhƒ‰‚Ìƒ_ƒCƒXŽn“®!!\nƒ_ƒCƒX‚ðˆê‰ñU‚ê!!");
-								d=rand()%6+1;
-								if(d==1){
-									printf("ƒMƒKƒhƒŒƒCƒ“Žn“®!!\n‚ ‚È‚½‚ÌLP‚©‚ç10ƒ|ƒCƒ“ƒg‹z‚¢Žæ‚é!!\n");
-									if(psn!=1){
-										eh=eh+10;
-										ph=ph-10;
-									}//if(psn!=1)
-								}if(d==2){//if(c==1)
-									printf("‰F’ˆ–‚–@Aƒuƒ‰ƒbƒNƒz[ƒ‹Žn“®!!\nŽ©•ª‚ÌLP1‚É‚µ‚ÄA‘ŠŽè‚É15‚Ìƒ_ƒ[ƒW!!\n");
-									eh=1;
-									if(psn!=1){
-										ph=ph-15;
-										if(dou>0){
-											ph=ph-15;
-										}//if(dou>0)
-									}//if(psn!=1)
-								}if(d==3){//if(c==2)
-									printf("‘ŠŽè‚ÆŽ©•ª‚ÌLP‚ð“ü‚ê‘Ö‚¦‚é!\n");
-									ph=ph+eh;
-									eh=ph-eh;
-									ph=ph-eh;
-								}if(d==4){//if(c==3)
-									printf("ƒ[ƒEƒX‚ð¢Š«‚µ‚½!!\n‚ ‚È‚½‚É13‚Ìƒ_ƒ[ƒW!!\n");
-									if(psn!=1){
-										ph=ph-13;
-										if(dou>0){
-											ph=ph-13;
-										}//if(dou>0)
-									}//if(psn!=1)
-								}if(d==5){//if(c==4)
-									printf("ƒq[ƒŠƒ“ƒOEƒmƒ”ƒ@Žn“®\n‘ŠŽè‚ÍLP‚ð10‰ñ•œ!!\n");
-									eh=eh+10;
-								}if(d==6){//if(c==5)
-									printf("ŽŸ‚Ì‘ŠŽè‚Ìƒ^[ƒ“I—¹Žž‚Ü‚ÅA”­¶‚·‚é‘S‚Ä‚Ìƒ_ƒ[ƒW‚Í2”{‚É‚È‚é\n");
-									while(dou<3){
-										dou++;
-									}//while(dou<3)
-								}//if(c==6)
-							}if(c==6){//if(c==5)
-								printf("ƒNƒŠƒeƒBƒJƒ‹ƒqƒbƒg!!\n");
-								printf("‚ ‚È‚½‚É5‚Ìƒ_ƒ[ƒW!!ŽŸ‚Ì‚ ‚È‚½‚Ìƒ^[ƒ“‚ðƒXƒLƒbƒv‚·‚éB\n");
-								if(psn!=1){
-									ph=ph-5;
-									if(dou>0){
-										ph=ph-5;
-									}//if(dou>0)
-									pss=1;
-								}//if(psn!=1)
-							}//if(c==6)
-						}if(ep==2){//if(ep==1)
-							printf("‘ŠŽè‚Íƒ}ƒWƒbƒNƒ_ƒCƒX‚ðU‚è‚Ü‚µ‚½B\n");
-							c=rand()%6+1;
-							if(c==1){
-								printf("‰Š–‚–@Aƒtƒ@ƒCƒA[ƒ{[ƒ‹”­“®!!\n");
-								printf("‚ ‚È‚½‚É2‚Ìƒ_ƒ[ƒW!!,ŽŸ‚Éƒ_ƒCƒX‚ðU‚éƒvƒŒƒCƒ„[‚É2‚Ìƒ_ƒ[ƒW‚ð—^‚¦‚éB!");
-								if(psn!=1){
-									ph=ph-2;
-									if(dou>0){
-										ph=ph-2;
-									}//if(dou>0)
-								}//if(psn!=1)
-								f=1;
-								epn++;
-							}if(c==2){//if(c==1)
-								printf("—‹–‚–@AƒTƒ“ƒ_[ƒ{ƒ‹ƒg”­“®!!\n");
-								printf("‚¨ŒÝ‚¢‚É4‚Ìƒ_ƒ[ƒW!!\n");
-								eh=eh-4;
-								if(dou>0){
-									eh=eh-4;
-								}//if(dou>0)
-								if(psn!=1){
-									ph=ph-4;
-									if(dou>0){
-										ph=ph-4;
-									}//if(dou>0)
-								}//if(psn!=1)
-								epn++;
-							}if(c==3){//if(c==2)
-								printf("ƒ~ƒX!A‚ ‚È‚½‚É0‚Ìƒ_ƒ[ƒW\n");
-								epn++;
-							}if(c==4){//if(c==3)
-								printf("ƒpƒ“ƒhƒ‰‚Ìƒ_ƒCƒXŽn“®!!\nƒ_ƒCƒX‚ðˆê‰ñU‚ê!!\n");
-								d=rand()%6+1;
-								if(d==1){
-									printf("ƒMƒKƒhƒŒƒCƒ“Žn“®!!\n‚ ‚È‚½‚ÌLP‚©‚ç10ƒ|ƒCƒ“ƒg‹z‚¢Žæ‚é!!\n");
-									if(psn!=1){
-										eh=eh+10;
-										ph=ph-10;
-									}//if(psn!=1)
-								}if(d==2){//if(c==1)
-									printf("‰F’ˆ–‚–@Aƒuƒ‰ƒbƒNƒz[ƒ‹Žn“®!!\nŽ©•ª‚ÌLP1‚É‚µ‚ÄA‘ŠŽè‚É15‚Ìƒ_ƒ[ƒW!!\n");							
-									eh=1;
-									if(psn!=1){
-										ph=ph-15;
-										if(dou>0){
-											ph=ph-15;
-										}//if(dou>0)
-									}//if(psn!=1)
-								}if(d==3){//if(c==2)
-									printf("‘ŠŽè‚ÆŽ©•ª‚ÌLP‚ð“ü‚ê‘Ö‚¦‚é!\n");
-									ph=ph+eh;
-									eh=ph-eh;
-									ph=ph-eh;
-								}if(d==4){//if(c==3)
-									printf("ƒ[ƒEƒX‚ð¢Š«‚µ‚½!!\n‚ ‚È‚½‚É13‚Ìƒ_ƒ[ƒW!!\n");
-									if(psn!=1){
-										ph=ph-13;
-										if(dou>0){
-											ph=ph-13;
-										}//if(dou>0)
-									}//if(psn!=1)
-								}if(d==5){//if(c==4)
-									printf("ƒq[ƒŠƒ“ƒOEƒmƒ”ƒ@Žn“®\n‘ŠŽè‚ÍLP‚ð10‰ñ•œ!!\n");
-									eh=eh+10;
-								}if(d==6){//if(c==5)
-									printf("ŽŸ‚Ì‘ŠŽè‚Ìƒ^[ƒ“I—¹Žž‚Ü‚ÅA”­¶‚·‚é‘S‚Ä‚Ìƒ_ƒ[ƒW‚Í2”{‚É‚È‚é\n");
-									while(dou<3){
-										dou++;
-									}//while(dou<3)
-								}//if(c==6)
-							}if(c==5){
-								printf("•X–‚–@AƒT[ƒNƒ‹ƒtƒƒXƒg”­“®!!\n");
-								printf("‚ ‚È‚½‚É3‚Ìƒ_ƒ[ƒW!!ŽŸ‚Ì‚ ‚È‚½‚Ìƒ^[ƒ“‚ðƒXƒLƒbƒv‚·‚éB\n");
-								if(psn!=1){
-									ph=ph-3;
-									if(dou>0){
-										ph=ph-3;
-									}//if(dou>0)
-									pss=1;
-								}//if(psn!=1)
-								epn++;
-							}if(c==6){//if(c==5)
-								printf("‰F’ˆ–‚–@AƒƒeƒI”­“®!!\n");
-								printf("Ž©g‚ÌLP‚ð1‚É‚µ‚ÄA‚ ‚È‚½‚É‚É10‚Ìƒ_ƒ[ƒW!!\n");
-								eh=1;
-								if(psn!=1){
-									ph=ph-10;
-									if(dou>0){
-										ph=ph-10;
-									}//if(dou>0)
-								}//if(psn!=1)
-								epn++;
-							}//if(c==6)
-						}if(ep==3){//if(ep==2)
-							printf("‘ŠŽè‚ÍƒK[ƒhƒ_ƒCƒX‚ðU‚è‚Ü‚µ‚½\n");
-							c=rand()%6+1;
-							if(c==1){
-								printf("ƒNƒŠƒeƒBƒJƒ‹ƒqƒbƒg!!\n");
-								printf("‚ ‚È‚½‚É4‚Ìƒ_ƒ[ƒW!!AŽŸ‚Ì‘ŠŽè‚Ìƒ^[ƒ“‚Ü‚Å‘ŠŽè‚ªŽó‚¯‚éƒ_ƒ[ƒW‚Í0‚É‚È‚éB\n");
-								esn=1;
-								if(psn!=1){
-									ph=ph-4;
-									if(dou>0){
-										ph=ph-4;
-									}//if(dou>0)
-								}//if(psn!=1)
-								epn++;
-							}if(c==2){//if(c==1)
-								printf("Žç‚è‚ðŒÅ‚ß‚½!!\n(ŽŸ‚Ì‘ŠŽè‚Ìƒ^[ƒ“‚Ü‚Å‘ŠŽè‚ªŽó‚¯‚éƒ_ƒ[ƒW‚Í0‚É‚È‚é)\n");
-								esn=1;
-								epn++;
-							}if(c==3){//if(c==2)
-								epn=0;
-								printf("ƒpƒ“ƒhƒ‰‚Ìƒ_ƒCƒXŽn“®!!\nƒ_ƒCƒX‚ðˆê‰ñU‚ê!!\n");
-								d=rand()%6+1;
-								if(d==1){
-									printf("ƒMƒKƒhƒŒƒCƒ“Žn“®!!\n‚ ‚È‚½‚ÌLP‚©‚ç10ƒ|ƒCƒ“ƒg‹z‚¢Žæ‚é!!\n");
-									if(psn!=1){
-										eh=eh+10;
-										ph=ph-10;
-									}//if(psn!=1)
-								}if(d==2){//if(c==1)
-									printf("‰F’ˆ–‚–@Aƒuƒ‰ƒbƒNƒz[ƒ‹Žn“®!!\nŽ©•ª‚ÌLP1‚É‚µ‚ÄA‚ ‚È‚½‚É15‚Ìƒ_ƒ[ƒW!!\n");
-									eh=1;
-									if(psn!=1){
-										ph=ph-15;
-										if(dou>0){
-											ph=ph-15;
-										}//if(dou>0)
-									}//if(psn!=1)
-								}if(d==3){//if(c==2)
-									printf("‘ŠŽè‚ÆŽ©•ª‚ÌLP‚ð“ü‚ê‘Ö‚¦‚é!\n");
-									ph=ph+eh;
-									eh=ph-eh;
-									ph=ph-eh;
-								}if(d==4){//if(c==3)
-									printf("ƒ[ƒEƒX‚ð¢Š«‚µ‚½!!\n‚ ‚È‚½‚É13‚Ìƒ_ƒ[ƒW!!\n");
-									if(psn!=1){
-										ph=ph-13;
-										if(dou>0){
-											ph=ph-13;
-										}//if(dou>0)
-									}//if(psn!=1)
-								}if(d==5){//if(c==4)
-									printf("ƒq[ƒŠƒ“ƒOEƒmƒ”ƒ@Žn“®\n‘ŠŽè‚ÍLP‚ð10‰ñ•œ!!\n");
-									eh=eh+10;
-								}if(d==6){//if(c==5)
-									printf("ŽŸ‚Ì‘ŠŽè‚Ìƒ^[ƒ“I—¹Žž‚Ü‚ÅA”­¶‚·‚é‘S‚Ä‚Ìƒ_ƒ[ƒW‚Í2”{‚É‚È‚é\n");
-									while(dou<3){
-										dou++;
-									}//while(dou<3)
-								}//if(c==6)
-							}if(c==4){//if(c==3)
-								printf("ƒ~ƒX!A‰½‚à‹N‚±‚ç‚È‚©‚Á‚½B\n");
-								epn++;
-							}if(c==5){//if(c==4)
-								printf("‚ ‚È‚½‚É1‚Ìƒ_ƒ[ƒW!\n");
-								if(psn!=1){
-									ph=ph-1;
-									if(dou>0){
-										ph=ph-1;
-									}//if(dou>0)
-								}//if(psn!=1)
-								epn++;
-							}if(c==6){//if(c==5)
-								printf("Žç‚è‚ðŒÅ‚ß‚½!!\n(ŽŸ‚Ì‘ŠŽè‚Ìƒ^[ƒ“‚Ü‚ÅA‘ŠŽè‚ªŽó‚¯‚éƒ_ƒ[ƒW‚Í0‚É‚È‚é)\n");
-								esn=1;
-								epn++;
-							}//if(c==6)
-						}if(ep==4){//if(ep==3)
-							printf("‘ŠŽè‚Íƒq[ƒŠƒ“ƒOƒ_ƒCƒX‚ðU‚è‚Ü‚µ‚½\n");
-							c=rand()%6+1;
-							if(c==1){
-								printf("ƒhƒŒƒCƒ“”­“®!!\n‚ ‚È‚½‚ÌLP‚©‚ç4ƒ|ƒCƒ“ƒg‹z‚¢Žæ‚é\n");
-								if(psn!=1){
-								ph=ph-4;
-									eh=eh+4;
-								}//if(psn!=1)
-								epn++;
-							}if(c==2){//if(c==1)
-								epn=0;
-								printf("ƒpƒ“ƒhƒ‰‚Ìƒ_ƒCƒXŽn“®!!\nƒ_ƒCƒX‚ðˆê‰ñU‚ê!!\n");
-								d=rand()%6+1;
-								if(d==1){
-									printf("ƒMƒKƒhƒŒƒCƒ“Žn“®!!\n‚ ‚È‚½‚ÌLP‚©‚ç10ƒ|ƒCƒ“ƒg‹z‚¢Žæ‚é!!\n");
-									if(psn!=1){
-										eh=eh+10;
-										ph=ph-10;
-									}//if(psn!=1)
-								}if(d==2){//if(c==1)
-									printf("‰F’ˆ–‚–@Aƒuƒ‰ƒbƒNƒz[ƒ‹Žn“®!!\nŽ©•ª‚ÌLP1‚É‚µ‚ÄA‚ ‚È‚½‚É15‚Ìƒ_ƒ[ƒW!!\n");
-									eh=1;
-									if(psn!=1){
-										ph=ph-15;
-										if(dou>0){
-											ph=ph-15;
-										}//if(dou>0)
-									}//if(psn!=1)
-								}if(d==3){//if(c==2)
-									printf("‘ŠŽè‚ÆŽ©•ª‚ÌLP‚ð“ü‚ê‘Ö‚¦‚é!\n");
-									ph=ph+eh;
-									eh=ph-eh;
-									ph=ph-eh;
-								}if(d==4){//if(c==3)
-									printf("ƒ[ƒEƒX‚ð¢Š«‚µ‚½!!\n‚ ‚È‚½‚É13‚Ìƒ_ƒ[ƒW!!\n");
-									if(psn!=1){
-										ph=ph-13;
-										if(dou>0){
-											ph=ph-13;
-										}//if(dou>0)
-									}//if(psn!='1')
-								}if(d==5){//if(c==4)
-									printf("ƒq[ƒŠƒ“ƒOEƒmƒ”ƒ@Žn“®\nŽ©•ª‚ÌLP‚ð10‰ñ•œ!!\n");
-									ph=ph+10;
-								}if(d==6){//if(c==5)
-									printf("ŽŸ‚Ì‘ŠŽè‚Ìƒ^[ƒ“I—¹Žž‚Ü‚ÅA”­¶‚·‚é‘S‚Ä‚Ìƒ_ƒ[ƒW‚Í2”{‚É‚È‚é\n");
-									while(dou<3){
-										dou++;
-									}//while(dou<3)
-								}//if(c==6)
-							}if(c==3){//if(c==2)
-								printf("‚ ‚È‚½‚É2‚Ìƒ_ƒ[ƒW!!\n");
-								if(psn!=1){
-									ph=ph-2;
-									if(dou>0){
-										ph=ph-2;
-									}//if(dou>0)
-								}//if(psn!=1)
-								epn++;
-							}if(c==4){//if(c==3)
-								printf("‚ ‚¢‚Ä‚ÍLP‚ð3‰ñ•œ!!\n");
-								eh=eh+3;
-								epn++;
-							}if(c==5){//if(c==4)
-								printf("Žç‚è‚ðŒÅ‚ß‚½!!/n");
-								printf("(ŽŸ‚ÌŽ©•ª‚Ìƒ^[ƒ“‚Ü‚ÅŽ©g‚ªŽó‚¯‚éƒ_ƒ[ƒW‚Í0‚Æ‚È‚é)\n");
-								esn=1;
-								epn++;
-							}if(c==6){//if(c==5)
-								printf("ƒ~ƒX!,‰½‚à‹N‚±‚ç‚È‚©‚Á‚½\n");
-								epn++;
-							}//if(c==6)
-						}//if(ep==4)
-					}if(eh>=20&&ph>0&&etd==1){//if(20>eh&&eh=>10&&ph>0etd==1)
-						etd=0;
-						ep=rand()%2+1;
-						if(ep==1){
-							printf("‘ŠŽè‚ÍƒNƒŠƒeƒBƒJƒ‹ƒ_ƒCƒX‚ðU‚è‚Ü‚µ‚½B\n");
-							c=rand()%6+1;
-							if(c==1){
-								printf("ƒNƒŠƒeƒBƒJƒ‹ƒqƒbƒg!!\n");
-								printf("‚ ‚È‚½‚É7‚Ìƒ_ƒ[ƒW!!\n");
-								if(psn!=1){
-									ph=ph-7;
-									if(dou>0){
-										ph=ph-7;
-									}//if(dou>0)
-								}//if(psn!=1)
-								epn++;
-							}if(c==2){//if(c==1)
-								printf("ƒ~ƒX!‚ ‚È‚½‚É0ƒ_ƒ[ƒW\n");
-								epn++;
-							}if(c==3){//if(c==2)
-								printf("ƒNƒŠƒeƒBƒJƒ‹ƒqƒbƒg!!\n");
-								printf("‚ ‚È‚½‚É5‚Ìƒ_ƒ[ƒW!!ŽŸ‚Ì‚ ‚È‚½‚Ìƒ^[ƒ“‚ðƒXƒLƒbƒv‚·‚éB\n");
-								if(psn!=1){
-									ph=ph-5;
-									if(dou>0){
-										ph=ph-5;
-									}//if(dou>0)
-									pss=1;
-								}//if(psn!=1)
-								epn++;
-							}if(c==4){//if(c==3)
-								printf("‚ ‚È‚½‚É2‚Ìƒ_ƒ[ƒW\n");
-								if(psn!=1){
-									ph=ph-2;
-									if(dou>0){
-										ph=ph-2;
-									}//if(dou>0)
-								}//if(psn!=1)
-								epn++;
-							}if(c==5){//if(c==4)
-								epn=0;
-								printf("ƒpƒ“ƒhƒ‰‚Ìƒ_ƒCƒXŽn“®!!\nƒ_ƒCƒX‚ðˆê‰ñU‚ê!!");
-								d=rand()%6+1;
-								if(d==1){
-									printf("ƒMƒKƒhƒŒƒCƒ“Žn“®!!\n‚ ‚È‚½‚ÌLP‚©‚ç10ƒ|ƒCƒ“ƒg‹z‚¢Žæ‚é!!\n");
-									if(psn!=1){
-										eh=eh+10;
-										ph=ph-10;
-									}//if(psn!=1)
-								}if(d==2){//if(c==1)
-									printf("‰F’ˆ–‚–@Aƒuƒ‰ƒbƒNƒz[ƒ‹Žn“®!!\nŽ©•ª‚ÌLP1‚É‚µ‚ÄA‚ ‚È‚½‚É15‚Ìƒ_ƒ[ƒW!!\n");
-									eh=1;
-									if(psn!=1){
-										ph=ph-15;
-										if(dou>0){
-											ph=ph-15;
-										}//if(dou>0)
-									}//if(psn!=1)
-								}if(d==3){//if(c==2)
-									printf("‘ŠŽè‚ÆŽ©•ª‚ÌLP‚ð“ü‚ê‘Ö‚¦‚é!\n");
-									ph=ph+eh;
-									eh=ph-eh;
-									ph=ph-eh;
-								}if(d==4){//if(c==3)
-									printf("ƒ[ƒEƒX‚ð¢Š«‚µ‚½!!\n‚ ‚È‚½‚É13‚Ìƒ_ƒ[ƒW!!\n");
-									if(psn!=1){
-										ph=ph-13;
-										if(dou>0){
-											ph=ph-13;
-										}//if(dou>0)
-									}//if(psn!=1)
-								}if(d==5){//if(c==4)
-									printf("ƒq[ƒŠƒ“ƒOEƒmƒ”ƒ@Žn“®\n‘ŠŽè‚ÍLP‚ð10‰ñ•œ!!\n");
-									eh=eh+10;
-								}if(d==6){//if(c==5)
-									printf("ŽŸ‚Ì‘ŠŽè‚Ìƒ^[ƒ“I—¹Žž‚Ü‚ÅA”­¶‚·‚é‘S‚Ä‚Ìƒ_ƒ[ƒW‚Í2”{‚É‚È‚é\n");
-									while(dou<3){
-										dou++;
-									}//while(dou<3)
-								}//if(c==6)
-							}if(c==6){//if(c==5)
-								printf("ƒNƒŠƒeƒBƒJƒ‹ƒqƒbƒg!!\n");
-								printf("‚ ‚È‚½‚É5‚Ìƒ_ƒ[ƒW!!ŽŸ‚Ì‚ ‚È‚½‚Ìƒ^[ƒ“‚ðƒXƒLƒbƒv‚·‚éB\n");
-								if(psn!=1){
-									ph=ph-5;
-									if(dou>0){
-										ph=ph-5;
-									}//if(dou>0)
-									pss=1;
-								}//if(psn!=1)
-								epn++;
-							}//if(c==6)
-						}if(ep==2){//if(ep==1)
-							printf("‘ŠŽè‚Íƒ}ƒWƒbƒNƒ_ƒCƒX‚ðU‚è‚Ü‚µ‚½B\n");
-							c=rand()%6+1;
-							if(c==1){
-								printf("‰Š–‚–@Aƒtƒ@ƒCƒA[ƒ{[ƒ‹”­“®!!\n");
-								printf("‚ ‚È‚½‚É2‚Ìƒ_ƒ[ƒW!!,ŽŸ‚Éƒ_ƒCƒX‚ðU‚éƒvƒŒƒCƒ„[‚É2‚Ìƒ_ƒ[ƒW‚ð—^‚¦‚éB!");
-								if(psn!=1){
-									ph=ph-2;
-									if(dou>0){
-										ph=ph-2;
-									}//if(dou>0)
-								}//if(psn!=1)
-								f=1;
-								epn++;
-							}if(c==2){//if(c==1)
-								printf("—‹–‚–@AƒTƒ“ƒ_[ƒ{ƒ‹ƒg”­“®!!\n");
-								printf("‚¨ŒÝ‚¢‚É4‚Ìƒ_ƒ[ƒW!!\n");
-								eh=eh-4;
-								if(dou>0){
-									eh=eh-4;
-								}//if(dou>0)
-								if(psn!=1){
-									ph=ph-4;
-									if(dou>0){
-										ph=ph-4;
-									}//if(dou>0)
-								}//if(psn!=1)
-								epn++;
-							}if(c==3){//if(c==2)
-								printf("ƒ~ƒX!A‚ ‚È‚½‚É0‚Ìƒ_ƒ[ƒW\n");
-								epn++;
-							}if(c==4){//if(c==3)
-								epn=0;
-								printf("ƒpƒ“ƒhƒ‰‚Ìƒ_ƒCƒXŽn“®!!\nƒ_ƒCƒX‚ðˆê‰ñU‚ê!!\n");
-								d=rand()%6+1;
-								if(d==1){
-									printf("ƒMƒKƒhƒŒƒCƒ“Žn“®!!\n‚ ‚È‚½‚ÌLP‚©‚ç10ƒ|ƒCƒ“ƒg‹z‚¢Žæ‚é!!\n");
-									if(psn!=1){
-										eh=eh+10;
-										ph=ph-10;
-									}//if(psn!=1)
-								}if(d==2){//if(c==1)
-									printf("‰F’ˆ–‚–@Aƒuƒ‰ƒbƒNƒz[ƒ‹Žn“®!!\nŽ©•ª‚ÌLP1‚É‚µ‚ÄA‚ ‚È‚½‚É15‚Ìƒ_ƒ[ƒW!!\n");
-									eh=1;
-									if(psn!=1){
-										ph=ph-15;
-										if(dou>0){
-											ph=ph-15;
-										}//if(dou>0)
-									}//if(psn!=1)
-								}if(d==3){//if(c==2)
-									printf("‘ŠŽè‚ÆŽ©•ª‚ÌLP‚ð“ü‚ê‘Ö‚¦‚é!\n");
-									ph=ph+eh;
-									eh=ph-eh;
-									ph=ph-eh;
-								}if(d==4){//if(c==3)
-									printf("ƒ[ƒEƒX‚ð¢Š«‚µ‚½!!\n‚ ‚È‚½‚É13‚Ìƒ_ƒ[ƒW!!\n");
-									if(psn!=1){
-										ph=ph-13;
-										if(dou>0){
-											ph=ph-13;
-										}//if(dou>0)
-									}//if(psn!=1)
-								}if(d==5){//if(c==4)
-									printf("ƒq[ƒŠƒ“ƒOEƒmƒ”ƒ@Žn“®\n‘ŠŽè‚ÍLP‚ð10‰ñ•œ!!\n");
-									eh=eh+10;
-								}if(d==6){//if(c==5)
-									printf("ŽŸ‚ÌŽ©•ª‚Ìƒ^[ƒ“I—¹Žž‚Ü‚ÅA”­¶‚·‚é‘S‚Ä‚Ìƒ_ƒ[ƒW‚Í2”{‚É‚È‚é\n");
-									while(dou<3){
-										dou++;
-									}//while(dou<3)
-								}//if(c==6)
-							}if(c==5){
-								printf("•X–‚–@AƒT[ƒNƒ‹ƒtƒƒXƒg”­“®!!\n");
-								printf("‚ ‚È‚½‚É3‚Ìƒ_ƒ[ƒW!!ŽŸ‚Ì‚ ‚È‚½‚Ìƒ^[ƒ“‚ðƒXƒLƒbƒv‚·‚éB\n");
-								if(psn!=1){
-									ph=ph-3;
-									if(dou>0){
-										ph=ph-3;
-									}//if(dou>0)
-									pss=1;
-								}//if(psn!=1)
-								epn++;
-							}if(c==6){//if(c==5)
-								printf("‰F’ˆ–‚–@AƒƒeƒI”­“®!!\n");
-								printf("Ž©g‚ÌLP‚ð1‚É‚µ‚ÄA‚ ‚È‚½‚É‚É10‚Ìƒ_ƒ[ƒW!!\n");
-								eh=1;
-								if(psn!=1){
-									ph=ph-10;
-									if(dou>0){
-										ph=ph-10;
-									}//if(dou>0)
-								}//if(ps1!='n')
-								epn++;
-							}//if(c==6)
-						}//if(ep==2)
-					}//if(eh>=20&&ph>0)
-				}if(epn==6){//if(epn!=6)
-					epn=0;
-					printf("ƒpƒ“ƒhƒ‰‚Ìƒ_ƒCƒX‹­§Žn“®!!\nƒ_ƒCƒX‚ðˆê‰ñU‚ê!!\n");
-					d=rand()%6+1;
-					if(d==1){
-						printf("ƒMƒKƒhƒŒƒCƒ“Žn“®!!\n‚ ‚È‚½‚ÌLP‚©‚ç10ƒ|ƒCƒ“ƒg‹z‚¢Žæ‚é!!\n");
-						if(psn!=1){
-							eh=eh+10;
-							ph=ph-10;
-						}//if(psn!=1)
-					}if(d==2){//if(c==1)
-						printf("‰F’ˆ–‚–@Aƒuƒ‰ƒbƒNƒz[ƒ‹Žn“®!!\nŽ©•ª‚ÌLP1‚É‚µ‚ÄA‚ ‚È‚½‚É15‚Ìƒ_ƒ[ƒW!!\n");
-						eh=1;
-						if(psn!=1){
-							ph=ph-15;
-							if(dou>0){
-								ph=ph-15;
-							}//if(dou>0)
-						}//if(psn!=1)
-					}if(d==3){//if(c==2)
-						printf("‘ŠŽè‚ÆŽ©•ª‚ÌLP‚ð“ü‚ê‘Ö‚¦‚é!\n");
-						ph=ph+eh;
-						eh=ph-eh;
-						ph=ph-eh;
-					}if(d==4){//if(c==3)
-						printf("ƒ[ƒEƒX‚ð¢Š«‚µ‚½!!\n‚ ‚È‚½‚É13‚Ìƒ_ƒ[ƒW!!\n");
-						if(psn!=1){
-							ph=ph-13;
-							if(dou>0){
-								ph=ph-13;
-							}//if(dou>0)
-						}//if(psn!=1)
-					}if(d==5){//if(c==4)
-						printf("ƒq[ƒŠƒ“ƒOEƒmƒ”ƒ@Žn“®\n‘ŠŽè‚ÍLP‚ð10‰ñ•œ!!\n");
-						eh=eh+10;
-					}if(d==6){//if(c==5)
-						printf("ŽŸ‚Ì‘ŠŽè‚Ìƒ^[ƒ“I—¹Žž‚Ü‚ÅA”­¶‚·‚é‘S‚Ä‚Ìƒ_ƒ[ƒW‚Í2”{‚É‚È‚é\n");
-						while(dou<3){
-							dou++;
-						}//while(dou<3)
-					}//if(c==6)
-				}//if(epn==6)
-			}if(ess==1){//if(ess!=1)
-				printf("\n‘ŠŽè‚Í‚±‚Ìƒ^[ƒ“s“®‚Å‚«‚È‚©‚Á‚½B\n");
-				ess=0;
-			}//ess==1
-			printf("next\n");
-			getch();
-			if(ph>0){
-				
-				dou--;
-				psn=0;
-				printf("\n¢‚ ‚È‚½‚ÌLP:%d\nü‘ŠŽè‚ÌLP:%d\n",ph,eh);
-				printf("next\n");
-				getch();
-				
-			printf("¢QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ\n");
-				if(pss!=1){
-					if(f==1){
-						printf("ƒtƒ@ƒCƒA[ƒ{[ƒ‹‚Ì—¬‚ê’e‚ª“–‚½‚Á‚½!!\n");
-						ph=ph-2;
-						if(dou>0){
-							ph=ph-2;
-						}//if(dou>0)
-						f=0;
-					}//if(f==1)
-					printf("\n¢‚ ‚È‚½‚Ìƒ^[ƒ“‚Å‚·\n");
-					printf("c;ƒNƒŠƒeƒBƒJƒ‹ƒ_ƒCƒX\n");
-					printf("m;ƒ}ƒWƒbƒNƒ_ƒCƒX\n");
-					printf("h;ƒq[ƒŠƒ“ƒOƒ_ƒCƒX\n");
-					printf("g;ƒK[ƒhƒ_ƒCƒX\n");
-					printf("\nŽg‚¤ƒ_ƒCƒX‚ðéŒ¾‚µ‚ÄAƒ_ƒCƒX‚ðU‚Á‚Ä‚­‚¾‚³‚¢:");
-					scanf("%c",&ps);
-					if(ps=='c'){
-						printf("‚ ‚È‚½‚ÍƒNƒŠƒeƒBƒJƒ‹ƒ_ƒCƒX‚ðU‚è‚Ü‚µ‚½B\n");
-						c=rand()%6+1;
- 						if(c==1){
-							printf("ƒNƒŠƒeƒBƒJƒ‹ƒqƒbƒg!!\n");
-							printf("‘ŠŽè‚É7‚Ìƒ_ƒ[ƒW!!\n");
-							if(esn!=1){
-								eh=eh-7;
-								if(dou>0){
-									eh=eh-7;
-								}//if(dou>0)
-							}//if(esn!=1)
-							ppn++;
-						}if(c==2){//if(c==
-							printf("ƒ~ƒX!‘ŠŽè‚É0ƒ_ƒ[ƒW\n");
-							ppn++;
-						}if(c==3){//if(c==2)
-							printf("ƒNƒŠƒeƒBƒJƒ‹ƒqƒbƒg!!\n");
-							printf("‘ŠŽè‚É5‚Ìƒ_ƒ[ƒW!!ŽŸ‚Ì‘ŠŽè‚Ìƒ^[ƒ“‚ðƒXƒLƒbƒv‚·‚éB\n");
-							if(esn!=1){
-								eh=eh-5;
-								if(dou>0){
-									eh=eh-5;
-								}//if(dou>0)
-								ess=1;
-							}//if(esn!=1)
-							ppn++;
-						}if(c==4){//if(c==3)
-							printf("‘ŠŽè‚É2‚Ìƒ_ƒ[ƒW\n");
-							if(esn!=1){
-								eh=eh-2;
-								if(dou>0){
-									eh=eh-2;
-								}//if(dou>0)
-							}//if(esn!=1)
-							ppn++;
-						}if(c==5){//if(c==4)
-							ppn=0;
-							printf("ƒpƒ“ƒhƒ‰‚Ìƒ_ƒCƒXŽn“®!!\nƒ_ƒCƒX‚ðˆê‰ñU‚ê!!\n");
-							scanf("\n");
-							d=rand()%6+1;
-							if(d==1){
-								printf("ƒMƒKƒhƒŒƒCƒ“Žn“®!!\n‘ŠŽè‚ÌLP‚©‚ç10ƒ|ƒCƒ“ƒg‹z‚¢Žæ‚é!!\n");
-								if(esn!=1){
-									ph=ph+10;
-									eh=eh-10;
-								}//if(esn!=1)
-							}if(d==2){//if(c==1)
-								printf("‰F’ˆ–‚–@Aƒuƒ‰ƒbƒNƒz[ƒ‹Žn“®!!\nŽ©•ª‚ÌLP1‚É‚µ‚ÄA‘ŠŽè‚É15‚Ìƒ_ƒ[ƒW!!\n");
-								ph=1;
-								if(esn!=1){
-									ph=1;
-									eh=eh-15;
-									if(dou>0){
-										eh=eh-15;
-									}//if(dou>0)
-								}//if(esn!=1)
-							}if(d==3){//if(d==2)
-								printf("‘ŠŽè‚ÆŽ©•ª‚ÌLP‚ð“ü‚ê‘Ö‚¦‚é!\n");
-								ph=ph+eh;
-								eh=ph-eh;
-								ph=ph-eh;
-							}if(d==4){//if(d==3)
-								printf("ƒ[ƒEƒX‚ð¢Š«‚µ‚½!!\n‘ŠŽè‚É13‚Ìƒ_ƒ[ƒW!!\n");
-								if(esn!=1){
-									eh=eh-13;
-									if(dou>0){
-										eh=eh-13;
-									}//if(dou>0)
-								}//if(esn!=1)
-							}if(d==5){//if(d==4)
-								printf("ƒq[ƒŠƒ“ƒOEƒmƒ”ƒ@Žn“®\nŽ©•ª‚ÌLP‚ð10‰ñ•œ!!\n");
-								ph=ph+10;
-							}if(d==6){//if(d==5)
-								printf("ŽŸ‚ÌŽ©•ª‚Ìƒ^[ƒ“I—¹Žž‚Ü‚ÅA”­¶‚·‚é‘S‚Ä‚Ìƒ_ƒ[ƒW‚Í2”{‚É‚È‚é\n");
-								while(dou<3){
-									dou++;
-								}//while(dou<3)
-							}//if(d==6)
-						}if(c==6){//if(c==5)
-							printf("ƒNƒŠƒeƒBƒJƒ‹ƒqƒbƒg!!\n");
-							printf("‘ŠŽè‚É5‚Ìƒ_ƒ[ƒW!!ŽŸ‚Ì‘ŠŽè‚Ìƒ^[ƒ“‚ðƒXƒLƒbƒv‚·‚éB\n");
-							if(esn!=1){
-								eh=eh-5;
-								if(dou>0){
-									eh=eh-5;
-								}//if(dou>0)
-								ess=1;
-							}//if(esn!=1)
-							ppn++;
-						}//if(c==6)
-					}if(ps=='m'){//if(ps=='c')
-						printf("‚ ‚È‚½‚Íƒ}ƒWƒbƒNƒ_ƒCƒX‚ðU‚è‚Ü‚µ‚½B\n");
-						c=rand()%6+1;
-						if(c==1){
-							printf("‰Š–‚–@Aƒtƒ@ƒCƒA[ƒ{[ƒ‹”­“®!!\n");
-							printf("‘ŠŽè‚É2‚Ìƒ_ƒ[ƒW!!,ŽŸ‚Éƒ_ƒCƒX‚ðU‚éƒvƒŒƒCƒ„[‚É2‚Ìƒ_ƒ[ƒW‚ð—^‚¦‚éB\n");
-							if(esn!=1){
-								eh=eh-2;
-								if(dou>0){
-									eh=eh-2;
-								}//if(dou>0)
-							}//if(esn!=1)
-							f=1;
-							ppn++;
-						}if(c==2){//if(c==1)
-							printf("—‹–‚–@AƒTƒ“ƒ_[ƒ{ƒ‹ƒg”­“®!!\n");
-							printf("‚¨ŒÝ‚¢‚É4‚Ìƒ_ƒ[ƒW!!\n");
-							ph=ph-4;
-							if(dou>0){
-								ph=ph-4;
-							}//if(dou>0)
-							if(esn!=1){
-								eh=eh-4;
-								if(dou>0){
-									eh=eh-4;
-								}//if(dou>0)
-							}//if(esn!=1)
-							ppn++;
-						}if(c==3){//if(c==2)
-							printf("ƒ~ƒX!A‘ŠŽè‚É0‚Ìƒ_ƒ[ƒW\n");
-							ppn++;
-						}if(c==4){//if(c==3)
-							ppn=0;
-							printf("ƒpƒ“ƒhƒ‰‚Ìƒ_ƒCƒXŽn“®!!\nƒ_ƒCƒX‚ðˆê‰ñU‚ê!!\n");
-							scanf("\n");
-							d=rand()%6+1;
-							if(d==1){
-								printf("ƒMƒKƒhƒŒƒCƒ“Žn“®!!\n‘ŠŽè‚ÌLP‚©‚ç10ƒ|ƒCƒ“ƒg‹z‚¢Žæ‚é!!\n");
-								if(esn!=1){
-									ph=ph+10;
-									eh=eh-10;
-								}//if(esn!=1)
-							}if(d==2){//if(d==1)
-								printf("‰F’ˆ–‚–@Aƒuƒ‰ƒbƒNƒz[ƒ‹Žn“®!!\nŽ©•ª‚ÌLP1‚É‚µ‚ÄA‘ŠŽè‚É15‚Ìƒ_ƒ[ƒW!!\n");
-								ph=1;
-								if(esn!=1){
-									eh=eh-15;
-									if(dou>0){
-										eh=eh-15;
-									}//if(dou>0)
-								}//if(esn!=1)
-							}if(d==3){//if(d==2)
-								printf("‘ŠŽè‚ÆŽ©•ª‚ÌLP‚ð“ü‚ê‘Ö‚¦‚é!\n");
-								ph=ph+eh;
-								eh=ph-eh;
-								ph=ph-eh;
-							}if(d==4){//if(d==3)
-								printf("ƒ[ƒEƒX‚ð¢Š«‚µ‚½!!\n‘ŠŽè‚É13‚Ìƒ_ƒ[ƒW!!\n");
-								if(esn!=1){
-									eh=eh-13;
-									if(dou>0){
-										eh=eh-13;
-									}//if(dou>0)
-								}//if(esn!=1)
-							}if(d==5){//if(d==4)
-								printf("ƒq[ƒŠƒ“ƒOEƒmƒ”ƒ@Žn“®\nŽ©•ª‚ÌLP‚ð10‰ñ•œ!!\n");
-								ph=ph+10;
-							}if(d==6){//if(d==5)
-								printf("ŽŸ‚ÌŽ©•ª‚Ìƒ^[ƒ“I—¹Žž‚Ü‚ÅA”­¶‚·‚é‘S‚Ä‚Ìƒ_ƒ[ƒW‚Í2”{‚É‚È‚é\n");
-								while(dou<3){
-									dou++;
-								}//while(dou<3)
-							}//if(d==6)
-						}if(c==5){
-							printf("•X–‚–@AƒT[ƒNƒ‹ƒtƒƒXƒg”­“®!!\n");
-							printf("‘ŠŽè‚É3‚Ìƒ_ƒ[ƒW!!ŽŸ‚Ì‘ŠŽè‚Ìƒ^[ƒ“‚ðƒXƒLƒbƒv‚·‚éB\n");
-							if(esn!=1){
-								eh=eh-3;
-								if(dou>0){
-									eh=eh-3;
-								}//if(dou>0)
-								ess=1;
-							}//if(esn!=1)
-							ppn++;
-						}if(c==6){//if(c==5)
-							printf("‰F’ˆ–‚–@AƒƒeƒI”­“®!!\n");
-							printf("Ž©g‚ÌLP‚ð1‚É‚µ‚ÄA‘ŠŽè‚É10‚Ìƒ_ƒ[ƒW!!\n");
-							ph=1;
-							if(esn!=1){
-								eh=eh-10;
-								if(dou>0){
-									eh=eh-10;
-								}//if(dou>0)
-							}//if(esn!=1)
-							ppn++;
-						}//if(c==6)
-					}if(ps=='g'){//if(ps=='m')
-						printf("‚ ‚È‚½‚ÍƒK[ƒhƒ_ƒCƒX‚ðU‚è‚Ü‚µ‚½B\n");
-						c=rand()%6+1;
-						if(c==1){
-							printf("ƒNƒŠƒeƒBƒJƒ‹ƒqƒbƒg!!\n");
-							printf("‘ŠŽè‚É4‚Ìƒ_ƒ[ƒW!!AŽŸ‚ÌŽ©•ª‚Ìƒ^[ƒ“‚Ü‚ÅŽó‚¯‚éƒ_ƒ[ƒW‚Í0‚É‚È‚éB\n");
-							psn=1;
-							if(esn!=1){
-								eh=eh-4;
-								if(dou>0){
-									eh=eh-4;
-								}//if(dou>0)
-							}//if(esn!=1)
-							ppn++;
-						}if(c==2){//if(c==1)
-							printf("Žç‚è‚ðŒÅ‚ß‚½!!\n(ŽŸ‚ÌŽ©•ª‚Ìƒ^[ƒ“‚Ü‚ÅŽ©g‚ªŽó‚¯‚éƒ_ƒ[ƒW‚Í0‚É‚È‚é)\n");
-							psn=1;
-							ppn++;
-						}if(c==3){//if(c==2)
-							ppn=0;
-							printf("ƒpƒ“ƒhƒ‰‚Ìƒ_ƒCƒXŽn“®!!\nƒ_ƒCƒX‚ðˆê‰ñU‚ê!!\n");
-							scanf("\n");
-							d=rand()%6+1;
-							if(d==1){
-								printf("ƒMƒKƒhƒŒƒCƒ“Žn“®!!\n‘ŠŽè‚ÌLP‚©‚ç10ƒ|ƒCƒ“ƒg‹z‚¢Žæ‚é!!\n");
-								if(esn!=1){
-									ph=ph+10;
-									eh=eh-10;
-								}//if(esn!=1)
-							}if(d==2){//if(d==1)
-								printf("‰F’ˆ–‚–@Aƒuƒ‰ƒbƒNƒz[ƒ‹Žn“®!!\nŽ©•ª‚ÌLP1‚É‚µ‚ÄA‘ŠŽè‚É15‚Ìƒ_ƒ[ƒW!!\n");
-								ph=1;
-								if(esn!=1){
-									eh=eh-15;
-									if(dou>0){
-										eh=eh-15;
-									}//if(dou>0)
-								}//if(esn!=1)
-							}if(d==3){//if(d==2)
-								printf("‘ŠŽè‚ÆŽ©•ª‚ÌLP‚ð“ü‚ê‘Ö‚¦‚é!\n");
-								ph=ph+eh;
-								eh=ph-eh;
-								ph=ph-eh;
-							}if(d==4){//if(d==3)
-								printf("ƒ[ƒEƒX‚ð¢Š«‚µ‚½!!\n‘ŠŽè‚É13‚Ìƒ_ƒ[ƒW!!\n");
-								if(esn!=1){
-									eh=eh-13;
-									if(dou>0){
-										eh=eh-13;
-									}//if(dou>0)
-								}//if(esn!=1)
-							}if(d==5){//if(d==4)
-								printf("ƒq[ƒŠƒ“ƒOEƒmƒ”ƒ@Žn“®\nŽ©•ª‚ÌLP‚ð10‰ñ•œ!!\n");
-								ph=ph+10;
-							}if(d==6){//if(d==5)
-								printf("ŽŸ‚ÌŽ©•ª‚Ìƒ^[ƒ“I—¹Žž‚Ü‚ÅA”­¶‚·‚é‘S‚Ä‚Ìƒ_ƒ[ƒW‚Í2”{‚É‚È‚é\n");
-								while(dou<3){
-									dou++;
-								}//while(dou<3)
-							}//if(d==6)
-						}if(c==4){//if(c==3)
-							printf("ƒ~ƒX!A‰½‚à‹N‚±‚ç‚È‚©‚Á‚½B\n");
-							ppn++;
-						}if(c==5){//if(c==4)
-							printf("‘ŠŽè‚É1‚Ìƒ_ƒ[ƒW!\n");
-							if(esn!=1){
-								eh=eh-1;
-								if(dou>0){
-									eh=eh-1;
-								}//if(dou>0)
-							}//if(esn!=1)
-							ppn++;
-						}if(c==6){//if(c==5)
-							printf("Žç‚è‚ðŒÅ‚ß‚½!!\n(ŽŸ‚ÌŽ©•ª‚Ìƒ^[ƒ“‚Ü‚ÅAŽ©g‚ªŽó‚¯‚éƒ_ƒ[ƒW‚Í0‚É‚È‚é)\n");
-							psn=1;
-							ppn++;
-						}//if(c==6)
-					}if(ps=='h'){//if(ps=='g')
-						printf("‚ ‚È‚½‚Íƒq[ƒŠƒ“ƒOƒ_ƒCƒX‚ðU‚è‚Ü‚µ‚½B\n");
-						c=rand()%6+1;
-						if(c==1){
-							printf("ƒhƒŒƒCƒ“”­“®!!\n‘ŠŽè‚ÌLP‚©‚ç4ƒ|ƒCƒ“ƒg‹z‚¢Žæ‚é\n");
-							if(esn!=1){
-								eh=eh-4;
-								ph=ph+4;
-							}//if(esn!=1)
-							ppn++;
-						}if(c==2){//if(c==1)
-							ppn=0;
-							printf("ƒpƒ“ƒhƒ‰‚Ìƒ_ƒCƒXŽn“®!!\nƒ_ƒCƒX‚ðˆê‰ñU‚ê!!\n");
-							scanf("\n");
-							d=rand()%6+1;
-							if(d==1){
-								printf("ƒMƒKƒhƒŒƒCƒ“Žn“®!!\n‘ŠŽè‚ÌLP‚©‚ç10ƒ|ƒCƒ“ƒg‹z‚¢Žæ‚é!!\n");
-								if(esn!=1){
-									ph=ph+10;
-									eh=eh-10;
-								}//if(esn!=1)
-							}if(d==2){//if(d==1)
-								printf("‰F’ˆ–‚–@Aƒuƒ‰ƒbƒNƒz[ƒ‹Žn“®!!\nŽ©•ª‚ÌLP1‚É‚µ‚ÄA‘ŠŽè‚É15‚Ìƒ_ƒ[ƒW!!\n");
-								ph=1;
-								if(esn!=1){
-									ph=1;
-									eh=eh-15;
-									if(dou>0){
-										eh=eh-15;
-									}//if(dou>0)
-								}//if(esn!=1)
-							}if(d==3){//if(d==2)
-								printf("‘ŠŽè‚ÆŽ©•ª‚ÌLP‚ð“ü‚ê‘Ö‚¦‚é!\n");
-								ph=ph+eh;
-								eh=ph-eh;
-								ph=ph-eh;
-							}if(d==4){//if(d==3)
-								printf("ƒ[ƒEƒX‚ð¢Š«‚µ‚½!!\n‘ŠŽè‚É13‚Ìƒ_ƒ[ƒW!!\n");
-								if(esn!=1){
-									eh=eh-13;
-									if(dou>0){
-										eh=eh-13;
-									}//if(dou>0)
-								}//if(esn!=1)
-							}if(d==5){//if(d==4)
-								printf("ƒq[ƒŠƒ“ƒOEƒmƒ”ƒ@Žn“®\nŽ©•ª‚ÌLP‚ð10‰ñ•œ!!\n");
-								ph=ph+10;
-							}if(d==6){//if(d==5)
-								printf("ŽŸ‚ÌŽ©•ª‚Ìƒ^[ƒ“I—¹Žž‚Ü‚ÅA”­¶‚·‚é‘S‚Ä‚Ìƒ_ƒ[ƒW‚Í2”{‚É‚È‚é\n");
-								while(dou<3){
-									dou++;
-								}//if(dou>3)
-							}//if(d==6)
-						}if(c==3){//if(c==2)
-							printf("‘ŠŽè‚É2‚Ìƒ_ƒ[ƒW!!\n");
-							if(esn!=1){
-								eh=eh-2;
-								if(dou>0){
-									eh=eh-2;
-								}//if(dou>0)
-							}//if(esn!=1)
-							ppn++;
-						}if(c==4){//if(c==3)
-							printf("Ž©g‚ÌLP‚ð3‰ñ•œ!!\n");
-							ph=ph+3;
-							ppn++;
-						}if(c==5){//if(c==4)
-							printf("Žç‚è‚ðŒÅ‚ß‚½!!/n");
-							printf("(ŽŸ‚ÌŽ©•ª‚Ìƒ^[ƒ“‚Ü‚ÅŽ©g‚ªŽó‚¯‚éƒ_ƒ[ƒW‚Í0‚Æ‚È‚é)\n");
-							psn=1;
-							ppn++;
-						}if(c==6){//if(c==5)
-							printf("ƒ~ƒX!,‰½‚à‹N‚±‚ç‚È‚©‚Á‚½\n");
-							ppn++;
-						}//if(c==6)
-					}if(ps!='c'&&ps!='m'&&ps!='g'&&ps!='h'){//if(ps=='h')
-						printf("ƒRƒ}ƒ“ƒh‚ð‰Ÿ‚µ‚Ä‚¢‚È‚¢‚½‚ßA‚±‚Ìƒ^[ƒ“‚Ís“®‚Å‚«‚Ü‚¹‚ñ\n");
-					}//if(ps!==''&&pw!='m'&&ps!='g'&&ps!='h')
-					if(ppn==6){
-						ppn=0;
-						printf("ƒpƒ“ƒhƒ‰‚Ìƒ_ƒCƒX‹­§Žn“®!!\nƒ_ƒCƒX‚ðˆê‰ñU‚ê!!\n");
-						scanf("\n");
-						d=rand()%6+1;
-						if(d==1){
-							printf("ƒMƒKƒhƒŒƒCƒ“Žn“®!!\n‘ŠŽè‚ÌLP‚©‚ç10ƒ|ƒCƒ“ƒg‹z‚¢Žæ‚é!!\n");
-							if(esn!=1){
-								ph=ph+10;
-								eh=eh-10;
-							}//if(esn!=1)
-						}if(d==2){//if(d==1)
-							printf("‰F’ˆ–‚–@Aƒuƒ‰ƒbƒNƒz[ƒ‹Žn“®!!\nŽ©•ª‚ÌLP1‚É‚µ‚ÄA‘ŠŽè‚É15‚Ìƒ_ƒ[ƒW!!\n");
-							ph=1;
-							if(esn!=1){
-								ph=1;
-								eh=eh-15;
-								if(dou>0){
-									eh=eh-15;
-								}//if(dou>0)
-							}//if(esn!=1)
-						}if(d==3){//if(d==2)
-							printf("‘ŠŽè‚ÆŽ©•ª‚ÌLP‚ð“ü‚ê‘Ö‚¦‚é!\n");
-							ph=ph+eh;
-							eh=ph-eh;
-							ph=ph-eh;
-						}if(d==4){//if(d==3)
-							printf("ƒ[ƒEƒX‚ð¢Š«‚µ‚½!!\n‘ŠŽè‚É13‚Ìƒ_ƒ[ƒW!!\n");
-							if(esn!=1){
-								eh=eh-13;
-								if(dou>0){
-									eh=eh-13;
-								}//if(dou>0)
-							}//if(esn!=1)
-						}if(d==5){//if(d==4)
-							printf("ƒq[ƒŠƒ“ƒOEƒmƒ”ƒ@Žn“®\nŽ©•ª‚ÌLP‚ð10‰ñ•œ!!\n");
-							ph=ph+10;
-						}if(d==6){//if(d==5)
-							printf("ŽŸ‚ÌŽ©•ª‚Ìƒ^[ƒ“I—¹Žž‚Ü‚ÅA”­¶‚·‚é‘S‚Ä‚Ìƒ_ƒ[ƒW‚Í2”{‚É‚È‚é\n");
-							while(dou<3){
-								dou++;
-							}//while(dou<3)
-						}//if(d==6)
-					}//if(ppn==6)
-				}if(pss==1){//if(pss!=1)
-					printf("\n‚ ‚È‚½‚Í‚±‚Ìƒ^[ƒ“s“®‚Å‚«‚Ü‚¹‚ñ\n");
-					pss=0;
-				}//if(pss==1)
-				printf("next\n");
-				getch();
-			}//if(ph>0)
-		}//if(b>a)
-	}//while(ph>0&&eh>0)
-	printf("í“¬I—¹‚Å‚·!\n‚ ‚È‚½‚Ì");
-	if(ph>0){
-		
-		printf("Ÿ‚¿‚Å‚·!!");
-	}else{
-		printf("•‰‚¯‚Å‚·!");
-	}
 	return 0;
+}
+
+void Helps()
+{
+
+	printf("ã‚¹ã‚­ãƒ«ãƒ€ã‚¤ã‚¹ã‚’ç”¨ã„ã¦ã€ç›¸æ‰‹ã®LPã‚’0ã«ã—ã¦ãã ã•ã„\n");
+	printf("ã‚¹ã‚­ãƒ«ãƒ€ã‚¤ã‚¹ã¯ä»¥ä¸‹ã®ã‚¹ãƒšãƒ«ã‚’æŠ¼ã—ã¦ã‹ã‚‰enter keyã‚’æŠ¼ã™ã¨ã€\nãã‚Œãžã‚Œã®ãƒ€ã‚¤ã‚¹ã‚’æŒ¯ã‚‹ã“ã¨ãŒã§ãã¾ã™ã€‚\n");
+	printf("\nc:ã‚¯ãƒªãƒ†ã‚£ã‚«ãƒ«ãƒ€ã‚¤ã‚¹(ã‚¯ãƒªãƒ†ã‚£ã‚«ãƒ«ãƒ’ãƒƒãƒˆã‚’ç‹™ã†ãŸã‚ã®ãƒ€ã‚¤ã‚¹ã§ã™ã€‚\n");
+	printf("å¤–ã‚Œã‚‹å¯èƒ½æ€§ã¯ã‚ã‚Šã¾ã™ãŒã€å½“ãŸã‚Œã°å¼·åŠ›ãªä¸€æ’ƒã«ç‰¹æ®Šèƒ½åŠ›ãŒä»˜ä¸Žã•ã‚Œã¾ã™ã€‚)\n");
+	printf("\nm:ãƒžã‚¸ãƒƒã‚¯ãƒ€ã‚¤ã‚¹(é­”æ³•ã‚’æ‰±ã†ãƒ€ã‚¤ã‚¹ã§ã™ã€‚é­”æ³•ã¯åŸºæœ¬çš„ã«å¤–ã‚Œã‚‹ã“ã¨ã¯ã‚ã‚Šã¾ã›ã‚“ãŒã€\n");
+	printf("é­”æ³•ã®ä¸­ã§ã¯ã€è‡ªã‚‰ã«ãƒ€ãƒ¡ãƒ¼ã‚¸ã‚’å½“ã¦ã‚‹ã‚‚ã®ãŒã‚ã‚Šã¾ã™ã€‚)\n");
+	printf("\ng:ã‚¬ãƒ¼ãƒ‰ãƒ€ã‚¤ã‚¹(ä¸»ã«å®ˆã‚Šã‚’å¼·åŒ–ã™ã‚‹ã“ã¨ã‚’ç›®çš„ã¨ã—ãŸãƒ€ã‚¤ã‚¹ã§ã™\n");
+	printf("ã‚¬ãƒ¼ãƒ‰ã‚’è¡Œã†ã“ã¨ã§å—ã‘ã‚‹ãƒ€ãƒ¡ãƒ¼ã‚¸ã‚’0ã«ã§ãã¾ã™ã€‚)\n");
+	printf("\nh:ãƒ’ãƒ¼ãƒªãƒ³ã‚°ãƒ€ã‚¤ã‚¹(å¤šäººæ•°æˆ¦ã§ä½¿ç”¨ã•ã‚Œã‚‹å›žå¾©ç”¨ãƒ€ã‚¤ã‚¹ã§ã™ã€‚\n");
+	printf("æœ¬æˆ¦ã§ã¯ç›¸æ‰‹ã‚’å›žå¾©ã•ã›ã¦ã—ã¾ã†æã‚ŒãŒã‚ã‚‹ãŸã‚ã€æ³¨æ„ãŒå¿…è¦ã§ã™ã€‚)\n");
+	printf("\nä¸Šè¨˜ã®ã‚‚ã®ä»¥å¤–ã«ã‚‚ç‰¹åˆ¥ãªãƒ€ã‚¤ã‚¹ãŒå­˜åœ¨ã—ã¾ã™\n");
+	printf("\né¸æŠžè‚¢ã®ãªã„ãƒ€ã‚¤ã‚¹ã§ã€ãƒ‘ãƒ³ãƒ‰ãƒ©ã®ãƒ€ã‚¤ã‚¹ã¨è¨€ã„ã¾ã™ã€‚\n");
+	printf("ã“ã®ãƒ€ã‚¤ã‚¹ã¯ç‰¹å®šæ¡ä»¶ã«é”ã—ãŸå ´åˆã«æŒ¯ã‚‹ã“ã¨ãŒã§ãã¾ã™ã€‚\n");
+	printf("å¼·åŠ›ãªåŠ¹æžœã®ã‚‚ã®ã—ã‹ãªã„ãŸã‚ã€ä¸€æ°—ã«æ±ºã‚ã‚‹å ´åˆã«ã¯ã“ã‚ŒãŒå‡ºã‚‹ã“ã¨ã‚’æœ›ã‚€ã¨è‰¯ã„ã§ã—ã‚‡ã†ã€‚\n");
+	printf("ã“ã®ãƒ€ã‚¤ã‚¹ã‚’æŒ¯ã‚‹æ¡ä»¶ã¯ã€é€šå¸¸ã®ã‚¹ã‚­ãƒ«ãƒ€ã‚¤ã‚¹ã«ã‚ˆã£ã¦ã“ã®ãƒ€ã‚¤ã‚¹ã‚’æŒ¯ã‚‹æŒ‡ç¤ºã‚’å—ã‘ãŸå ´åˆã‹ã€\n");
+	printf("ã“ã®ãƒ€ã‚¤ã‚¹ã‚’æŒ¯ã‚‰ãšã«6å›žé€šå¸¸ãƒ€ã‚¤ã‚¹ã®ã¿ã‚’æŒ¯ã£ãŸå ´åˆã«ã“ã®ãƒ€ã‚¤ã‚¹ã‚’æŒ¯ã‚‹ã“ã¨ãŒã§ãã¾ã™ã€‚\n");
+	printf("\nä»¥ä¸ŠãŒç°¡å˜ãªãƒ«ãƒ¼ãƒ«èª¬æ˜Žã¨ãªã‚Šã¾ã™ã€‚\n");
+}
+
+void StartDice()
+{
+
+	printf("å…ˆè¡Œå¾Œæ”»ã‚’æ±ºã‚ã‚‹ãƒ€ã‚¤ã‚¹ã§ã™\n");
+	printf("enter keyã‚’æŠ¼ã—ã¦ãƒ€ã‚¤ã‚¹ã‚’æŒ¯ã£ã¦ãã ã•ã„\n");
+
+	while (a == b)
+	{
+
+		scanf("\n");
+		a = rand() % 20 + 1;
+		b = rand() % 20 + 1;
+
+		printf("ã‚ãªãŸã®ç›®ã¯%dã§ã™ã€‚\n", a);
+		printf("ç›¸æ‰‹ã®ç›®ã¯%dã§ã™ã€‚\n", b);
+
+		if (a > b)
+		{
+			printf("ã‚ãªãŸãŒå…ˆè¡Œã§ã™ã€‚\n");
+		}
+		if (a < b)
+		{ //if(a>b)
+			printf("ã‚ãªãŸã¯å¾Œæ”»ã§ã™ã€‚\n");
+		}
+		if (a == b)
+		{ //if(a<b)
+			printf("ã‚ã„ã“ã§ã™ã€ã‚‚ã†ä¸€åº¦æŒ¯ã£ã¦ãã ã•ã„ã€‚\n");
+		} //if(a==b)
+
+		printf("next\n");
+		getchar();
+	}
+}
+
+void Result()
+{
+	printf("æˆ¦é—˜çµ‚äº†ã§ã™!\nã‚ãªãŸã®");
+	if (ph > 0)
+	{
+		printf("å‹ã¡ã§ã™!!");
+	}
+	else
+	{
+		printf("è² ã‘ã§ã™!");
+	}
+}
+
+void Game()
+{
+
+	while (ph > 0 && eh > 0)
+	{
+		FirstPlayer();
+		FirstEnemy();
+	} //while(ph>0&&eh>0)
+}
+
+void FirstPlayer()
+{
+
+	if (a > b)
+	{
+		DicePlayer();
+		DiceEnemy();
+	}
+}
+
+void FirstEnemy()
+{
+
+	if (b > a)
+	{ //if(a>b)
+		DiceEnemy();
+		DicePlayer();
+
+	} //if(b>a)
+}
+
+void DicePlayer()
+{
+
+	if (eh > 0 && ph > 0)
+	{
+
+		dou--;
+		psn = 0;
+		printf("\nâ–³ã‚ãªãŸã®LP:%d\nâ—¯ç›¸æ‰‹ã®LP:%d\n", ph, eh);
+		printf("next\n");
+		getchar();
+
+		printf("â–³ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿\n");
+		if (pss != 1)
+		{
+			if (f == 1)
+			{
+				printf("ãƒ•ã‚¡ã‚¤ã‚¢ãƒ¼ãƒœãƒ¼ãƒ«ã®æµã‚Œå¼¾ãŒå½“ãŸã£ãŸ!!\n");
+				ph = ph - 2;
+				if (dou > 0)
+				{
+					ph = ph - 2;
+				} //if(dou>0)
+				f = 0;
+			} //if(f==1)
+			printf("\nâ–³ã‚ãªãŸã®ã‚¿ãƒ¼ãƒ³ã§ã™\n");
+			printf("c;ã‚¯ãƒªãƒ†ã‚£ã‚«ãƒ«ãƒ€ã‚¤ã‚¹\n");
+			printf("m;ãƒžã‚¸ãƒƒã‚¯ãƒ€ã‚¤ã‚¹\n");
+			printf("h;ãƒ’ãƒ¼ãƒªãƒ³ã‚°ãƒ€ã‚¤ã‚¹\n");
+			printf("g;ã‚¬ãƒ¼ãƒ‰ãƒ€ã‚¤ã‚¹\n");
+			printf("\nä½¿ã†ãƒ€ã‚¤ã‚¹ã‚’å®£è¨€ã—ã¦ã€ãƒ€ã‚¤ã‚¹ã‚’æŒ¯ã£ã¦ãã ã•ã„:");
+			scanf("%c", &ps);
+			if (ps == 'c')
+			{
+				printf("ã‚ãªãŸã¯ã‚¯ãƒªãƒ†ã‚£ã‚«ãƒ«ãƒ€ã‚¤ã‚¹ã‚’æŒ¯ã‚Šã¾ã—ãŸã€‚\n");
+				c = rand() % 6 + 1;
+				if (c == 1)
+				{
+					printf("ã‚¯ãƒªãƒ†ã‚£ã‚«ãƒ«ãƒ’ãƒƒãƒˆ!!\n");
+					printf("ç›¸æ‰‹ã«7ã®ãƒ€ãƒ¡ãƒ¼ã‚¸!!\n");
+					if (esn != 1)
+					{
+						eh = eh - 7;
+						if (dou > 0)
+						{
+							eh = eh - 7;
+						} //if(dou>0)
+					}	  //if(esn!=1)
+					ppn++;
+				}
+				if (c == 2)
+				{ //if(c==
+					printf("ãƒŸã‚¹!ç›¸æ‰‹ã«0ãƒ€ãƒ¡ãƒ¼ã‚¸\n");
+					ppn++;
+				}
+				if (c == 3)
+				{ //if(c==2)
+					printf("ã‚¯ãƒªãƒ†ã‚£ã‚«ãƒ«ãƒ’ãƒƒãƒˆ!!\n");
+					printf("ç›¸æ‰‹ã«5ã®ãƒ€ãƒ¡ãƒ¼ã‚¸!!æ¬¡ã®ç›¸æ‰‹ã®ã‚¿ãƒ¼ãƒ³ã‚’ã‚¹ã‚­ãƒƒãƒ—ã™ã‚‹ã€‚\n");
+					if (esn != 1)
+					{
+						eh = eh - 5;
+						if (dou > 0)
+						{
+							eh = eh - 5;
+						} //if(dou>0)
+						ess = 1;
+					} //if(esn!=1)
+					ppn++;
+				}
+				if (c == 4)
+				{ //if(c==3)
+					printf("ç›¸æ‰‹ã«2ã®ãƒ€ãƒ¡ãƒ¼ã‚¸\n");
+					if (esn != 1)
+					{
+						eh = eh - 2;
+						if (dou > 0)
+						{
+							eh = eh - 2;
+						} //if(dou>0)
+					}	  //if(esn!=1)
+					ppn++;
+				}
+				if (c == 5)
+				{ //if(c==4)
+					ppn = 0;
+					printf("ãƒ‘ãƒ³ãƒ‰ãƒ©ã®ãƒ€ã‚¤ã‚¹å§‹å‹•!!\nãƒ€ã‚¤ã‚¹ã‚’ä¸€å›žæŒ¯ã‚Œ!!\n");
+					scanf("\n");
+					d = rand() % 6 + 1;
+					if (d == 1)
+					{
+						printf("ã‚®ã‚¬ãƒ‰ãƒ¬ã‚¤ãƒ³å§‹å‹•!!\nç›¸æ‰‹ã®LPã‹ã‚‰10ãƒã‚¤ãƒ³ãƒˆå¸ã„å–ã‚‹!!\n");
+						if (esn != 1)
+						{
+							ph = ph + 10;
+							eh = eh - 10;
+						} //if(esn!=1)
+					}
+					if (d == 2)
+					{ //if(c==1)
+						printf("å®‡å®™é­”æ³•ã€ãƒ–ãƒ©ãƒƒã‚¯ãƒ›ãƒ¼ãƒ«å§‹å‹•!!\nè‡ªåˆ†ã®LP1ã«ã—ã¦ã€ç›¸æ‰‹ã«15ã®ãƒ€ãƒ¡ãƒ¼ã‚¸!!\n");
+						ph = 1;
+						if (esn != 1)
+						{
+							ph = 1;
+							eh = eh - 15;
+							if (dou > 0)
+							{
+								eh = eh - 15;
+							} //if(dou>0)
+						}	  //if(esn!=1)
+					}
+					if (d == 3)
+					{ //if(d==2)
+						printf("ç›¸æ‰‹ã¨è‡ªåˆ†ã®LPã‚’å…¥ã‚Œæ›¿ãˆã‚‹!\n");
+						ph = ph + eh;
+						eh = ph - eh;
+						ph = ph - eh;
+					}
+					if (d == 4)
+					{ //if(d==3)
+						printf("ã‚¼ã‚¦ã‚¹ã‚’å¬å–šã—ãŸ!!\nç›¸æ‰‹ã«13ã®ãƒ€ãƒ¡ãƒ¼ã‚¸!!\n");
+						if (esn != 1)
+						{
+							eh = eh - 13;
+							if (dou > 0)
+							{
+								eh = eh - 13;
+							} //if(dou>0)
+						}	  //if(esn!=1)
+					}
+					if (d == 5)
+					{ //if(d==4)
+						printf("ãƒ’ãƒ¼ãƒªãƒ³ã‚°ãƒ»ãƒŽãƒ´ã‚¡å§‹å‹•\nè‡ªåˆ†ã®LPã‚’10å›žå¾©!!\n");
+						ph = ph + 10;
+					}
+					if (d == 6)
+					{ //if(d==5)
+						printf("æ¬¡ã®è‡ªåˆ†ã®ã‚¿ãƒ¼ãƒ³çµ‚äº†æ™‚ã¾ã§ã€ç™ºç”Ÿã™ã‚‹å…¨ã¦ã®ãƒ€ãƒ¡ãƒ¼ã‚¸ã¯2å€ã«ãªã‚‹\n");
+						while (dou < 3)
+						{
+							dou++;
+						} //while(dou<3)
+					}	  //if(d==6)
+				}
+				if (c == 6)
+				{ //if(c==5)
+					printf("ã‚¯ãƒªãƒ†ã‚£ã‚«ãƒ«ãƒ’ãƒƒãƒˆ!!\n");
+					printf("ç›¸æ‰‹ã«5ã®ãƒ€ãƒ¡ãƒ¼ã‚¸!!æ¬¡ã®ç›¸æ‰‹ã®ã‚¿ãƒ¼ãƒ³ã‚’ã‚¹ã‚­ãƒƒãƒ—ã™ã‚‹ã€‚\n");
+					if (esn != 1)
+					{
+						eh = eh - 5;
+						if (dou > 0)
+						{
+							eh = eh - 5;
+						} //if(dou>0)
+						ess = 1;
+					} //if(esn!=1)
+					ppn++;
+				} //if(c==6)
+			}
+			if (ps == 'm')
+			{ //if(ps=='c')
+				printf("ã‚ãªãŸã¯ãƒžã‚¸ãƒƒã‚¯ãƒ€ã‚¤ã‚¹ã‚’æŒ¯ã‚Šã¾ã—ãŸã€‚\n");
+				c = rand() % 6 + 1;
+				if (c == 1)
+				{
+					printf("ç‚Žé­”æ³•ã€ãƒ•ã‚¡ã‚¤ã‚¢ãƒ¼ãƒœãƒ¼ãƒ«ç™ºå‹•!!\n");
+					printf("ç›¸æ‰‹ã«2ã®ãƒ€ãƒ¡ãƒ¼ã‚¸!!,æ¬¡ã«ãƒ€ã‚¤ã‚¹ã‚’æŒ¯ã‚‹ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã«2ã®ãƒ€ãƒ¡ãƒ¼ã‚¸ã‚’ä¸Žãˆã‚‹ã€‚\n");
+					if (esn != 1)
+					{
+						eh = eh - 2;
+						if (dou > 0)
+						{
+							eh = eh - 2;
+						} //if(dou>0)
+					}	  //if(esn!=1)
+					f = 1;
+					ppn++;
+				}
+				if (c == 2)
+				{ //if(c==1)
+					printf("é›·é­”æ³•ã€ã‚µãƒ³ãƒ€ãƒ¼ãƒœãƒ«ãƒˆç™ºå‹•!!\n");
+					printf("ãŠäº’ã„ã«4ã®ãƒ€ãƒ¡ãƒ¼ã‚¸!!\n");
+					ph = ph - 4;
+					if (dou > 0)
+					{
+						ph = ph - 4;
+					} //if(dou>0)
+					if (esn != 1)
+					{
+						eh = eh - 4;
+						if (dou > 0)
+						{
+							eh = eh - 4;
+						} //if(dou>0)
+					}	  //if(esn!=1)
+					ppn++;
+				}
+				if (c == 3)
+				{ //if(c==2)
+					printf("ãƒŸã‚¹!ã€ç›¸æ‰‹ã«0ã®ãƒ€ãƒ¡ãƒ¼ã‚¸\n");
+					ppn++;
+				}
+				if (c == 4)
+				{ //if(c==3)
+					ppn = 0;
+					printf("ãƒ‘ãƒ³ãƒ‰ãƒ©ã®ãƒ€ã‚¤ã‚¹å§‹å‹•!!\nãƒ€ã‚¤ã‚¹ã‚’ä¸€å›žæŒ¯ã‚Œ!!\n");
+					scanf("\n");
+					d = rand() % 6 + 1;
+					if (d == 1)
+					{
+						printf("ã‚®ã‚¬ãƒ‰ãƒ¬ã‚¤ãƒ³å§‹å‹•!!\nç›¸æ‰‹ã®LPã‹ã‚‰10ãƒã‚¤ãƒ³ãƒˆå¸ã„å–ã‚‹!!\n");
+						if (esn != 1)
+						{
+							ph = ph + 10;
+							eh = eh - 10;
+						} //if(esn!=1)
+					}
+					if (d == 2)
+					{ //if(d==1)
+						printf("å®‡å®™é­”æ³•ã€ãƒ–ãƒ©ãƒƒã‚¯ãƒ›ãƒ¼ãƒ«å§‹å‹•!!\nè‡ªåˆ†ã®LP1ã«ã—ã¦ã€ç›¸æ‰‹ã«15ã®ãƒ€ãƒ¡ãƒ¼ã‚¸!!\n");
+						ph = 1;
+						if (esn != 1)
+						{
+							eh = eh - 15;
+							if (dou > 0)
+							{
+								eh = eh - 15;
+							} //if(dou>0)
+						}	  //if(esn!=1)
+					}
+					if (d == 3)
+					{ //if(d==2)
+						printf("ç›¸æ‰‹ã¨è‡ªåˆ†ã®LPã‚’å…¥ã‚Œæ›¿ãˆã‚‹!\n");
+						ph = ph + eh;
+						eh = ph - eh;
+						ph = ph - eh;
+					}
+					if (d == 4)
+					{ //if(d==3)
+						printf("ã‚¼ã‚¦ã‚¹ã‚’å¬å–šã—ãŸ!!\nç›¸æ‰‹ã«13ã®ãƒ€ãƒ¡ãƒ¼ã‚¸!!\n");
+						if (esn != 1)
+						{
+							eh = eh - 13;
+							if (dou > 0)
+							{
+								eh = eh - 13;
+							} //if(dou>0)
+						}	  //if(esn!=1)
+					}
+					if (d == 5)
+					{ //if(d==4)
+						printf("ãƒ’ãƒ¼ãƒªãƒ³ã‚°ãƒ»ãƒŽãƒ´ã‚¡å§‹å‹•\nè‡ªåˆ†ã®LPã‚’10å›žå¾©!!\n");
+						ph = ph + 10;
+					}
+					if (d == 6)
+					{ //if(d==5)
+						printf("æ¬¡ã®è‡ªåˆ†ã®ã‚¿ãƒ¼ãƒ³çµ‚äº†æ™‚ã¾ã§ã€ç™ºç”Ÿã™ã‚‹å…¨ã¦ã®ãƒ€ãƒ¡ãƒ¼ã‚¸ã¯2å€ã«ãªã‚‹\n");
+						while (dou < 3)
+						{
+							dou++;
+						} //while(dou<3)
+					}	  //if(d==6)
+				}
+				if (c == 5)
+				{
+					printf("æ°·é­”æ³•ã€ã‚µãƒ¼ã‚¯ãƒ«ãƒ•ãƒ­ã‚¹ãƒˆç™ºå‹•!!\n");
+					printf("ç›¸æ‰‹ã«3ã®ãƒ€ãƒ¡ãƒ¼ã‚¸!!æ¬¡ã®ç›¸æ‰‹ã®ã‚¿ãƒ¼ãƒ³ã‚’ã‚¹ã‚­ãƒƒãƒ—ã™ã‚‹ã€‚\n");
+					if (esn != 1)
+					{
+						eh = eh - 3;
+						if (dou > 0)
+						{
+							eh = eh - 3;
+						} //if(dou>0)
+						ess = 1;
+					} //if(esn!=1)
+					ppn++;
+				}
+				if (c == 6)
+				{ //if(c==5)
+					printf("å®‡å®™é­”æ³•ã€ãƒ¡ãƒ†ã‚ªç™ºå‹•!!\n");
+					printf("è‡ªèº«ã®LPã‚’1ã«ã—ã¦ã€ç›¸æ‰‹ã«10ã®ãƒ€ãƒ¡ãƒ¼ã‚¸!!\n");
+					ph = 1;
+					if (esn != 1)
+					{
+						eh = eh - 10;
+						if (dou > 0)
+						{
+							eh = eh - 10;
+						} //if(dou>0)
+					}	  //if(esn!=1)
+					ppn++;
+				} //if(c==6)
+			}
+			if (ps == 'g')
+			{ //if(ps=='m')
+				printf("ã‚ãªãŸã¯ã‚¬ãƒ¼ãƒ‰ãƒ€ã‚¤ã‚¹ã‚’æŒ¯ã‚Šã¾ã—ãŸã€‚\n");
+				c = rand() % 6 + 1;
+				if (c == 1)
+				{
+					printf("ã‚¯ãƒªãƒ†ã‚£ã‚«ãƒ«ãƒ’ãƒƒãƒˆ!!\n");
+					printf("ç›¸æ‰‹ã«4ã®ãƒ€ãƒ¡ãƒ¼ã‚¸!!ã€æ¬¡ã®è‡ªåˆ†ã®ã‚¿ãƒ¼ãƒ³ã¾ã§å—ã‘ã‚‹ãƒ€ãƒ¡ãƒ¼ã‚¸ã¯0ã«ãªã‚‹ã€‚\n");
+					psn = 1;
+					if (esn != 1)
+					{
+						eh = eh - 4;
+						if (dou > 0)
+						{
+							eh = eh - 4;
+						} //if(dou>0)
+					}	  //if(esn!=1)
+					ppn++;
+				}
+				if (c == 2)
+				{ //if(c==1)
+					printf("å®ˆã‚Šã‚’å›ºã‚ãŸ!!\n(æ¬¡ã®è‡ªåˆ†ã®ã‚¿ãƒ¼ãƒ³ã¾ã§è‡ªèº«ãŒå—ã‘ã‚‹ãƒ€ãƒ¡ãƒ¼ã‚¸ã¯0ã«ãªã‚‹)\n");
+					psn = 1;
+					ppn++;
+				}
+				if (c == 3)
+				{ //if(c==2)
+					ppn = 0;
+					printf("ãƒ‘ãƒ³ãƒ‰ãƒ©ã®ãƒ€ã‚¤ã‚¹å§‹å‹•!!\nãƒ€ã‚¤ã‚¹ã‚’ä¸€å›žæŒ¯ã‚Œ!!\n");
+					scanf("\n");
+					d = rand() % 6 + 1;
+					if (d == 1)
+					{
+						printf("ã‚®ã‚¬ãƒ‰ãƒ¬ã‚¤ãƒ³å§‹å‹•!!\nç›¸æ‰‹ã®LPã‹ã‚‰10ãƒã‚¤ãƒ³ãƒˆå¸ã„å–ã‚‹!!\n");
+						if (esn != 1)
+						{
+							ph = ph + 10;
+							eh = eh - 10;
+						} //if(esn!=1)
+					}
+					if (d == 2)
+					{ //if(d==1)
+						printf("å®‡å®™é­”æ³•ã€ãƒ–ãƒ©ãƒƒã‚¯ãƒ›ãƒ¼ãƒ«å§‹å‹•!!\nè‡ªåˆ†ã®LP1ã«ã—ã¦ã€ç›¸æ‰‹ã«15ã®ãƒ€ãƒ¡ãƒ¼ã‚¸!!\n");
+						ph = 1;
+						if (esn != 1)
+						{
+							eh = eh - 15;
+							if (dou > 0)
+							{
+								eh = eh - 15;
+							} //if(dou>0)
+						}	  //if(esn!=1)
+					}
+					if (d == 3)
+					{ //if(d==2)
+						printf("ç›¸æ‰‹ã¨è‡ªåˆ†ã®LPã‚’å…¥ã‚Œæ›¿ãˆã‚‹!\n");
+						ph = ph + eh;
+						eh = ph - eh;
+						ph = ph - eh;
+					}
+					if (d == 4)
+					{ //if(d==3)
+						printf("ã‚¼ã‚¦ã‚¹ã‚’å¬å–šã—ãŸ!!\nç›¸æ‰‹ã«13ã®ãƒ€ãƒ¡ãƒ¼ã‚¸!!\n");
+						if (esn != 1)
+						{
+							eh = eh - 13;
+							if (dou > 0)
+							{
+								eh = eh - 13;
+							} //if(dou>0)
+						}	  //if(esn!=1)
+					}
+					if (d == 5)
+					{ //if(d==4)
+						printf("ãƒ’ãƒ¼ãƒªãƒ³ã‚°ãƒ»ãƒŽãƒ´ã‚¡å§‹å‹•\nè‡ªåˆ†ã®LPã‚’10å›žå¾©!!\n");
+						ph = ph + 10;
+					}
+					if (d == 6)
+					{ //if(d==5)
+						printf("æ¬¡ã®è‡ªåˆ†ã®ã‚¿ãƒ¼ãƒ³çµ‚äº†æ™‚ã¾ã§ã€ç™ºç”Ÿã™ã‚‹å…¨ã¦ã®ãƒ€ãƒ¡ãƒ¼ã‚¸ã¯2å€ã«ãªã‚‹\n");
+						while (dou < 3)
+						{
+							dou++;
+						} //while(dou<3)
+					}	  //if(d==6)
+				}
+				if (c == 4)
+				{ //if(c==3)
+					printf("ãƒŸã‚¹!ã€ä½•ã‚‚èµ·ã“ã‚‰ãªã‹ã£ãŸã€‚\n");
+					ppn++;
+				}
+				if (c == 5)
+				{ //if(c==4)
+					printf("ç›¸æ‰‹ã«1ã®ãƒ€ãƒ¡ãƒ¼ã‚¸!\n");
+					if (esn != 1)
+					{
+						eh = eh - 1;
+						if (dou > 0)
+						{
+							eh = eh - 1;
+						} //if(dou>0)
+					}	  //if(esn!=1)
+					ppn++;
+				}
+				if (c == 6)
+				{ //if(c==5)
+					printf("å®ˆã‚Šã‚’å›ºã‚ãŸ!!\n(æ¬¡ã®è‡ªåˆ†ã®ã‚¿ãƒ¼ãƒ³ã¾ã§ã€è‡ªèº«ãŒå—ã‘ã‚‹ãƒ€ãƒ¡ãƒ¼ã‚¸ã¯0ã«ãªã‚‹)\n");
+					psn = 1;
+					ppn++;
+				} //if(c==6)
+			}
+			if (ps == 'h')
+			{ //if(ps=='g')
+				printf("ã‚ãªãŸã¯ãƒ’ãƒ¼ãƒªãƒ³ã‚°ãƒ€ã‚¤ã‚¹ã‚’æŒ¯ã‚Šã¾ã—ãŸã€‚\n");
+				c = rand() % 6 + 1;
+				if (c == 1)
+				{
+					printf("ãƒ‰ãƒ¬ã‚¤ãƒ³ç™ºå‹•!!\nç›¸æ‰‹ã®LPã‹ã‚‰4ãƒã‚¤ãƒ³ãƒˆå¸ã„å–ã‚‹\n");
+					if (esn != 1)
+					{
+						eh = eh - 4;
+						ph = ph + 4;
+					} //if(esn!=1)
+					ppn++;
+				}
+				if (c == 2)
+				{ //if(c==1)
+					ppn = 0;
+					printf("ãƒ‘ãƒ³ãƒ‰ãƒ©ã®ãƒ€ã‚¤ã‚¹å§‹å‹•!!\nãƒ€ã‚¤ã‚¹ã‚’ä¸€å›žæŒ¯ã‚Œ!!\n");
+					scanf("\n");
+					d = rand() % 6 + 1;
+					if (d == 1)
+					{
+						printf("ã‚®ã‚¬ãƒ‰ãƒ¬ã‚¤ãƒ³å§‹å‹•!!\nç›¸æ‰‹ã®LPã‹ã‚‰10ãƒã‚¤ãƒ³ãƒˆå¸ã„å–ã‚‹!!\n");
+						if (esn != 1)
+						{
+							ph = ph + 10;
+							eh = eh - 10;
+						} //if(esn!=1)
+					}
+					if (d == 2)
+					{ //if(d==1)
+						printf("å®‡å®™é­”æ³•ã€ãƒ–ãƒ©ãƒƒã‚¯ãƒ›ãƒ¼ãƒ«å§‹å‹•!!\nè‡ªåˆ†ã®LP1ã«ã—ã¦ã€ç›¸æ‰‹ã«15ã®ãƒ€ãƒ¡ãƒ¼ã‚¸!!\n");
+						ph = 1;
+						if (esn != 1)
+						{
+							ph = 1;
+							eh = eh - 15;
+							if (dou > 0)
+							{
+								eh = eh - 15;
+							} //if(dou>0)
+						}	  //if(esn!=1)
+					}
+					if (d == 3)
+					{ //if(d==2)
+						printf("ç›¸æ‰‹ã¨è‡ªåˆ†ã®LPã‚’å…¥ã‚Œæ›¿ãˆã‚‹!\n");
+						ph = ph + eh;
+						eh = ph - eh;
+						ph = ph - eh;
+					}
+					if (d == 4)
+					{ //if(d==3)
+						printf("ã‚¼ã‚¦ã‚¹ã‚’å¬å–šã—ãŸ!!\nç›¸æ‰‹ã«13ã®ãƒ€ãƒ¡ãƒ¼ã‚¸!!\n");
+						if (esn != 1)
+						{
+							eh = eh - 13;
+							if (dou > 0)
+							{
+								eh = eh - 13;
+							} //if(dou>0)
+						}	  //if(esn!=1)
+					}
+					if (d == 5)
+					{ //if(d==4)
+						printf("ãƒ’ãƒ¼ãƒªãƒ³ã‚°ãƒ»ãƒŽãƒ´ã‚¡å§‹å‹•\nè‡ªåˆ†ã®LPã‚’10å›žå¾©!!\n");
+						ph = ph + 10;
+					}
+					if (d == 6)
+					{ //if(d==5)
+						printf("æ¬¡ã®è‡ªåˆ†ã®ã‚¿ãƒ¼ãƒ³çµ‚äº†æ™‚ã¾ã§ã€ç™ºç”Ÿã™ã‚‹å…¨ã¦ã®ãƒ€ãƒ¡ãƒ¼ã‚¸ã¯2å€ã«ãªã‚‹\n");
+						while (dou < 3)
+						{
+							dou++;
+						} //if(dou>3)
+					}	  //if(d==6)
+				}
+				if (c == 3)
+				{ //if(c==2)
+					printf("ç›¸æ‰‹ã«2ã®ãƒ€ãƒ¡ãƒ¼ã‚¸!!\n");
+					if (esn != 1)
+					{
+						eh = eh - 2;
+						if (dou > 0)
+						{
+							eh = eh - 2;
+						} //if(dou>0)
+					}	  //if(esn!=1)
+					ppn++;
+				}
+				if (c == 4)
+				{ //if(c==3)
+					printf("è‡ªèº«ã®LPã‚’3å›žå¾©!!\n");
+					ph = ph + 3;
+					ppn++;
+				}
+				if (c == 5)
+				{ //if(c==4)
+					printf("å®ˆã‚Šã‚’å›ºã‚ãŸ!!/n");
+					printf("(æ¬¡ã®è‡ªåˆ†ã®ã‚¿ãƒ¼ãƒ³ã¾ã§è‡ªèº«ãŒå—ã‘ã‚‹ãƒ€ãƒ¡ãƒ¼ã‚¸ã¯0ã¨ãªã‚‹)\n");
+					psn = 1;
+					ppn++;
+				}
+				if (c == 6)
+				{ //if(c==5)
+					printf("ãƒŸã‚¹!,ä½•ã‚‚èµ·ã“ã‚‰ãªã‹ã£ãŸ\n");
+					ppn++;
+				} //if(c==6)
+			}
+			if (ps != 'c' && ps != 'm' && ps != 'g' && ps != 'h')
+			{ //if(ps=='h')
+				printf("ã‚³ãƒžãƒ³ãƒ‰ã‚’æŠ¼ã—ã¦ã„ãªã„ãŸã‚ã€ã“ã®ã‚¿ãƒ¼ãƒ³ã¯è¡Œå‹•ã§ãã¾ã›ã‚“\n");
+			} //if(ps!==''&&pw!='m'&&ps!='g'&&ps!='h')
+			if (ppn == 6)
+			{
+				ppn = 0;
+				printf("ãƒ‘ãƒ³ãƒ‰ãƒ©ã®ãƒ€ã‚¤ã‚¹å¼·åˆ¶å§‹å‹•!!\nãƒ€ã‚¤ã‚¹ã‚’ä¸€å›žæŒ¯ã‚Œ!!\n");
+				scanf("\n");
+				d = rand() % 6 + 1;
+				if (d == 1)
+				{
+					printf("ã‚®ã‚¬ãƒ‰ãƒ¬ã‚¤ãƒ³å§‹å‹•!!\nç›¸æ‰‹ã®LPã‹ã‚‰10ãƒã‚¤ãƒ³ãƒˆå¸ã„å–ã‚‹!!\n");
+					if (esn != 1)
+					{
+						ph = ph + 10;
+						eh = eh - 10;
+					} //if(esn!=1)
+				}
+				if (d == 2)
+				{ //if(d==1)
+					printf("å®‡å®™é­”æ³•ã€ãƒ–ãƒ©ãƒƒã‚¯ãƒ›ãƒ¼ãƒ«å§‹å‹•!!\nè‡ªåˆ†ã®LP1ã«ã—ã¦ã€ç›¸æ‰‹ã«15ã®ãƒ€ãƒ¡ãƒ¼ã‚¸!!\n");
+					ph = 1;
+					if (esn != 1)
+					{
+						ph = 1;
+						eh = eh - 15;
+						if (dou > 0)
+						{
+							eh = eh - 15;
+						} //if(dou>0)
+					}	  //if(esn!=1)
+				}
+				if (d == 3)
+				{ //if(d==2)
+					printf("ç›¸æ‰‹ã¨è‡ªåˆ†ã®LPã‚’å…¥ã‚Œæ›¿ãˆã‚‹!\n");
+					ph = ph + eh;
+					eh = ph - eh;
+					ph = ph - eh;
+				}
+				if (d == 4)
+				{ //if(d==3)
+					printf("ã‚¼ã‚¦ã‚¹ã‚’å¬å–šã—ãŸ!!\nç›¸æ‰‹ã«13ã®ãƒ€ãƒ¡ãƒ¼ã‚¸!!\n");
+					if (esn != 1)
+					{
+						eh = eh - 13;
+						if (dou > 0)
+						{
+							eh = eh - 13;
+						} //if(dou>0)
+					}	  //if(esn!=1)
+				}
+				if (d == 5)
+				{ //if(d==4)
+					printf("ãƒ’ãƒ¼ãƒªãƒ³ã‚°ãƒ»ãƒŽãƒ´ã‚¡å§‹å‹•\nè‡ªåˆ†ã®LPã‚’10å›žå¾©!!\n");
+					ph = ph + 10;
+				}
+				if (d == 6)
+				{ //if(d==5)
+					printf("æ¬¡ã®è‡ªåˆ†ã®ã‚¿ãƒ¼ãƒ³çµ‚äº†æ™‚ã¾ã§ã€ç™ºç”Ÿã™ã‚‹å…¨ã¦ã®ãƒ€ãƒ¡ãƒ¼ã‚¸ã¯2å€ã«ãªã‚‹\n");
+					while (dou < 3)
+					{
+						dou++;
+					} //while(dou<3)
+				}	  //if(d==6)
+			}		  //if(ppn==6)
+		}
+		if (pss == 1)
+		{ //if(pss!=1)
+			printf("\nã‚ãªãŸã¯ã“ã®ã‚¿ãƒ¼ãƒ³è¡Œå‹•ã§ãã¾ã›ã‚“\n");
+			pss = 0;
+		} //if(pss==1)
+		printf("next\n");
+		getchar();
+	} //if(ph>0)
+}
+
+void DiceEnemy()
+{
+
+	if (eh > 0 && ph > 0)
+	{
+		dou--;
+		esn = 0;
+
+		printf("\nâ–³ã‚ãªãŸã®LP:%d\nâ—¯ç›¸æ‰‹ã®LP:%d\n", ph, eh);
+		printf("next\n");
+		getchar();
+		printf("â—¯ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿ï¼¿\n");
+		if (ess != 1)
+		{
+			if (f == 1)
+			{
+				printf("ãƒ•ã‚¡ã‚¤ã‚¢ãƒ¼ãƒœãƒ¼ãƒ«ã®æµã‚Œå¼¾ãŒå½“ãŸã£ãŸ!!\n");
+				eh = eh - 2;
+				if (dou > 0)
+				{
+					eh = eh - 2;
+				} //if(dou>0)
+				f = 0;
+			} //if(==1)
+			printf("\nâ—¯ç›¸æ‰‹ã®ã‚¿ãƒ¼ãƒ³ã§ã™\n");
+			getchar();
+			etd = 1;
+			if (epn != 6)
+			{
+				if (10 > eh && eh > 0 && etd == 1)
+				{
+					etd = 0;
+					ep = rand() % 2 + 1;
+					if (ep == 1)
+					{
+						printf("ç›¸æ‰‹ã¯ã‚¬ãƒ¼ãƒ‰ãƒ€ã‚¤ã‚¹ã‚’æŒ¯ã‚Šã¾ã—ãŸ\n");
+						c = rand() % 6 + 1;
+						if (c == 1)
+						{
+							printf("ã‚¯ãƒªãƒ†ã‚£ã‚«ãƒ«ãƒ’ãƒƒãƒˆ!!\n");
+							printf("ã‚ãªãŸã«4ã®ãƒ€ãƒ¡ãƒ¼ã‚¸!!ã€æ¬¡ã®ç›¸æ‰‹ã®ã‚¿ãƒ¼ãƒ³ã¾ã§ç›¸æ‰‹ãŒå—ã‘ã‚‹ãƒ€ãƒ¡ãƒ¼ã‚¸ã¯0ã«ãªã‚‹ã€‚\n");
+							esn = 1;
+							if (psn != 1)
+							{
+								ph = ph - 4;
+								if (dou > 0)
+								{
+									ph = ph - 4;
+								} //if(dou>0)
+							}	  //if(psn!=1)
+							epn++;
+						}
+						if (c == 2)
+						{ //if(c==1)
+							printf("å®ˆã‚Šã‚’å›ºã‚ãŸ!!\n(æ¬¡ã®ç›¸æ‰‹ã®ã‚¿ãƒ¼ãƒ³ã¾ã§ç›¸æ‰‹ãŒå—ã‘ã‚‹ãƒ€ãƒ¡ãƒ¼ã‚¸ã¯0ã«ãªã‚‹)\n");
+							esn = 1;
+							epn++;
+						}
+						if (c == 3)
+						{ //if(c==2)
+							epn = 0;
+							printf("ãƒ‘ãƒ³ãƒ‰ãƒ©ã®ãƒ€ã‚¤ã‚¹å§‹å‹•!!\nãƒ€ã‚¤ã‚¹ã‚’ä¸€å›žæŒ¯ã‚Œ!!\n");
+							d = rand() % 6 + 1;
+							if (d == 1)
+							{
+								printf("ã‚®ã‚¬ãƒ‰ãƒ¬ã‚¤ãƒ³å§‹å‹•!!\nã‚ãªãŸã®LPã‹ã‚‰10ãƒã‚¤ãƒ³ãƒˆå¸ã„å–ã‚‹!!\n");
+								if (psn != 1)
+								{
+									eh = eh + 10;
+									ph = ph - 10;
+								} //if(ps1!='n')
+							}
+							if (d == 2)
+							{ //if(c==1)
+								printf("å®‡å®™é­”æ³•ã€ãƒ–ãƒ©ãƒƒã‚¯ãƒ›ãƒ¼ãƒ«å§‹å‹•!!\nè‡ªåˆ†ã®LP1ã«ã—ã¦ã€ã‚ãªãŸã«15ã®ãƒ€ãƒ¡ãƒ¼ã‚¸!!\n");
+								eh = 1;
+								if (psn != 1)
+								{
+									ph = ph - 15;
+									if (dou > 0)
+									{
+										ph = ph - 15;
+									} //if(dou>0)
+								}	  //if(psn!=1)
+							}
+							if (d == 3)
+							{ //if(c==2)
+								printf("ç›¸æ‰‹ã¨è‡ªåˆ†ã®LPã‚’å…¥ã‚Œæ›¿ãˆã‚‹!\n");
+								ph = ph + eh;
+								eh = ph - eh;
+								ph = ph - eh;
+							}
+							if (d == 4)
+							{ //if(c==3)
+								printf("ã‚¼ã‚¦ã‚¹ã‚’å¬å–šã—ãŸ!!\nã‚ãªãŸã«13ã®ãƒ€ãƒ¡ãƒ¼ã‚¸!!\n");
+								if (psn != 1)
+								{
+									ph = ph - 13;
+									if (dou > 0)
+									{
+										ph = ph - 13;
+									} //if(dou>0)
+								}	  //if(psn!=1)
+							}
+							if (d == 5)
+							{ //if(c==4)
+								printf("ãƒ’ãƒ¼ãƒªãƒ³ã‚°ãƒ»ãƒŽãƒ´ã‚¡å§‹å‹•\nç›¸æ‰‹ã¯LPã‚’10å›žå¾©!!\n");
+								eh = eh + 10;
+							}
+							if (d == 6)
+							{ //if(c==5)
+								printf("æ¬¡ã®ç›¸æ‰‹ã®ã‚¿ãƒ¼ãƒ³çµ‚äº†æ™‚ã¾ã§ã€ç™ºç”Ÿã™ã‚‹å…¨ã¦ã®ãƒ€ãƒ¡ãƒ¼ã‚¸ã¯2å€ã«ãªã‚‹\n");
+								while (dou < 3)
+								{
+									dou++;
+								} //while(dou<3)
+							}	  //if(c==6)
+						}
+						if (c == 4)
+						{ //if(c==3)
+							printf("ãƒŸã‚¹!ã€ä½•ã‚‚èµ·ã“ã‚‰ãªã‹ã£ãŸã€‚\n");
+							epn++;
+						}
+						if (c == 5)
+						{ //if(c==4)
+							printf("ã‚ãªãŸã«1ã®ãƒ€ãƒ¡ãƒ¼ã‚¸!\n");
+							if (psn != 1)
+							{
+								ph = ph - 1;
+								if (dou > 0)
+								{
+									ph = ph - 1;
+								} //if(dou>0)
+							}	  //if(psn!=1)
+							epn++;
+						}
+						if (c == 6)
+						{ //if(c==5)
+							printf("å®ˆã‚Šã‚’å›ºã‚ãŸ!!\n(æ¬¡ã®è‡ªåˆ†ã®ã‚¿ãƒ¼ãƒ³ã¾ã§ã€è‡ªèº«ãŒå—ã‘ã‚‹ãƒ€ãƒ¡ãƒ¼ã‚¸ã¯0ã«ãªã‚‹)\n");
+							esn = 1;
+							epn++;
+						} //if(c==6)
+					}
+					if (ep == 2)
+					{ //if(ep==1)
+						printf("ç›¸æ‰‹ã¯ãƒ’ãƒ¼ãƒªãƒ³ã‚°ãƒ€ã‚¤ã‚¹ã‚’æŒ¯ã‚Šã¾ã—ãŸ\n");
+						c = rand() % 6 + 1;
+						if (c == 1)
+						{
+							printf("ãƒ‰ãƒ¬ã‚¤ãƒ³ç™ºå‹•!!\nã‚ãªãŸã®LPã‹ã‚‰4ãƒã‚¤ãƒ³ãƒˆå¸ã„å–ã‚‹\n");
+							if (psn != 1)
+							{
+								ph = ph - 4;
+								eh = eh + 4;
+							} //if(psn!=1)
+							epn++;
+						}
+						if (c == 2)
+						{ //if(c==1)
+							epn = 0;
+							printf("ãƒ‘ãƒ³ãƒ‰ãƒ©ã®ãƒ€ã‚¤ã‚¹å§‹å‹•!!\nãƒ€ã‚¤ã‚¹ã‚’ä¸€å›žæŒ¯ã‚Œ!!\n");
+							d = rand() % 6 + 1;
+							if (d == 1)
+							{
+								printf("ã‚®ã‚¬ãƒ‰ãƒ¬ã‚¤ãƒ³å§‹å‹•!!\nã‚ãªãŸã®LPã‹ã‚‰10ãƒã‚¤ãƒ³ãƒˆå¸ã„å–ã‚‹!!\n");
+								if (psn != 1)
+								{
+									eh = eh + 10;
+									ph = ph - 10;
+								} //if(psn!=1)
+							}
+							if (d == 2)
+							{ //if(c==1)
+								printf("å®‡å®™é­”æ³•ã€ãƒ–ãƒ©ãƒƒã‚¯ãƒ›ãƒ¼ãƒ«å§‹å‹•!!\nè‡ªåˆ†ã®LP1ã«ã—ã¦ã€ã‚ãªãŸã«15ã®ãƒ€ãƒ¡ãƒ¼ã‚¸!!\n");
+								eh = 1;
+								if (psn != 1)
+								{
+									ph = ph - 15;
+									if (dou > 0)
+									{
+										ph = ph - 15;
+									} //if(dou>0)
+								}	  //if(psn!=1)
+							}
+							if (d == 3)
+							{ //if(c==2)
+								printf("ç›¸æ‰‹ã¨è‡ªåˆ†ã®LPã‚’å…¥ã‚Œæ›¿ãˆã‚‹!\n");
+								ph = ph + eh;
+								eh = ph - eh;
+								ph = ph - eh;
+							}
+							if (d == 4)
+							{ //if(c==3)
+								printf("ã‚¼ã‚¦ã‚¹ã‚’å¬å–šã—ãŸ!!\nã‚ãªãŸã«13ã®ãƒ€ãƒ¡ãƒ¼ã‚¸!!\n");
+								if (psn != 1)
+								{
+									ph = ph - 13;
+									if (dou > 0)
+									{
+										ph = ph - 13;
+									} //if(dou>0)
+								}	  //if(psn!=1)
+							}
+							if (d == 5)
+							{ //if(c==4)
+								printf("ãƒ’ãƒ¼ãƒªãƒ³ã‚°ãƒ»ãƒŽãƒ´ã‚¡å§‹å‹•\nã‚ã„ã¦ã¯LPã‚’10å›žå¾©!!\n");
+								eh = eh + 10;
+							}
+							if (d == 6)
+							{ //if(c==5)
+								printf("æ¬¡ã®ç›¸æ‰‹ã®ã‚¿ãƒ¼ãƒ³çµ‚äº†æ™‚ã¾ã§ã€ç™ºç”Ÿã™ã‚‹å…¨ã¦ã®ãƒ€ãƒ¡ãƒ¼ã‚¸ã¯2å€ã«ãªã‚‹\n");
+								while (dou < 3)
+								{
+									dou++;
+								} //while(dou<3)
+							}	  //if(c==6)
+						}
+						if (c == 3)
+						{ //if(c==2)
+							printf("ã‚ãªãŸã«2ã®ãƒ€ãƒ¡ãƒ¼ã‚¸!!\n");
+							if (psn != 1)
+							{
+								ph = eh - 2;
+								if (dou > 0)
+								{
+									ph = ph - 2;
+								} //if(dou>0)
+							}	  //if(psn!=1)
+							epn++;
+						}
+						if (c == 4)
+						{ //if(c==3)
+							printf("ã‚ã„ã¦ã¯LPã‚’3å›žå¾©!!\n");
+							eh = eh + 3;
+							epn++;
+						}
+						if (c == 5)
+						{ //if(c==4)
+							printf("å®ˆã‚Šã‚’å›ºã‚ãŸ!!/n");
+							printf("(æ¬¡ã®ç›¸æ‰‹ã®ã‚¿ãƒ¼ãƒ³ã¾ã§ç›¸æ‰‹ãŒå—ã‘ã‚‹ãƒ€ãƒ¡ãƒ¼ã‚¸ã¯0ã¨ãªã‚‹)\n");
+							esn = 1;
+							epn++;
+						}
+						if (c == 6)
+						{ //if(c==5)
+							printf("ãƒŸã‚¹!,ä½•ã‚‚èµ·ã“ã‚‰ãªã‹ã£ãŸ\n");
+							epn++;
+						} //if(c==6)
+					}	  //if(ep==2)
+				}
+				if (20 > eh && eh >= 10 && etd == 1)
+				{ //if(10>eh&&eh>0&&etd==1)
+					etd = 0;
+					ep = rand() % 4 + 1;
+					if (ep == 1)
+					{
+						printf("ç›¸æ‰‹ã¯ã‚¯ãƒªãƒ†ã‚£ã‚«ãƒ«ãƒ€ã‚¤ã‚¹ã‚’æŒ¯ã‚Šã¾ã—ãŸã€‚\n");
+						c = rand() % 6 + 1;
+						if (c == 1)
+						{
+							printf("ã‚¯ãƒªãƒ†ã‚£ã‚«ãƒ«ãƒ’ãƒƒãƒˆ!!\n");
+							printf("ã‚ãªãŸã«7ã®ãƒ€ãƒ¡ãƒ¼ã‚¸!!\n");
+							if (psn != 1)
+							{
+								ph = ph - 7;
+								if (dou > 0)
+								{
+									ph = ph - 7;
+								} //if(dou>0)
+							}	  //if(psn!=1)
+							epn++;
+						}
+						if (c == 2)
+						{ //if(c==1)
+							printf("ãƒŸã‚¹!ã‚ãªãŸã«0ãƒ€ãƒ¡ãƒ¼ã‚¸\n");
+							epn++;
+						}
+						if (c == 3)
+						{ //if(c==2)
+							printf("ã‚¯ãƒªãƒ†ã‚£ã‚«ãƒ«ãƒ’ãƒƒãƒˆ!!\n");
+							printf("ã‚ãªãŸã«5ã®ãƒ€ãƒ¡ãƒ¼ã‚¸!!æ¬¡ã®ã‚ãªãŸã®ã‚¿ãƒ¼ãƒ³ã‚’ã‚¹ã‚­ãƒƒãƒ—ã™ã‚‹ã€‚\n");
+							if (psn != 1)
+							{
+								ph = ph - 5;
+								if (dou > 0)
+								{
+									ph = ph - 5;
+								} //if(dou>0)
+								pss = 1;
+							} //if(psn!=1)
+							epn++;
+						}
+						if (c == 4)
+						{ //if(c==3)
+							printf("ã‚ãªãŸã«2ã®ãƒ€ãƒ¡ãƒ¼ã‚¸\n");
+							if (psn != 1)
+							{
+								ph = ph - 2;
+								if (dou > 0)
+								{
+									ph = ph - 2;
+								} //if(dou>0)
+							}	  //if(psn!=1)
+							epn++;
+						}
+						if (c == 5)
+						{ //if(c==4)
+							epn = 0;
+							printf("ãƒ‘ãƒ³ãƒ‰ãƒ©ã®ãƒ€ã‚¤ã‚¹å§‹å‹•!!\nãƒ€ã‚¤ã‚¹ã‚’ä¸€å›žæŒ¯ã‚Œ!!");
+							d = rand() % 6 + 1;
+							if (d == 1)
+							{
+								printf("ã‚®ã‚¬ãƒ‰ãƒ¬ã‚¤ãƒ³å§‹å‹•!!\nã‚ãªãŸã®LPã‹ã‚‰10ãƒã‚¤ãƒ³ãƒˆå¸ã„å–ã‚‹!!\n");
+								if (psn != 1)
+								{
+									eh = eh + 10;
+									ph = ph - 10;
+								} //if(psn!=1)
+							}
+							if (d == 2)
+							{ //if(c==1)
+								printf("å®‡å®™é­”æ³•ã€ãƒ–ãƒ©ãƒƒã‚¯ãƒ›ãƒ¼ãƒ«å§‹å‹•!!\nè‡ªåˆ†ã®LP1ã«ã—ã¦ã€ç›¸æ‰‹ã«15ã®ãƒ€ãƒ¡ãƒ¼ã‚¸!!\n");
+								eh = 1;
+								if (psn != 1)
+								{
+									ph = ph - 15;
+									if (dou > 0)
+									{
+										ph = ph - 15;
+									} //ih(dou>0)
+								}	  //if(psn!=1)
+							}
+							if (d == 3)
+							{ //if(c==2)
+								printf("ç›¸æ‰‹ã¨è‡ªåˆ†ã®LPã‚’å…¥ã‚Œæ›¿ãˆã‚‹!\n");
+								ph = ph + eh;
+								eh = ph - eh;
+								ph = ph - eh;
+							}
+							if (d == 4)
+							{ //if(c==3)
+								printf("ã‚¼ã‚¦ã‚¹ã‚’å¬å–šã—ãŸ!!\nã‚ãªãŸã«13ã®ãƒ€ãƒ¡ãƒ¼ã‚¸!!\n");
+								if (psn != 1)
+								{
+									ph = ph - 13;
+									if (dou > 0)
+									{
+										ph = ph - 13;
+									} ///if(dou>0)
+								}	  //if(psn!=1)
+							}
+							if (d == 5)
+							{ //if(c==4)
+								printf("ãƒ’ãƒ¼ãƒªãƒ³ã‚°ãƒ»ãƒŽãƒ´ã‚¡å§‹å‹•\nç›¸æ‰‹ã¯LPã‚’10å›žå¾©!!\n");
+								eh = eh + 10;
+							}
+							if (d == 6)
+							{ //if(c==5)
+								printf("æ¬¡ã®ç›¸æ‰‹ã®ã‚¿ãƒ¼ãƒ³çµ‚äº†æ™‚ã¾ã§ã€ç™ºç”Ÿã™ã‚‹å…¨ã¦ã®ãƒ€ãƒ¡ãƒ¼ã‚¸ã¯2å€ã«ãªã‚‹\n");
+								while (dou < 3)
+								{
+									dou++;
+								} //while(dou<3)
+							}	  //if(c==6)
+						}
+						if (c == 6)
+						{ //if(c==5)
+							printf("ã‚¯ãƒªãƒ†ã‚£ã‚«ãƒ«ãƒ’ãƒƒãƒˆ!!\n");
+							printf("ã‚ãªãŸã«5ã®ãƒ€ãƒ¡ãƒ¼ã‚¸!!æ¬¡ã®ã‚ãªãŸã®ã‚¿ãƒ¼ãƒ³ã‚’ã‚¹ã‚­ãƒƒãƒ—ã™ã‚‹ã€‚\n");
+							if (psn != 1)
+							{
+								ph = ph - 5;
+								if (dou > 0)
+								{
+									ph = ph - 5;
+								} //if(dou>0)
+								pss = 1;
+							} //if(pstn!=1)
+							epn++;
+						} //if(c==6)
+					}
+					if (ep == 2)
+					{ //if(ep==1)
+						printf("ç›¸æ‰‹ã¯ãƒžã‚¸ãƒƒã‚¯ãƒ€ã‚¤ã‚¹ã‚’æŒ¯ã‚Šã¾ã—ãŸã€‚\n");
+						c = rand() % 6 + 1;
+						if (c == 1)
+						{
+							printf("ç‚Žé­”æ³•ã€ãƒ•ã‚¡ã‚¤ã‚¢ãƒ¼ãƒœãƒ¼ãƒ«ç™ºå‹•!!\n");
+							printf("ã‚ãªãŸã«2ã®ãƒ€ãƒ¡ãƒ¼ã‚¸!!,æ¬¡ã«ãƒ€ã‚¤ã‚¹ã‚’æŒ¯ã‚‹ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã«2ã®ãƒ€ãƒ¡ãƒ¼ã‚¸ã‚’ä¸Žãˆã‚‹ã€‚!");
+							if (psn != 1)
+							{
+								ph = ph - 2;
+								if (dou > 0)
+								{
+									ph = ph - 2;
+								} //if(dou>0)
+							}	  //if(psn!=1)
+							f = 1;
+							epn++;
+						}
+						if (c == 2)
+						{ //if(c==1)
+							printf("é›·é­”æ³•ã€ã‚µãƒ³ãƒ€ãƒ¼ãƒœãƒ«ãƒˆç™ºå‹•!!\n");
+							printf("ãŠäº’ã„ã«4ã®ãƒ€ãƒ¡ãƒ¼ã‚¸!!\n");
+							eh = eh - 4;
+							if (dou > 0)
+							{
+								eh = eh - 4;
+							} //if(dou>0)
+							if (psn != 1)
+							{
+								ph = ph - 4;
+								if (dou > 0)
+								{
+									ph = ph - 4;
+								} //if(dou>0)
+							}	  //if(psn!=1)
+							epn++;
+						}
+						if (c == 3)
+						{ //if(c==2)
+							printf("ãƒŸã‚¹!ã€ã‚ãªãŸã«0ã®ãƒ€ãƒ¡ãƒ¼ã‚¸\n");
+							epn++;
+						}
+						if (c == 4)
+						{ //if(c==3)
+							epn = 0;
+							printf("ãƒ‘ãƒ³ãƒ‰ãƒ©ã®ãƒ€ã‚¤ã‚¹å§‹å‹•!!\nãƒ€ã‚¤ã‚¹ã‚’ä¸€å›žæŒ¯ã‚Œ!!\n");
+							d = rand() % 6 + 1;
+							if (d == 1)
+							{
+								printf("ã‚®ã‚¬ãƒ‰ãƒ¬ã‚¤ãƒ³å§‹å‹•!!\nã‚ãªãŸã®LPã‹ã‚‰10ãƒã‚¤ãƒ³ãƒˆå¸ã„å–ã‚‹!!\n");
+								if (psn != 1)
+								{
+									eh = eh + 10;
+									ph = ph - 10;
+								} //if(psn!=1)
+							}
+							if (d == 2)
+							{ //if(c==1)
+								printf("å®‡å®™é­”æ³•ã€ãƒ–ãƒ©ãƒƒã‚¯ãƒ›ãƒ¼ãƒ«å§‹å‹•!!\nè‡ªåˆ†ã®LP1ã«ã—ã¦ã€ç›¸æ‰‹ã«15ã®ãƒ€ãƒ¡ãƒ¼ã‚¸!!\n");
+								eh = 1;
+								if (psn != 1)
+								{
+									ph = ph - 15;
+									if (dou > 0)
+									{
+										ph = ph - 15;
+									} //if(dou>0)
+								}	  //if(psn!=1)
+							}
+							if (d == 3)
+							{ //if(c==2)
+								printf("ç›¸æ‰‹ã¨è‡ªåˆ†ã®LPã‚’å…¥ã‚Œæ›¿ãˆã‚‹!\n");
+								ph = ph + eh;
+								eh = ph - eh;
+								ph = ph - eh;
+							}
+							if (d == 4)
+							{ //if(c==3)
+								printf("ã‚¼ã‚¦ã‚¹ã‚’å¬å–šã—ãŸ!!\nã‚ãªãŸã«13ã®ãƒ€ãƒ¡ãƒ¼ã‚¸!!\n");
+								if (psn != 1)
+								{
+									ph = ph - 13;
+									if (dou > 0)
+									{
+										ph = ph - 13;
+									} //if(dou>0)
+								}	  //if(psn!=1)
+							}
+							if (d == 5)
+							{ //if(c==4)
+								printf("ãƒ’ãƒ¼ãƒªãƒ³ã‚°ãƒ»ãƒŽãƒ´ã‚¡å§‹å‹•\nç›¸æ‰‹ã¯LPã‚’10å›žå¾©!!\n");
+								eh = eh + 10;
+							}
+							if (d == 6)
+							{ //if(c==5)
+								printf("æ¬¡ã®ç›¸æ‰‹ã®ã‚¿ãƒ¼ãƒ³çµ‚äº†æ™‚ã¾ã§ã€ç™ºç”Ÿã™ã‚‹å…¨ã¦ã®ãƒ€ãƒ¡ãƒ¼ã‚¸ã¯2å€ã«ãªã‚‹\n");
+								while (dou < 3)
+								{
+									dou++;
+								} //while(dou<3)
+							}	  //if(c==6)
+						}
+						if (c == 5)
+						{
+							printf("æ°·é­”æ³•ã€ã‚µãƒ¼ã‚¯ãƒ«ãƒ•ãƒ­ã‚¹ãƒˆç™ºå‹•!!\n");
+							printf("ã‚ãªãŸã«3ã®ãƒ€ãƒ¡ãƒ¼ã‚¸!!æ¬¡ã®ã‚ãªãŸã®ã‚¿ãƒ¼ãƒ³ã‚’ã‚¹ã‚­ãƒƒãƒ—ã™ã‚‹ã€‚\n");
+							if (psn != 1)
+							{
+								ph = ph - 3;
+								if (dou > 0)
+								{
+									ph = ph - 3;
+								} //if(dou>0)
+								pss = 1;
+							} //if(psn!=1)
+							epn++;
+						}
+						if (c == 6)
+						{ //if(c==5)
+							printf("å®‡å®™é­”æ³•ã€ãƒ¡ãƒ†ã‚ªç™ºå‹•!!\n");
+							printf("è‡ªèº«ã®LPã‚’1ã«ã—ã¦ã€ã‚ãªãŸã«ã«10ã®ãƒ€ãƒ¡ãƒ¼ã‚¸!!\n");
+							eh = 1;
+							if (psn != 1)
+							{
+								ph = ph - 10;
+								if (dou > 0)
+								{
+									ph = ph - 10;
+								} //if(dou>0)
+							}	  //if(psn!=1)
+							epn++;
+						} //if(c==6)
+					}
+					if (ep == 3)
+					{ //if(ep==2)
+						printf("ç›¸æ‰‹ã¯ã‚¬ãƒ¼ãƒ‰ãƒ€ã‚¤ã‚¹ã‚’æŒ¯ã‚Šã¾ã—ãŸ\n");
+						c = rand() % 6 + 1;
+						if (c == 1)
+						{
+							printf("ã‚¯ãƒªãƒ†ã‚£ã‚«ãƒ«ãƒ’ãƒƒãƒˆ!!\n");
+							printf("ã‚ãªãŸã«4ã®ãƒ€ãƒ¡ãƒ¼ã‚¸!!ã€æ¬¡ã®ç›¸æ‰‹ã®ã‚¿ãƒ¼ãƒ³ã¾ã§ç›¸æ‰‹ãŒå—ã‘ã‚‹ãƒ€ãƒ¡ãƒ¼ã‚¸ã¯0ã«ãªã‚‹ã€‚\n");
+							esn = 1;
+							if (psn != 1)
+							{
+								ph = ph - 4;
+								if (dou > 0)
+								{
+									ph = ph - 4;
+								} //if(dou>0)
+							}	  //if(psn!=1)
+							epn++;
+						}
+						if (c == 2)
+						{ //if(c==1)
+							printf("å®ˆã‚Šã‚’å›ºã‚ãŸ!!\n(æ¬¡ã®ç›¸æ‰‹ã®ã‚¿ãƒ¼ãƒ³ã¾ã§ç›¸æ‰‹ãŒå—ã‘ã‚‹ãƒ€ãƒ¡ãƒ¼ã‚¸ã¯0ã«ãªã‚‹)\n");
+							esn = 1;
+							epn++;
+						}
+						if (c == 3)
+						{ //if(c==2)
+							epn = 0;
+							printf("ãƒ‘ãƒ³ãƒ‰ãƒ©ã®ãƒ€ã‚¤ã‚¹å§‹å‹•!!\nãƒ€ã‚¤ã‚¹ã‚’ä¸€å›žæŒ¯ã‚Œ!!\n");
+							d = rand() % 6 + 1;
+							if (d == 1)
+							{
+								printf("ã‚®ã‚¬ãƒ‰ãƒ¬ã‚¤ãƒ³å§‹å‹•!!\nã‚ãªãŸã®LPã‹ã‚‰10ãƒã‚¤ãƒ³ãƒˆå¸ã„å–ã‚‹!!\n");
+								if (psn != 1)
+								{
+									eh = eh + 10;
+									ph = ph - 10;
+								} //if(psn!=1)
+							}
+							if (d == 2)
+							{ //if(c==1)
+								printf("å®‡å®™é­”æ³•ã€ãƒ–ãƒ©ãƒƒã‚¯ãƒ›ãƒ¼ãƒ«å§‹å‹•!!\nè‡ªåˆ†ã®LP1ã«ã—ã¦ã€ã‚ãªãŸã«15ã®ãƒ€ãƒ¡ãƒ¼ã‚¸!!\n");
+								eh = 1;
+								if (psn != 1)
+								{
+									ph = ph - 15;
+									if (dou > 0)
+									{
+										ph = ph - 15;
+									} //if(dou>0)
+								}	  //if(psn!=1)
+							}
+							if (d == 3)
+							{ //if(c==2)
+								printf("ç›¸æ‰‹ã¨è‡ªåˆ†ã®LPã‚’å…¥ã‚Œæ›¿ãˆã‚‹!\n");
+								ph = ph + eh;
+								eh = ph - eh;
+								ph = ph - eh;
+							}
+							if (d == 4)
+							{ //if(c==3)
+								printf("ã‚¼ã‚¦ã‚¹ã‚’å¬å–šã—ãŸ!!\nã‚ãªãŸã«13ã®ãƒ€ãƒ¡ãƒ¼ã‚¸!!\n");
+								if (psn != 1)
+								{
+									ph = ph - 13;
+									if (dou > 0)
+									{
+										ph = ph - 13;
+									} //if(dou>0)
+								}	  //if(psn!=1)
+							}
+							if (d == 5)
+							{ //if(c==4)
+								printf("ãƒ’ãƒ¼ãƒªãƒ³ã‚°ãƒ»ãƒŽãƒ´ã‚¡å§‹å‹•\nç›¸æ‰‹ã¯LPã‚’10å›žå¾©!!\n");
+								eh = eh + 10;
+							}
+							if (d == 6)
+							{ //if(c==5)
+								printf("æ¬¡ã®ç›¸æ‰‹ã®ã‚¿ãƒ¼ãƒ³çµ‚äº†æ™‚ã¾ã§ã€ç™ºç”Ÿã™ã‚‹å…¨ã¦ã®ãƒ€ãƒ¡ãƒ¼ã‚¸ã¯2å€ã«ãªã‚‹\n");
+								while (dou < 3)
+								{
+									dou++;
+								} //while(dou<3)
+							}	  //if(c==6)
+						}
+						if (c == 4)
+						{ //if(c==3)
+							printf("ãƒŸã‚¹!ã€ä½•ã‚‚èµ·ã“ã‚‰ãªã‹ã£ãŸã€‚\n");
+							epn++;
+						}
+						if (c == 5)
+						{ //if(c==4)
+							printf("ã‚ãªãŸã«1ã®ãƒ€ãƒ¡ãƒ¼ã‚¸!\n");
+							if (psn != 1)
+							{
+								ph = ph - 1;
+								if (dou > 0)
+								{
+									ph = ph - 1;
+								} //if(dou>0)
+							}	  //if(psn!=1)
+							epn++;
+						}
+						if (c == 6)
+						{ //if(c==5)
+							printf("å®ˆã‚Šã‚’å›ºã‚ãŸ!!\n(æ¬¡ã®ç›¸æ‰‹ã®ã‚¿ãƒ¼ãƒ³ã¾ã§ã€ç›¸æ‰‹ãŒå—ã‘ã‚‹ãƒ€ãƒ¡ãƒ¼ã‚¸ã¯0ã«ãªã‚‹)\n");
+							esn = 1;
+							epn++;
+						} //if(c==6)
+					}
+					if (ep == 4)
+					{ //if(ep==3)
+						printf("ç›¸æ‰‹ã¯ãƒ’ãƒ¼ãƒªãƒ³ã‚°ãƒ€ã‚¤ã‚¹ã‚’æŒ¯ã‚Šã¾ã—ãŸ\n");
+						c = rand() % 6 + 1;
+						if (c == 1)
+						{
+							printf("ãƒ‰ãƒ¬ã‚¤ãƒ³ç™ºå‹•!!\nã‚ãªãŸã®LPã‹ã‚‰4ãƒã‚¤ãƒ³ãƒˆå¸ã„å–ã‚‹\n");
+							if (psn != 1)
+							{
+								ph = ph - 4;
+								eh = eh + 4;
+							} //if(psn!=1)
+							epn++;
+						}
+						if (c == 2)
+						{ //if(c==1)
+							epn = 0;
+							printf("ãƒ‘ãƒ³ãƒ‰ãƒ©ã®ãƒ€ã‚¤ã‚¹å§‹å‹•!!\nãƒ€ã‚¤ã‚¹ã‚’ä¸€å›žæŒ¯ã‚Œ!!\n");
+							d = rand() % 6 + 1;
+							if (d == 1)
+							{
+								printf("ã‚®ã‚¬ãƒ‰ãƒ¬ã‚¤ãƒ³å§‹å‹•!!\nã‚ãªãŸã®LPã‹ã‚‰10ãƒã‚¤ãƒ³ãƒˆå¸ã„å–ã‚‹!!\n");
+								if (psn != 1)
+								{
+									eh = eh + 10;
+									ph = ph - 10;
+								} //if(psn!=1)
+							}
+							if (d == 2)
+							{ //if(c==1)
+								printf("å®‡å®™é­”æ³•ã€ãƒ–ãƒ©ãƒƒã‚¯ãƒ›ãƒ¼ãƒ«å§‹å‹•!!\nè‡ªåˆ†ã®LP1ã«ã—ã¦ã€ã‚ãªãŸã«15ã®ãƒ€ãƒ¡ãƒ¼ã‚¸!!\n");
+								eh = 1;
+								if (psn != 1)
+								{
+									ph = ph - 15;
+									if (dou > 0)
+									{
+										ph = ph - 15;
+									} //if(dou>0)
+								}	  //if(psn!=1)
+							}
+							if (d == 3)
+							{ //if(c==2)
+								printf("ç›¸æ‰‹ã¨è‡ªåˆ†ã®LPã‚’å…¥ã‚Œæ›¿ãˆã‚‹!\n");
+								ph = ph + eh;
+								eh = ph - eh;
+								ph = ph - eh;
+							}
+							if (d == 4)
+							{ //if(c==3)
+								printf("ã‚¼ã‚¦ã‚¹ã‚’å¬å–šã—ãŸ!!\nã‚ãªãŸã«13ã®ãƒ€ãƒ¡ãƒ¼ã‚¸!!\n");
+								if (psn != 1)
+								{
+									ph = ph - 13;
+									if (dou > 0)
+									{
+										ph = ph - 13;
+									} //if(dou>0)
+								}	  //if(psn!=1)
+							}
+							if (d == 5)
+							{ //if(c==4)
+								printf("ãƒ’ãƒ¼ãƒªãƒ³ã‚°ãƒ»ãƒŽãƒ´ã‚¡å§‹å‹•\nè‡ªåˆ†ã®LPã‚’10å›žå¾©!!\n");
+								ph = ph + 10;
+							}
+							if (d == 6)
+							{ //if(c==5)
+								printf("æ¬¡ã®ç›¸æ‰‹ã®ã‚¿ãƒ¼ãƒ³çµ‚äº†æ™‚ã¾ã§ã€ç™ºç”Ÿã™ã‚‹å…¨ã¦ã®ãƒ€ãƒ¡ãƒ¼ã‚¸ã¯2å€ã«ãªã‚‹\n");
+								while (dou < 3)
+								{
+									dou++;
+								} //while(dou<3)
+							}	  //if(c==6)
+						}
+						if (c == 3)
+						{ //if(c==2)
+							printf("ã‚ãªãŸã«2ã®ãƒ€ãƒ¡ãƒ¼ã‚¸!!\n");
+							if (psn != 1)
+							{
+								ph = ph - 2;
+								if (dou > 0)
+								{
+									ph = ph - 2;
+								} //if(dou>0)
+							}	  //if(psn!=1)
+							epn++;
+						}
+						if (c == 4)
+						{ //if(c==3)
+							printf("ã‚ã„ã¦ã¯LPã‚’3å›žå¾©!!\n");
+							eh = eh + 3;
+							epn++;
+						}
+						if (c == 5)
+						{ //if(c==4)
+							printf("å®ˆã‚Šã‚’å›ºã‚ãŸ!!/n");
+							printf("(æ¬¡ã®è‡ªåˆ†ã®ã‚¿ãƒ¼ãƒ³ã¾ã§è‡ªèº«ãŒå—ã‘ã‚‹ãƒ€ãƒ¡ãƒ¼ã‚¸ã¯0ã¨ãªã‚‹)\n");
+							esn = 1;
+							epn++;
+						}
+						if (c == 6)
+						{ //if(c==5)
+							printf("ãƒŸã‚¹!,ä½•ã‚‚èµ·ã“ã‚‰ãªã‹ã£ãŸ\n");
+							epn++;
+						} //if(c==6)
+					}	  //if(ep==4)
+				}
+				if (eh >= 20 && etd == 1)
+				{ //if(20>eh&&eh=>10&&etd==1)
+					etd = 0;
+					ep = rand() % 2 + 1;
+					if (ep == 1)
+					{
+						printf("ç›¸æ‰‹ã¯ã‚¯ãƒªãƒ†ã‚£ã‚«ãƒ«ãƒ€ã‚¤ã‚¹ã‚’æŒ¯ã‚Šã¾ã—ãŸã€‚\n");
+						c = rand() % 6 + 1;
+						if (c == 1)
+						{
+							printf("ã‚¯ãƒªãƒ†ã‚£ã‚«ãƒ«ãƒ’ãƒƒãƒˆ!!\n");
+							printf("ã‚ãªãŸã«7ã®ãƒ€ãƒ¡ãƒ¼ã‚¸!!\n");
+							if (psn != 1)
+							{
+								ph = ph - 7;
+								if (dou > 0)
+								{
+									ph = ph - 7;
+								} //if(dou>0)
+							}	  //if(psn!=1)
+							epn++;
+						}
+						if (c == 2)
+						{ //if(c==1)
+							printf("ãƒŸã‚¹!ã‚ãªãŸã«0ãƒ€ãƒ¡ãƒ¼ã‚¸\n");
+							epn++;
+						}
+						if (c == 3)
+						{ //if(c==3)
+							printf("ã‚¯ãƒªãƒ†ã‚£ã‚«ãƒ«ãƒ’ãƒƒãƒˆ!!\n");
+							printf("ã‚ãªãŸã«5ã®ãƒ€ãƒ¡ãƒ¼ã‚¸!!æ¬¡ã®ã‚ãªãŸã®ã‚¿ãƒ¼ãƒ³ã‚’ã‚¹ã‚­ãƒƒãƒ—ã™ã‚‹ã€‚\n");
+							if (psn != 1)
+							{
+								ph = ph - 5;
+								if (dou > 0)
+								{
+									ph = ph - 5;
+								} //if(dou>0)
+								pss = 1;
+							} //if(psn!=1)
+							epn++;
+						}
+						if (c == 4)
+						{ //if(c==3)
+							printf("ã‚ãªãŸã«2ã®ãƒ€ãƒ¡ãƒ¼ã‚¸\n");
+							if (psn != 1)
+							{
+								ph = ph - 2;
+								if (dou > 0)
+								{
+									ph = ph - 2;
+								} //if(dou>0)
+							}	  //if(psn!=1)
+							epn++;
+						}
+						if (c == 5)
+						{ //if(c==4)
+							epn = 0;
+							printf("ãƒ‘ãƒ³ãƒ‰ãƒ©ã®ãƒ€ã‚¤ã‚¹å§‹å‹•!!\nãƒ€ã‚¤ã‚¹ã‚’ä¸€å›žæŒ¯ã‚Œ!!");
+							d = rand() % 6 + 1;
+							if (d == 1)
+							{
+								printf("ã‚®ã‚¬ãƒ‰ãƒ¬ã‚¤ãƒ³å§‹å‹•!!\nã‚ãªãŸã®LPã‹ã‚‰10ãƒã‚¤ãƒ³ãƒˆå¸ã„å–ã‚‹!!\n");
+								if (psn != 1)
+								{
+									eh = eh + 10;
+									ph = ph - 10;
+								} //if(psn!=1)
+							}
+							if (d == 2)
+							{ //if(c==1)
+								printf("å®‡å®™é­”æ³•ã€ãƒ–ãƒ©ãƒƒã‚¯ãƒ›ãƒ¼ãƒ«å§‹å‹•!!\nè‡ªåˆ†ã®LP1ã«ã—ã¦ã€ã‚ãªãŸã«15ã®ãƒ€ãƒ¡ãƒ¼ã‚¸!!\n");
+								eh = 1;
+								if (psn != 1)
+								{
+									ph = ph - 15;
+									if (dou > 0)
+									{
+										ph = ph - 15;
+									} //if(dou>0)
+								}	  //if(psn!=1)
+							}
+							if (d == 3)
+							{ //if(c==2)
+								printf("ç›¸æ‰‹ã¨è‡ªåˆ†ã®LPã‚’å…¥ã‚Œæ›¿ãˆã‚‹!\n");
+								ph = ph + eh;
+								eh = ph - eh;
+								ph = ph - eh;
+							}
+							if (d == 4)
+							{ //if(c==3)
+								printf("ã‚¼ã‚¦ã‚¹ã‚’å¬å–šã—ãŸ!!\nã‚ãªãŸã«13ã®ãƒ€ãƒ¡ãƒ¼ã‚¸!!\n");
+								if (psn != 1)
+								{
+									ph = ph - 13;
+									if (dou > 0)
+									{
+										ph = ph - 13;
+									} //if(dou>0)
+								}	  //if(psn!=1)
+							}
+							if (d == 5)
+							{ //if(c==4)
+								printf("ãƒ’ãƒ¼ãƒªãƒ³ã‚°ãƒ»ãƒŽãƒ´ã‚¡å§‹å‹•\nç›¸æ‰‹ã¯LPã‚’10å›žå¾©!!\n");
+								eh = eh + 10;
+							}
+							if (d == 6)
+							{ //if(c==5)
+								printf("æ¬¡ã®ç›¸æ‰‹ã®ã‚¿ãƒ¼ãƒ³çµ‚äº†æ™‚ã¾ã§ã€ç™ºç”Ÿã™ã‚‹å…¨ã¦ã®ãƒ€ãƒ¡ãƒ¼ã‚¸ã¯2å€ã«ãªã‚‹\n");
+							} //if(c==6)
+						}
+						if (c == 6)
+						{ //if(c==5)
+							printf("ã‚¯ãƒªãƒ†ã‚£ã‚«ãƒ«ãƒ’ãƒƒãƒˆ!!\n");
+							printf("ã‚ãªãŸã«5ã®ãƒ€ãƒ¡ãƒ¼ã‚¸!!æ¬¡ã®ã‚ãªãŸã®ã‚¿ãƒ¼ãƒ³ã‚’ã‚¹ã‚­ãƒƒãƒ—ã™ã‚‹ã€‚\n");
+							if (psn != 1)
+							{
+								ph = ph - 5;
+								if (dou > 0)
+								{
+									ph = ph - 5;
+								} //if(dou>0)
+								pss = 1;
+							} //if(psn!=1)
+							epn++;
+						} //if(c==6)
+					}
+					if (ep == 2)
+					{ //if(ep==1)
+						printf("ç›¸æ‰‹ã¯ãƒžã‚¸ãƒƒã‚¯ãƒ€ã‚¤ã‚¹ã‚’æŒ¯ã‚Šã¾ã—ãŸã€‚\n");
+						c = rand() % 6 + 1;
+						if (c == 1)
+						{
+							printf("ç‚Žé­”æ³•ã€ãƒ•ã‚¡ã‚¤ã‚¢ãƒ¼ãƒœãƒ¼ãƒ«ç™ºå‹•!!\n");
+							printf("ã‚ãªãŸã«2ã®ãƒ€ãƒ¡ãƒ¼ã‚¸!!,æ¬¡ã«ãƒ€ã‚¤ã‚¹ã‚’æŒ¯ã‚‹ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã«2ã®ãƒ€ãƒ¡ãƒ¼ã‚¸ã‚’ä¸Žãˆã‚‹ã€‚!");
+							if (psn != 1)
+							{
+								ph = ph - 2;
+								if (dou > 0)
+								{
+									ph = ph - 2;
+								} //if(dou>0)
+							}	  //if(psn!=1)
+							f = 1;
+							epn++;
+						}
+						if (c == 2)
+						{ //if(c==1)
+							printf("é›·é­”æ³•ã€ã‚µãƒ³ãƒ€ãƒ¼ãƒœãƒ«ãƒˆç™ºå‹•!!\n");
+							printf("ãŠäº’ã„ã«4ã®ãƒ€ãƒ¡ãƒ¼ã‚¸!!\n");
+							eh = eh - 4;
+							if (dou > 0)
+							{
+								eh = eh - 4;
+							} //if(dou>0)
+							if (psn != 1)
+							{
+								ph = ph - 4;
+								if (dou > 0)
+								{
+									ph = ph - 4;
+								} //if(dou>0)
+							}	  //if(psn!=1)
+							epn++;
+						}
+						if (c == 3)
+						{ //if(c==2)
+							printf("ãƒŸã‚¹!ã€ã‚ãªãŸã«0ã®ãƒ€ãƒ¡ãƒ¼ã‚¸\n");
+							epn++;
+						}
+						if (c == 4)
+						{ //if(c==3)
+							epn = 0;
+							printf("ãƒ‘ãƒ³ãƒ‰ãƒ©ã®ãƒ€ã‚¤ã‚¹å§‹å‹•!!\nãƒ€ã‚¤ã‚¹ã‚’ä¸€å›žæŒ¯ã‚Œ!!\n");
+							d = rand() % 6 + 1;
+							if (d == 1)
+							{
+								printf("ã‚®ã‚¬ãƒ‰ãƒ¬ã‚¤ãƒ³å§‹å‹•!!\nã‚ãªãŸã®LPã‹ã‚‰10ãƒã‚¤ãƒ³ãƒˆå¸ã„å–ã‚‹!!\n");
+								if (psn != 1)
+								{
+									eh = eh + 10;
+									ph = ph - 10;
+								} //if(psn!=1)
+							}
+							if (d == 2)
+							{ //if(c==1)
+								printf("å®‡å®™é­”æ³•ã€ãƒ–ãƒ©ãƒƒã‚¯ãƒ›ãƒ¼ãƒ«å§‹å‹•!!\nè‡ªåˆ†ã®LP1ã«ã—ã¦ã€ã‚ãªãŸã«15ã®ãƒ€ãƒ¡ãƒ¼ã‚¸!!\n");
+								eh = 1;
+								if (psn != 1)
+								{
+									ph = ph - 15;
+									if (dou > 0)
+									{
+										ph = ph - 15;
+									} //if(dou>0)
+								}	  //if(psn!=1)
+							}
+							if (d == 3)
+							{ //if(c==2)
+								printf("ç›¸æ‰‹ã¨è‡ªåˆ†ã®LPã‚’å…¥ã‚Œæ›¿ãˆã‚‹!\n");
+								ph = ph + eh;
+								eh = ph - eh;
+								ph = ph - eh;
+							}
+							if (d == 4)
+							{ //if(c==3)
+								printf("ã‚¼ã‚¦ã‚¹ã‚’å¬å–šã—ãŸ!!\nã‚ãªãŸã«13ã®ãƒ€ãƒ¡ãƒ¼ã‚¸!!\n");
+								if (psn != 1)
+								{
+									ph = ph - 13;
+									if (dou > 0)
+									{
+										ph = ph - 13;
+									} //if(dou>0)
+								}	  //if(psn!=1)
+							}
+							if (d == 5)
+							{ //if(c==4)
+								printf("ãƒ’ãƒ¼ãƒªãƒ³ã‚°ãƒ»ãƒŽãƒ´ã‚¡å§‹å‹•\nç›¸æ‰‹ã¯LPã‚’10å›žå¾©!!\n");
+								eh = eh + 10;
+							}
+							if (d == 6)
+							{ //if(c==5)
+								printf("æ¬¡ã®è‡ªåˆ†ã®ã‚¿ãƒ¼ãƒ³çµ‚äº†æ™‚ã¾ã§ã€ç™ºç”Ÿã™ã‚‹å…¨ã¦ã®ãƒ€ãƒ¡ãƒ¼ã‚¸ã¯2å€ã«ãªã‚‹\n");
+								while (dou < 3)
+								{
+									dou++;
+								} //while(dou<3)
+							}	  //if(c==6)
+						}
+						if (c == 5)
+						{
+							printf("æ°·é­”æ³•ã€ã‚µãƒ¼ã‚¯ãƒ«ãƒ•ãƒ­ã‚¹ãƒˆç™ºå‹•!!\n");
+							printf("ã‚ãªãŸã«3ã®ãƒ€ãƒ¡ãƒ¼ã‚¸!!æ¬¡ã®ã‚ãªãŸã®ã‚¿ãƒ¼ãƒ³ã‚’ã‚¹ã‚­ãƒƒãƒ—ã™ã‚‹ã€‚\n");
+							if (psn != 1)
+							{
+								ph = ph - 3;
+								if (dou > 0)
+								{
+									ph = ph - 3;
+								} //if(dou>0)
+								pss = 1;
+							} //if(psn!=1)
+							epn++;
+						}
+						if (c == 6)
+						{ //if(c==5)
+							printf("å®‡å®™é­”æ³•ã€ãƒ¡ãƒ†ã‚ªç™ºå‹•!!\n");
+							printf("è‡ªèº«ã®LPã‚’1ã«ã—ã¦ã€ã‚ãªãŸã«ã«10ã®ãƒ€ãƒ¡ãƒ¼ã‚¸!!\n");
+							eh = 1;
+							if (psn != 1)
+							{
+								ph = ph - 10;
+								if (dou > 0)
+								{
+									ph = ph - 10;
+								} //if(dou>0)
+							}	  //if(psn!=1)
+							epn++;
+						} //if(c==6)
+					}	  //if(ep==2)
+				}		  //if(eh>=20)
+			}
+			if (epn == 6)
+			{ //if(epn!=6)
+				epn = 0;
+				printf("ãƒ‘ãƒ³ãƒ‰ãƒ©ã®ãƒ€ã‚¤ã‚¹å¼·åˆ¶å§‹å‹•!!\nãƒ€ã‚¤ã‚¹ã‚’ä¸€å›žæŒ¯ã‚Œ!!");
+				d = rand() % 6 + 1;
+				if (d == 1)
+				{
+					printf("ã‚®ã‚¬ãƒ‰ãƒ¬ã‚¤ãƒ³å§‹å‹•!!\nã‚ãªãŸã®LPã‹ã‚‰10ãƒã‚¤ãƒ³ãƒˆå¸ã„å–ã‚‹!!\n");
+					if (psn != 1)
+					{
+						eh = eh + 10;
+						ph = ph - 10;
+					} //if(psn!=1)
+				}
+				if (d == 2)
+				{ //if(c==1)
+					printf("å®‡å®™é­”æ³•ã€ãƒ–ãƒ©ãƒƒã‚¯ãƒ›ãƒ¼ãƒ«å§‹å‹•!!\nè‡ªåˆ†ã®LP1ã«ã—ã¦ã€ã‚ãªãŸã«15ã®ãƒ€ãƒ¡ãƒ¼ã‚¸!!\n");
+					eh = 1;
+					if (psn != 1)
+					{
+						ph = ph - 15;
+						if (dou > 0)
+						{
+							ph = ph - 15;
+						} //if(dou>0)
+					}	  //if(psn!=1)
+				}
+				if (d == 3)
+				{ //if(c==2)
+					printf("ç›¸æ‰‹ã¨è‡ªåˆ†ã®LPã‚’å…¥ã‚Œæ›¿ãˆã‚‹!\n");
+					ph = ph + eh;
+					eh = ph - eh;
+					ph = ph - eh;
+				}
+				if (d == 4)
+				{ //if(c==3)
+					printf("ã‚¼ã‚¦ã‚¹ã‚’å¬å–šã—ãŸ!!\nã‚ãªãŸã«13ã®ãƒ€ãƒ¡ãƒ¼ã‚¸!!\n");
+					if (psn != 1)
+					{
+						ph = ph - 13;
+						if (dou > 0)
+						{
+							ph = ph - 13;
+						} //if(dou>0)
+					}	  //if(psn!=1)
+				}
+				if (d == 5)
+				{ //if(c==4)
+					printf("ãƒ’ãƒ¼ãƒªãƒ³ã‚°ãƒ»ãƒŽãƒ´ã‚¡å§‹å‹•\nç›¸æ‰‹ã¯LPã‚’10å›žå¾©!!\n");
+					eh = eh + 20;
+				}
+				if (d == 6)
+				{ //if(c==5)
+					printf("æ¬¡ã®ç›¸æ‰‹ã®ã‚¿ãƒ¼ãƒ³çµ‚äº†æ™‚ã¾ã§ã€ç™ºç”Ÿã™ã‚‹å…¨ã¦ã®ãƒ€ãƒ¡ãƒ¼ã‚¸ã¯2å€ã«ãªã‚‹\n");
+					while (dou < 3)
+					{
+						dou++;
+					} //while(dou<3)
+				}	  //if(c==6)
+			}		  //if(epn==6)
+		}
+		if (ess == 1)
+		{ //if(ess!=1)
+			printf("\nç›¸æ‰‹ã¯ã“ã®ã‚¿ãƒ¼ãƒ³è¡Œå‹•ã§ããªã‹ã£ãŸã€‚\n");
+			ess = 0;
+		} //if(ess==1)
+		printf("next\n");
+		getchar();
+	} //if(eh>0&&ph>0)
 }
