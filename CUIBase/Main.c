@@ -32,7 +32,7 @@ enum GuardTest
 };
 
 int a = 0, b = 0;
-int c = 0, d = 0, f = 0, ep = 0, dou = 0;
+int c = 0, d = 0, ep = 0, dou = 0;
 char ps = 0, es = 0;
 
 FAObject fireBall;
@@ -254,16 +254,6 @@ void DicePlayer()
 		else
 		{
 
-			if (f == 1)
-			{
-				printf("%sはファイアーボールの流れ弾が当たった!!\n", charas[Player].name);
-				charas[Player].hp -= 2;
-				if (dou > 0)
-				{
-					charas[Player].hp -= 2;
-				} //if(dou>0)
-				f = 0;
-			} //if(f==1)
 			if (charas[Player].pandoraDiceCount >= 6)
 			{
 				PandoraDice(&charas[Enemy], &charas[Player]);
