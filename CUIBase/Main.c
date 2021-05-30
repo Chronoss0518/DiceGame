@@ -317,14 +317,6 @@ void DiceEnemy()
 			printf("\n%sはこのターン行動できません\n", charas[Enemy].name);
 			charas[Enemy].stan = 0;
 		} //if(ess==1)
-		printf("\n◯%sのターンです\n", charas[Enemy].name);
-		printf("next\n");
-		getchar();
-		if (charas[Enemy].stan == 1)
-		{ //if(ess!=1)
-			printf("\n%sはこのターン行動できません\n", charas[Enemy].name);
-			charas[Enemy].stan = 0;
-		} //if(ess==1)
 		else
 		{
 			if (charas[Enemy].pandoraDiceCount >= 6)
