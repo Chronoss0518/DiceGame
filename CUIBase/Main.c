@@ -19,7 +19,7 @@ enum CharaType
 };
 
 int a = 0, b = 0;
-int c = 0, d = 0, f = 0, ep = 0, dou = 0, psn = 0, esn = 0, pss = 0, ess = 0, ppn = 0;
+int c = 0, d = 0, f = 0, ep = 0, dou = 0;
 int ph = 30, eh = 30;
 char ps = 0, es = 0;
 
@@ -256,7 +256,7 @@ void DiceEnemy()
 	if (charas[Player].hp > 0 && charas[Enemy].hp > 0)
 	{
 		dou--;
-		esn = 0;
+		charas[Enemy].nodamage = 0;
 
 		printf("\n△%sのLP:%d\n◯%sのLP:%d\n", charas[Player].name, charas[Player].hp, charas[Enemy].name, charas[Enemy].hp);
 		printf("next\n");
