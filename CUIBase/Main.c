@@ -35,6 +35,7 @@ int a = 0, b = 0;
 int c = 0, d = 0, f = 0, ep = 0, dou = 0;
 char ps = 0, es = 0;
 
+FAObject fireBall;
 CharaData charas[2];
 
 //s=スタン、n=ノーダメージ、dou=倍ダメージ,
@@ -263,14 +264,6 @@ void DicePlayer()
 				} //if(dou>0)
 				f = 0;
 			} //if(f==1)
-			printf("\n△%sのターンです\n", charas[Player].name);
-			printf("c;クリティカルダイス\n");
-			printf("m;マジックダイス\n");
-			printf("h;ヒーリングダイス\n");
-			printf("g;ガードダイス\n");
-			printf("\n使うダイスを宣言して、ダイスを振ってください:");
-			scanf("%c", &ps);
-
 			if (charas[Player].pandoraDiceCount >= 6)
 			{
 				PandoraDice(&charas[Enemy], &charas[Player]);
@@ -278,32 +271,40 @@ void DicePlayer()
 			else
 			{
 
+				printf("\n△%sのターンです\n", charas[Player].name);
+				printf("c;クリティカルダイス\n");
+				printf("m;マジックダイス\n");
+				printf("h;ヒーリングダイス\n");
+				printf("g;ガードダイス\n");
+				printf("\n使うダイスを宣言して、ダイスを振ってください:");
+				scanf("%c", &ps);
+				getchar();
+				printf("\n");
+
 				charas[Player].pandoraDiceCount++;
 				if (ps == 'c')
 				{
 					CriticalDice(&charas[Enemy], &charas[Player]);
 				}
-				if (ps == 'm')
+				else if (ps == 'm')
 				{ //if(ps=='c')
 					MagicDice(&charas[Enemy], &charas[Player]);
 				}
-				if (ps == 'g')
+				else if (ps == 'g')
 				{ //if(ps=='m')
 					GuardDice(&charas[Enemy], &charas[Player]);
 				}
-				if (ps == 'h')
+				else if (ps == 'h')
 				{ //if(ps=='g')
 					HearingDice(&charas[Enemy], &charas[Player]);
 				}
-				if (ps != 'c' && ps != 'm' && ps != 'g' && ps != 'h')
+				else
 				{ //if(ps=='h')
 					printf("コマンドを押していないため、このターンは行動できません\n");
 				} //if(ps!==''&&pw!='m'&&ps!='g'&&ps!='h')
 			}
 		}
 	}
-	printf("next\n");
-	getchar();
 }
 
 void DiceEnemy()
@@ -326,7 +327,7 @@ void DiceEnemy()
 			else
 			{
 				charas[Enemy].pandoraDiceCount++;
-				if (10 > eh && eh > 0)
+				if (10 > charas[Enemy].hp && charas[Enemy].hp > 0)
 				{
 					ep = rand() % 2 + 1;
 					if (ep == 1)
@@ -338,7 +339,7 @@ void DiceEnemy()
 						HearingDice(&charas[Player], &charas[Enemy]);
 					} //if(ep==2)
 				}
-				else if (20 > eh && eh >= 10)
+				else if (20 > charas[Enemy].hp && charas[Enemy].hp >= 10)
 				{ //if(10>eh&&eh>0&&etd==1)
 					ep = rand() % 4 + 1;
 					if (ep == 1)
@@ -358,7 +359,7 @@ void DiceEnemy()
 						HearingDice(&charas[Player], &charas[Enemy]);
 					} //if(ep==4)
 				}
-				if (eh >= 20)
+				else if (charas[Enemy].hp >= 20)
 				{ //if(20>eh&&eh=>10&&etd==1)
 					ep = rand() % 2 + 1;
 					if (ep == 1)
@@ -373,8 +374,6 @@ void DiceEnemy()
 			}
 			//if(epn==6)
 		}
-		printf("next\n");
-		getchar();
 	} //if(eh>0&&ph>0)
 }
 
@@ -384,7 +383,10 @@ void ChangeTurn(CharaData *_turnCharas)
 	_turnCharas->nodamage = 0;
 
 	PushKeyAction();
-	printf("\n△%sのLP:%d\n◯%sのLP:%d\n", charas[Player].name, charas[Player].hp, charas[Enemy].name, charas[Enemy].hp);
+	printf("%sのLP:%d\n", charas[Player].name, charas[Player].hp);
+	printf("%sのパンドラダイスカウント:%d\n", charas[Player].name, charas[Player].pandoraDiceCount);
+	printf("\n%sのLP:%d\n",  charas[Enemy].name, charas[Enemy].hp);
+	printf("%sのパンドラダイスカウント:%d\n", charas[Enemy].name, charas[Enemy].pandoraDiceCount);
 
 	if (fireBall.flg == 1)
 	{
@@ -403,7 +405,6 @@ void ChangeTurn(CharaData *_turnCharas)
 
 void CriticalDice(CharaData *_target, CharaData *_this)
 {
-	_this->pandoraDiceCount++;
 	printf("%sはクリティカルダイスを振りました。\n", _this->name);
 
 	printf("next>>\n");
@@ -704,7 +705,7 @@ void ChangeHP(CharaData *_target, CharaData *_this)
 //ガードさせる//
 void SetGuard(CharaData *_target)
 {
-	printf("%sは守りを固めた!!/n"
+	printf("%sは守りを固めた!!\n"
 		   "(次の%sのターンまで%sが受けるダメージは0となる)\n",
 		   _target->name, _target->name, _target->name);
 	_target->nodamage = 1;
