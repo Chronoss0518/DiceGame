@@ -4,23 +4,32 @@
 
 typedef struct CharactorData
 {
-	char* name;
+	char *name;
 	int hp;
 	int stan;
 	int nodamage;
 	int ice;
+	int pandoraDiceCount;
 } CharaData;
 
+enum CharaType
+{
+	Player,
+	Enemy
+};
+
 int a = 0, b = 0;
-int c = 0, d = 0, f = 0, ep = 0, dou = 0, psn = 0, esn = 0, pss = 0, ess = 0, ppn = 0, epn = 0, etd = 0, turn = 0;
+int c = 0, d = 0, f = 0, ep = 0, dou = 0, psn = 0, esn = 0, pss = 0, ess = 0, ppn = 0;
 int ph = 30, eh = 30;
 char ps = 0, es = 0;
 
-CharaData charas;
+CharaData charas[2];
 
 //s=スタン、n=ノーダメージ、dou=倍ダメージ,
 //pst1,est1=n;pst2,est2=s
 //c=クリティカル,m=マジック,g=ガード,h=ヒーリング,
+
+void InitCharaData(CharaData *_data, char *_name);
 void Helps();
 void StartDice();
 void Game();
@@ -30,16 +39,19 @@ void DicePlayer();
 void DiceEnemy();
 void Result();
 
-void CriticalDice(char* _name,int* _hp, int* _stn, int* _nod,int* _thisHp,int* _thisNod);
-void MagicDice(char* _name,int* _hp, int* _stn, int* _nod,int* _thisHp,int* _thisNod);
-void GuardDice(char* _name,int* _hp, int* _stn, int* _nod,int* _thisHp,int* _thisNod);
-void HearingDice(char* _name,int* _hp, int* _stn, int* _nod,int* _thisHp,int* _thisNod);
-void Pandora
+void CriticalDice(CharaData *_target, CharaData *_this);
+void MagicDice(CharaData *_target, CharaData *_this);
+void GuardDice(CharaData *_target, CharaData *_this);
+void HearingDice(CharaData *_target, CharaData *_this);
+void PandoraDice(CharaData *_target, CharaData *_this);
 
 int main(void)
 {
 	srand(time(0));
 	rand();
+
+	InitCharaData(&charas[Player], "あなた");
+	InitCharaData(&charas[Enemy], "エネミー");
 
 	Helps();
 
@@ -49,8 +61,17 @@ int main(void)
 
 	Result();
 
-	
 	return 0;
+}
+
+void InitCharaData(CharaData *_data, char *_name)
+{
+	_data->name = _name;
+	_data->hp = 30;
+	_data->ice = 0;
+	_data->nodamage = 0;
+	_data->stan = 0;
+	_data->pandoraDiceCount = 0;
 }
 
 void Helps()
@@ -88,16 +109,16 @@ void StartDice()
 		a = rand() % 20 + 1;
 		b = rand() % 20 + 1;
 
-		printf("あなたの目は%dです。\n", a);
-		printf("相手の目は%dです。\n", b);
+		printf("%sの目は%dです。\n", charas[Player].name, a);
+		printf("%sの目は%dです。\n", charas[Enemy].name, b);
 
 		if (a > b)
 		{
-			printf("あなたが先行です。\n");
+			printf("%sが先行です。\n", charas[Player].name);
 		}
 		if (a < b)
 		{ //if(a>b)
-			printf("あなたは後攻です。\n");
+			printf("%sは後攻です。\n", charas[Player].name);
 		}
 		if (a == b)
 		{ //if(a<b)
@@ -111,8 +132,8 @@ void StartDice()
 
 void Result()
 {
-	printf("戦闘終了です!\nあなたの");
-	if (ph > 0)
+	printf("戦闘終了です!\n%sの", charas[Player].name);
+	if (charas[Player].hp > 0)
 	{
 		printf("勝ちです!!");
 	}
@@ -120,12 +141,14 @@ void Result()
 	{
 		printf("負けです!");
 	}
+	printf("GameEnd\n");
+	getchar();
 }
 
 void Game()
 {
 
-	while (ph > 0 && eh > 0)
+	while (charas[Player].hp > 0 && charas[Enemy].hp > 0)
 	{
 		FirstPlayer();
 		FirstEnemy();
@@ -156,1657 +179,470 @@ void FirstEnemy()
 void DicePlayer()
 {
 
-	if (eh > 0 && ph > 0)
+	if (charas[Player].hp > 0 && charas[Enemy].hp > 0)
 	{
 
 		dou--;
-		psn = 0;
-		printf("\n△あなたのLP:%d\n◯相手のLP:%d\n", ph, eh);
+		charas[Player].nodamage = 0;
+		printf("\n△%sのLP:%d\n◯%sのLP:%d\n", charas[Player].name, charas[Player].hp, charas[Enemy].name, charas[Enemy].hp);
 		printf("next\n");
 		getchar();
 
 		printf("△＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿\n");
-		if (pss != 1)
+		if (charas[Player].stan == 1)
+		{ //if(pss!=1)
+			printf("\n%sはこのターン行動できません\n", charas[Player].name);
+			charas[Player].stan = 0;
+		} //if(pss==1)
+		else
 		{
+
 			if (f == 1)
 			{
-				printf("ファイアーボールの流れ弾が当たった!!\n");
-				ph = ph - 2;
+				printf("%sはファイアーボールの流れ弾が当たった!!\n", charas[Player].name);
+				charas[Player].hp -= 2;
 				if (dou > 0)
 				{
-					ph = ph - 2;
+					charas[Player].hp -= 2;
 				} //if(dou>0)
 				f = 0;
 			} //if(f==1)
-			printf("\n△あなたのターンです\n");
+			printf("\n△%sのターンです\n", charas[Player].name);
 			printf("c;クリティカルダイス\n");
 			printf("m;マジックダイス\n");
 			printf("h;ヒーリングダイス\n");
 			printf("g;ガードダイス\n");
 			printf("\n使うダイスを宣言して、ダイスを振ってください:");
 			scanf("%c", &ps);
-			if (ps == 'c')
+
+			if (charas[Player].pandoraDiceCount >= 6)
 			{
-				printf("あなたはクリティカルダイスを振りました。\n");
-				c = rand() % 6 + 1;
-				if (c == 1)
-				{
-					printf("クリティカルヒット!!\n");
-					printf("相手に7のダメージ!!\n");
-					if (esn != 1)
-					{
-						eh = eh - 7;
-						if (dou > 0)
-						{
-							eh = eh - 7;
-						} //if(dou>0)
-					}	  //if(esn!=1)
-					ppn++;
-				}
-				if (c == 2)
-				{ //if(c==
-					printf("ミス!相手に0ダメージ\n");
-					ppn++;
-				}
-				if (c == 3)
-				{ //if(c==2)
-					printf("クリティカルヒット!!\n");
-					printf("相手に5のダメージ!!次の相手のターンをスキップする。\n");
-					if (esn != 1)
-					{
-						eh = eh - 5;
-						if (dou > 0)
-						{
-							eh = eh - 5;
-						} //if(dou>0)
-						ess = 1;
-					} //if(esn!=1)
-					ppn++;
-				}
-				if (c == 4)
-				{ //if(c==3)
-					printf("相手に2のダメージ\n");
-					if (esn != 1)
-					{
-						eh = eh - 2;
-						if (dou > 0)
-						{
-							eh = eh - 2;
-						} //if(dou>0)
-					}	  //if(esn!=1)
-					ppn++;
-				}
-				if (c == 5)
-				{ //if(c==4)
-					ppn = 0;
-					printf("パンドラのダイス始動!!\nダイスを一回振れ!!\n");
-					scanf("\n");
-					d = rand() % 6 + 1;
-					if (d == 1)
-					{
-						printf("ギガドレイン始動!!\n相手のLPから10ポイント吸い取る!!\n");
-						if (esn != 1)
-						{
-							ph = ph + 10;
-							eh = eh - 10;
-						} //if(esn!=1)
-					}
-					if (d == 2)
-					{ //if(c==1)
-						printf("宇宙魔法、ブラックホール始動!!\n自分のLP1にして、相手に15のダメージ!!\n");
-						ph = 1;
-						if (esn != 1)
-						{
-							ph = 1;
-							eh = eh - 15;
-							if (dou > 0)
-							{
-								eh = eh - 15;
-							} //if(dou>0)
-						}	  //if(esn!=1)
-					}
-					if (d == 3)
-					{ //if(d==2)
-						printf("相手と自分のLPを入れ替える!\n");
-						ph = ph + eh;
-						eh = ph - eh;
-						ph = ph - eh;
-					}
-					if (d == 4)
-					{ //if(d==3)
-						printf("ゼウスを召喚した!!\n相手に13のダメージ!!\n");
-						if (esn != 1)
-						{
-							eh = eh - 13;
-							if (dou > 0)
-							{
-								eh = eh - 13;
-							} //if(dou>0)
-						}	  //if(esn!=1)
-					}
-					if (d == 5)
-					{ //if(d==4)
-						printf("ヒーリング・ノヴァ始動\n自分のLPを10回復!!\n");
-						ph = ph + 10;
-					}
-					if (d == 6)
-					{ //if(d==5)
-						printf("次の自分のターン終了時まで、発生する全てのダメージは2倍になる\n");
-						while (dou < 3)
-						{
-							dou++;
-						} //while(dou<3)
-					}	  //if(d==6)
-				}
-				if (c == 6)
-				{ //if(c==5)
-					printf("クリティカルヒット!!\n");
-					printf("相手に5のダメージ!!次の相手のターンをスキップする。\n");
-					if (esn != 1)
-					{
-						eh = eh - 5;
-						if (dou > 0)
-						{
-							eh = eh - 5;
-						} //if(dou>0)
-						ess = 1;
-					} //if(esn!=1)
-					ppn++;
-				} //if(c==6)
-			}
-			if (ps == 'm')
-			{ //if(ps=='c')
-				printf("あなたはマジックダイスを振りました。\n");
-				c = rand() % 6 + 1;
-				if (c == 1)
-				{
-					printf("炎魔法、ファイアーボール発動!!\n");
-					printf("相手に2のダメージ!!,次にダイスを振るプレイヤーに2のダメージを与える。\n");
-					if (esn != 1)
-					{
-						eh = eh - 2;
-						if (dou > 0)
-						{
-							eh = eh - 2;
-						} //if(dou>0)
-					}	  //if(esn!=1)
-					f = 1;
-					ppn++;
-				}
-				if (c == 2)
-				{ //if(c==1)
-					printf("雷魔法、サンダーボルト発動!!\n");
-					printf("お互いに4のダメージ!!\n");
-					ph = ph - 4;
-					if (dou > 0)
-					{
-						ph = ph - 4;
-					} //if(dou>0)
-					if (esn != 1)
-					{
-						eh = eh - 4;
-						if (dou > 0)
-						{
-							eh = eh - 4;
-						} //if(dou>0)
-					}	  //if(esn!=1)
-					ppn++;
-				}
-				if (c == 3)
-				{ //if(c==2)
-					printf("ミス!、相手に0のダメージ\n");
-					ppn++;
-				}
-				if (c == 4)
-				{ //if(c==3)
-					ppn = 0;
-					printf("パンドラのダイス始動!!\nダイスを一回振れ!!\n");
-					scanf("\n");
-					d = rand() % 6 + 1;
-					if (d == 1)
-					{
-						printf("ギガドレイン始動!!\n相手のLPから10ポイント吸い取る!!\n");
-						if (esn != 1)
-						{
-							ph = ph + 10;
-							eh = eh - 10;
-						} //if(esn!=1)
-					}
-					if (d == 2)
-					{ //if(d==1)
-						printf("宇宙魔法、ブラックホール始動!!\n自分のLP1にして、相手に15のダメージ!!\n");
-						ph = 1;
-						if (esn != 1)
-						{
-							eh = eh - 15;
-							if (dou > 0)
-							{
-								eh = eh - 15;
-							} //if(dou>0)
-						}	  //if(esn!=1)
-					}
-					if (d == 3)
-					{ //if(d==2)
-						printf("相手と自分のLPを入れ替える!\n");
-						ph = ph + eh;
-						eh = ph - eh;
-						ph = ph - eh;
-					}
-					if (d == 4)
-					{ //if(d==3)
-						printf("ゼウスを召喚した!!\n相手に13のダメージ!!\n");
-						if (esn != 1)
-						{
-							eh = eh - 13;
-							if (dou > 0)
-							{
-								eh = eh - 13;
-							} //if(dou>0)
-						}	  //if(esn!=1)
-					}
-					if (d == 5)
-					{ //if(d==4)
-						printf("ヒーリング・ノヴァ始動\n自分のLPを10回復!!\n");
-						ph = ph + 10;
-					}
-					if (d == 6)
-					{ //if(d==5)
-						printf("次の自分のターン終了時まで、発生する全てのダメージは2倍になる\n");
-						while (dou < 3)
-						{
-							dou++;
-						} //while(dou<3)
-					}	  //if(d==6)
-				}
-				if (c == 5)
-				{
-					printf("氷魔法、サークルフロスト発動!!\n");
-					printf("相手に3のダメージ!!次の相手のターンをスキップする。\n");
-					if (esn != 1)
-					{
-						eh = eh - 3;
-						if (dou > 0)
-						{
-							eh = eh - 3;
-						} //if(dou>0)
-						ess = 1;
-					} //if(esn!=1)
-					ppn++;
-				}
-				if (c == 6)
-				{ //if(c==5)
-					printf("宇宙魔法、メテオ発動!!\n");
-					printf("自身のLPを1にして、相手に10のダメージ!!\n");
-					ph = 1;
-					if (esn != 1)
-					{
-						eh = eh - 10;
-						if (dou > 0)
-						{
-							eh = eh - 10;
-						} //if(dou>0)
-					}	  //if(esn!=1)
-					ppn++;
-				} //if(c==6)
-			}
-			if (ps == 'g')
-			{ //if(ps=='m')
-				printf("あなたはガードダイスを振りました。\n");
-				c = rand() % 6 + 1;
-				if (c == 1)
-				{
-					printf("クリティカルヒット!!\n");
-					printf("相手に4のダメージ!!、次の自分のターンまで受けるダメージは0になる。\n");
-					psn = 1;
-					if (esn != 1)
-					{
-						eh = eh - 4;
-						if (dou > 0)
-						{
-							eh = eh - 4;
-						} //if(dou>0)
-					}	  //if(esn!=1)
-					ppn++;
-				}
-				if (c == 2)
-				{ //if(c==1)
-					printf("守りを固めた!!\n(次の自分のターンまで自身が受けるダメージは0になる)\n");
-					psn = 1;
-					ppn++;
-				}
-				if (c == 3)
-				{ //if(c==2)
-					ppn = 0;
-					printf("パンドラのダイス始動!!\nダイスを一回振れ!!\n");
-					scanf("\n");
-					d = rand() % 6 + 1;
-					if (d == 1)
-					{
-						printf("ギガドレイン始動!!\n相手のLPから10ポイント吸い取る!!\n");
-						if (esn != 1)
-						{
-							ph = ph + 10;
-							eh = eh - 10;
-						} //if(esn!=1)
-					}
-					if (d == 2)
-					{ //if(d==1)
-						printf("宇宙魔法、ブラックホール始動!!\n自分のLP1にして、相手に15のダメージ!!\n");
-						ph = 1;
-						if (esn != 1)
-						{
-							eh = eh - 15;
-							if (dou > 0)
-							{
-								eh = eh - 15;
-							} //if(dou>0)
-						}	  //if(esn!=1)
-					}
-					if (d == 3)
-					{ //if(d==2)
-						printf("相手と自分のLPを入れ替える!\n");
-						ph = ph + eh;
-						eh = ph - eh;
-						ph = ph - eh;
-					}
-					if (d == 4)
-					{ //if(d==3)
-						printf("ゼウスを召喚した!!\n相手に13のダメージ!!\n");
-						if (esn != 1)
-						{
-							eh = eh - 13;
-							if (dou > 0)
-							{
-								eh = eh - 13;
-							} //if(dou>0)
-						}	  //if(esn!=1)
-					}
-					if (d == 5)
-					{ //if(d==4)
-						printf("ヒーリング・ノヴァ始動\n自分のLPを10回復!!\n");
-						ph = ph + 10;
-					}
-					if (d == 6)
-					{ //if(d==5)
-						printf("次の自分のターン終了時まで、発生する全てのダメージは2倍になる\n");
-						while (dou < 3)
-						{
-							dou++;
-						} //while(dou<3)
-					}	  //if(d==6)
-				}
-				if (c == 4)
-				{ //if(c==3)
-					printf("ミス!、何も起こらなかった。\n");
-					ppn++;
-				}
-				if (c == 5)
-				{ //if(c==4)
-					printf("相手に1のダメージ!\n");
-					if (esn != 1)
-					{
-						eh = eh - 1;
-						if (dou > 0)
-						{
-							eh = eh - 1;
-						} //if(dou>0)
-					}	  //if(esn!=1)
-					ppn++;
-				}
-				if (c == 6)
-				{ //if(c==5)
-					printf("守りを固めた!!\n(次の自分のターンまで、自身が受けるダメージは0になる)\n");
-					psn = 1;
-					ppn++;
-				} //if(c==6)
-			}
-			if (ps == 'h')
-			{ //if(ps=='g')
-				printf("あなたはヒーリングダイスを振りました。\n");
-				c = rand() % 6 + 1;
-				if (c == 1)
-				{
-					printf("ドレイン発動!!\n相手のLPから4ポイント吸い取る\n");
-					if (esn != 1)
-					{
-						eh = eh - 4;
-						ph = ph + 4;
-					} //if(esn!=1)
-					ppn++;
-				}
-				if (c == 2)
-				{ //if(c==1)
-					ppn = 0;
-					printf("パンドラのダイス始動!!\nダイスを一回振れ!!\n");
-					scanf("\n");
-					d = rand() % 6 + 1;
-					if (d == 1)
-					{
-						printf("ギガドレイン始動!!\n相手のLPから10ポイント吸い取る!!\n");
-						if (esn != 1)
-						{
-							ph = ph + 10;
-							eh = eh - 10;
-						} //if(esn!=1)
-					}
-					if (d == 2)
-					{ //if(d==1)
-						printf("宇宙魔法、ブラックホール始動!!\n自分のLP1にして、相手に15のダメージ!!\n");
-						ph = 1;
-						if (esn != 1)
-						{
-							ph = 1;
-							eh = eh - 15;
-							if (dou > 0)
-							{
-								eh = eh - 15;
-							} //if(dou>0)
-						}	  //if(esn!=1)
-					}
-					if (d == 3)
-					{ //if(d==2)
-						printf("相手と自分のLPを入れ替える!\n");
-						ph = ph + eh;
-						eh = ph - eh;
-						ph = ph - eh;
-					}
-					if (d == 4)
-					{ //if(d==3)
-						printf("ゼウスを召喚した!!\n相手に13のダメージ!!\n");
-						if (esn != 1)
-						{
-							eh = eh - 13;
-							if (dou > 0)
-							{
-								eh = eh - 13;
-							} //if(dou>0)
-						}	  //if(esn!=1)
-					}
-					if (d == 5)
-					{ //if(d==4)
-						printf("ヒーリング・ノヴァ始動\n自分のLPを10回復!!\n");
-						ph = ph + 10;
-					}
-					if (d == 6)
-					{ //if(d==5)
-						printf("次の自分のターン終了時まで、発生する全てのダメージは2倍になる\n");
-						while (dou < 3)
-						{
-							dou++;
-						} //if(dou>3)
-					}	  //if(d==6)
-				}
-				if (c == 3)
-				{ //if(c==2)
-					printf("相手に2のダメージ!!\n");
-					if (esn != 1)
-					{
-						eh = eh - 2;
-						if (dou > 0)
-						{
-							eh = eh - 2;
-						} //if(dou>0)
-					}	  //if(esn!=1)
-					ppn++;
-				}
-				if (c == 4)
-				{ //if(c==3)
-					printf("自身のLPを3回復!!\n");
-					ph = ph + 3;
-					ppn++;
-				}
-				if (c == 5)
-				{ //if(c==4)
-					printf("守りを固めた!!/n");
-					printf("(次の自分のターンまで自身が受けるダメージは0となる)\n");
-					psn = 1;
-					ppn++;
-				}
-				if (c == 6)
-				{ //if(c==5)
-					printf("ミス!,何も起こらなかった\n");
-					ppn++;
-				} //if(c==6)
-			}
-			if (ps != 'c' && ps != 'm' && ps != 'g' && ps != 'h')
-			{ //if(ps=='h')
-				printf("コマンドを押していないため、このターンは行動できません\n");
-			} //if(ps!==''&&pw!='m'&&ps!='g'&&ps!='h')
-			if (ppn == 6)
+				PandoraDice(&charas[Enemy], &charas[Player]);
+			} //if(ppn==6)
+			else
 			{
-				ppn = 0;
-				printf("パンドラのダイス強制始動!!\nダイスを一回振れ!!\n");
-				scanf("\n");
-				d = rand() % 6 + 1;
-				if (d == 1)
+
+				charas[Player].pandoraDiceCount++;
+				if (ps == 'c')
 				{
-					printf("ギガドレイン始動!!\n相手のLPから10ポイント吸い取る!!\n");
-					if (esn != 1)
-					{
-						ph = ph + 10;
-						eh = eh - 10;
-					} //if(esn!=1)
+					CriticalDice(&charas[Enemy], &charas[Player]);
 				}
-				if (d == 2)
-				{ //if(d==1)
-					printf("宇宙魔法、ブラックホール始動!!\n自分のLP1にして、相手に15のダメージ!!\n");
-					ph = 1;
-					if (esn != 1)
-					{
-						ph = 1;
-						eh = eh - 15;
-						if (dou > 0)
-						{
-							eh = eh - 15;
-						} //if(dou>0)
-					}	  //if(esn!=1)
+				if (ps == 'm')
+				{ //if(ps=='c')
+					MagicDice(&charas[Enemy], &charas[Player]);
 				}
-				if (d == 3)
-				{ //if(d==2)
-					printf("相手と自分のLPを入れ替える!\n");
-					ph = ph + eh;
-					eh = ph - eh;
-					ph = ph - eh;
+				if (ps == 'g')
+				{ //if(ps=='m')
+					GuardDice(&charas[Enemy], &charas[Player]);
 				}
-				if (d == 4)
-				{ //if(d==3)
-					printf("ゼウスを召喚した!!\n相手に13のダメージ!!\n");
-					if (esn != 1)
-					{
-						eh = eh - 13;
-						if (dou > 0)
-						{
-							eh = eh - 13;
-						} //if(dou>0)
-					}	  //if(esn!=1)
+				if (ps == 'h')
+				{ //if(ps=='g')
+					HearingDice(&charas[Enemy], &charas[Player]);
 				}
-				if (d == 5)
-				{ //if(d==4)
-					printf("ヒーリング・ノヴァ始動\n自分のLPを10回復!!\n");
-					ph = ph + 10;
-				}
-				if (d == 6)
-				{ //if(d==5)
-					printf("次の自分のターン終了時まで、発生する全てのダメージは2倍になる\n");
-					while (dou < 3)
-					{
-						dou++;
-					} //while(dou<3)
-				}	  //if(d==6)
-			}		  //if(ppn==6)
+				if (ps != 'c' && ps != 'm' && ps != 'g' && ps != 'h')
+				{ //if(ps=='h')
+					printf("コマンドを押していないため、このターンは行動できません\n");
+				} //if(ps!==''&&pw!='m'&&ps!='g'&&ps!='h')
+			}
 		}
-		if (pss == 1)
-		{ //if(pss!=1)
-			printf("\nあなたはこのターン行動できません\n");
-			pss = 0;
-		} //if(pss==1)
-		printf("next\n");
-		getchar();
-	} //if(ph>0)
+	}
+	printf("next\n");
+	getchar();
 }
 
 void DiceEnemy()
 {
 
-	if (eh > 0 && ph > 0)
+	if (charas[Player].hp > 0 && charas[Enemy].hp > 0)
 	{
 		dou--;
 		esn = 0;
 
-		printf("\n△あなたのLP:%d\n◯相手のLP:%d\n", ph, eh);
+		printf("\n△%sのLP:%d\n◯%sのLP:%d\n", charas[Player].name, charas[Player].hp, charas[Enemy].name, charas[Enemy].hp);
 		printf("next\n");
 		getchar();
 		printf("◯＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿\n");
-		if (ess != 1)
+
+		if (f == 1)
 		{
-			if (f == 1)
+			printf("%sはファイアーボールの流れ弾が当たった!!\n", charas[Enemy].name);
+			charas[Enemy].hp -= 2;
+			if (dou > 0)
 			{
-				printf("ファイアーボールの流れ弾が当たった!!\n");
-				eh = eh - 2;
-				if (dou > 0)
-				{
-					eh = eh - 2;
-				} //if(dou>0)
-				f = 0;
-			} //if(==1)
-			printf("\n◯相手のターンです\n");
-			getchar();
-			etd = 1;
-			if (epn != 6)
+				charas[Enemy].hp -= 2;
+			} //if(dou>0)
+			f = 0;
+		} //if(==1)
+		printf("\n◯%sのターンです\n", charas[Enemy].name);
+		printf("next\n");
+		getchar();
+		if (charas[Enemy].stan == 1)
+		{ //if(ess!=1)
+			printf("\n%sはこのターン行動できません\n", charas[Enemy].name);
+			charas[Enemy].stan = 0;
+		} //if(ess==1)
+		else
+		{
+			if (charas[Enemy].pandoraDiceCount >= 6)
+			{ //if(epn!=6)
+				PandoraDice(&charas[Player], &charas[Enemy]);
+			}
+			else
 			{
-				if (10 > eh && eh > 0 && etd == 1)
+				charas[Enemy].pandoraDiceCount++;
+				if (10 > eh && eh > 0)
 				{
-					etd = 0;
 					ep = rand() % 2 + 1;
 					if (ep == 1)
 					{
-						printf("相手はガードダイスを振りました\n");
-						c = rand() % 6 + 1;
-						if (c == 1)
-						{
-							printf("クリティカルヒット!!\n");
-							printf("あなたに4のダメージ!!、次の相手のターンまで相手が受けるダメージは0になる。\n");
-							esn = 1;
-							if (psn != 1)
-							{
-								ph = ph - 4;
-								if (dou > 0)
-								{
-									ph = ph - 4;
-								} //if(dou>0)
-							}	  //if(psn!=1)
-							epn++;
-						}
-						if (c == 2)
-						{ //if(c==1)
-							printf("守りを固めた!!\n(次の相手のターンまで相手が受けるダメージは0になる)\n");
-							esn = 1;
-							epn++;
-						}
-						if (c == 3)
-						{ //if(c==2)
-							epn = 0;
-							printf("パンドラのダイス始動!!\nダイスを一回振れ!!\n");
-							d = rand() % 6 + 1;
-							if (d == 1)
-							{
-								printf("ギガドレイン始動!!\nあなたのLPから10ポイント吸い取る!!\n");
-								if (psn != 1)
-								{
-									eh = eh + 10;
-									ph = ph - 10;
-								} //if(ps1!='n')
-							}
-							if (d == 2)
-							{ //if(c==1)
-								printf("宇宙魔法、ブラックホール始動!!\n自分のLP1にして、あなたに15のダメージ!!\n");
-								eh = 1;
-								if (psn != 1)
-								{
-									ph = ph - 15;
-									if (dou > 0)
-									{
-										ph = ph - 15;
-									} //if(dou>0)
-								}	  //if(psn!=1)
-							}
-							if (d == 3)
-							{ //if(c==2)
-								printf("相手と自分のLPを入れ替える!\n");
-								ph = ph + eh;
-								eh = ph - eh;
-								ph = ph - eh;
-							}
-							if (d == 4)
-							{ //if(c==3)
-								printf("ゼウスを召喚した!!\nあなたに13のダメージ!!\n");
-								if (psn != 1)
-								{
-									ph = ph - 13;
-									if (dou > 0)
-									{
-										ph = ph - 13;
-									} //if(dou>0)
-								}	  //if(psn!=1)
-							}
-							if (d == 5)
-							{ //if(c==4)
-								printf("ヒーリング・ノヴァ始動\n相手はLPを10回復!!\n");
-								eh = eh + 10;
-							}
-							if (d == 6)
-							{ //if(c==5)
-								printf("次の相手のターン終了時まで、発生する全てのダメージは2倍になる\n");
-								while (dou < 3)
-								{
-									dou++;
-								} //while(dou<3)
-							}	  //if(c==6)
-						}
-						if (c == 4)
-						{ //if(c==3)
-							printf("ミス!、何も起こらなかった。\n");
-							epn++;
-						}
-						if (c == 5)
-						{ //if(c==4)
-							printf("あなたに1のダメージ!\n");
-							if (psn != 1)
-							{
-								ph = ph - 1;
-								if (dou > 0)
-								{
-									ph = ph - 1;
-								} //if(dou>0)
-							}	  //if(psn!=1)
-							epn++;
-						}
-						if (c == 6)
-						{ //if(c==5)
-							printf("守りを固めた!!\n(次の自分のターンまで、自身が受けるダメージは0になる)\n");
-							esn = 1;
-							epn++;
-						} //if(c==6)
+						GuardDice(&charas[Player], &charas[Enemy]);
 					}
 					if (ep == 2)
 					{ //if(ep==1)
-						printf("相手はヒーリングダイスを振りました\n");
-						c = rand() % 6 + 1;
-						if (c == 1)
-						{
-							printf("ドレイン発動!!\nあなたのLPから4ポイント吸い取る\n");
-							if (psn != 1)
-							{
-								ph = ph - 4;
-								eh = eh + 4;
-							} //if(psn!=1)
-							epn++;
-						}
-						if (c == 2)
-						{ //if(c==1)
-							epn = 0;
-							printf("パンドラのダイス始動!!\nダイスを一回振れ!!\n");
-							d = rand() % 6 + 1;
-							if (d == 1)
-							{
-								printf("ギガドレイン始動!!\nあなたのLPから10ポイント吸い取る!!\n");
-								if (psn != 1)
-								{
-									eh = eh + 10;
-									ph = ph - 10;
-								} //if(psn!=1)
-							}
-							if (d == 2)
-							{ //if(c==1)
-								printf("宇宙魔法、ブラックホール始動!!\n自分のLP1にして、あなたに15のダメージ!!\n");
-								eh = 1;
-								if (psn != 1)
-								{
-									ph = ph - 15;
-									if (dou > 0)
-									{
-										ph = ph - 15;
-									} //if(dou>0)
-								}	  //if(psn!=1)
-							}
-							if (d == 3)
-							{ //if(c==2)
-								printf("相手と自分のLPを入れ替える!\n");
-								ph = ph + eh;
-								eh = ph - eh;
-								ph = ph - eh;
-							}
-							if (d == 4)
-							{ //if(c==3)
-								printf("ゼウスを召喚した!!\nあなたに13のダメージ!!\n");
-								if (psn != 1)
-								{
-									ph = ph - 13;
-									if (dou > 0)
-									{
-										ph = ph - 13;
-									} //if(dou>0)
-								}	  //if(psn!=1)
-							}
-							if (d == 5)
-							{ //if(c==4)
-								printf("ヒーリング・ノヴァ始動\nあいてはLPを10回復!!\n");
-								eh = eh + 10;
-							}
-							if (d == 6)
-							{ //if(c==5)
-								printf("次の相手のターン終了時まで、発生する全てのダメージは2倍になる\n");
-								while (dou < 3)
-								{
-									dou++;
-								} //while(dou<3)
-							}	  //if(c==6)
-						}
-						if (c == 3)
-						{ //if(c==2)
-							printf("あなたに2のダメージ!!\n");
-							if (psn != 1)
-							{
-								ph = eh - 2;
-								if (dou > 0)
-								{
-									ph = ph - 2;
-								} //if(dou>0)
-							}	  //if(psn!=1)
-							epn++;
-						}
-						if (c == 4)
-						{ //if(c==3)
-							printf("あいてはLPを3回復!!\n");
-							eh = eh + 3;
-							epn++;
-						}
-						if (c == 5)
-						{ //if(c==4)
-							printf("守りを固めた!!/n");
-							printf("(次の相手のターンまで相手が受けるダメージは0となる)\n");
-							esn = 1;
-							epn++;
-						}
-						if (c == 6)
-						{ //if(c==5)
-							printf("ミス!,何も起こらなかった\n");
-							epn++;
-						} //if(c==6)
-					}	  //if(ep==2)
+						HearingDice(&charas[Player], &charas[Enemy]);
+					} //if(ep==2)
 				}
-				if (20 > eh && eh >= 10 && etd == 1)
+				else if (20 > eh && eh >= 10)
 				{ //if(10>eh&&eh>0&&etd==1)
-					etd = 0;
 					ep = rand() % 4 + 1;
 					if (ep == 1)
 					{
-						printf("相手はクリティカルダイスを振りました。\n");
-						c = rand() % 6 + 1;
-						if (c == 1)
-						{
-							printf("クリティカルヒット!!\n");
-							printf("あなたに7のダメージ!!\n");
-							if (psn != 1)
-							{
-								ph = ph - 7;
-								if (dou > 0)
-								{
-									ph = ph - 7;
-								} //if(dou>0)
-							}	  //if(psn!=1)
-							epn++;
-						}
-						if (c == 2)
-						{ //if(c==1)
-							printf("ミス!あなたに0ダメージ\n");
-							epn++;
-						}
-						if (c == 3)
-						{ //if(c==2)
-							printf("クリティカルヒット!!\n");
-							printf("あなたに5のダメージ!!次のあなたのターンをスキップする。\n");
-							if (psn != 1)
-							{
-								ph = ph - 5;
-								if (dou > 0)
-								{
-									ph = ph - 5;
-								} //if(dou>0)
-								pss = 1;
-							} //if(psn!=1)
-							epn++;
-						}
-						if (c == 4)
-						{ //if(c==3)
-							printf("あなたに2のダメージ\n");
-							if (psn != 1)
-							{
-								ph = ph - 2;
-								if (dou > 0)
-								{
-									ph = ph - 2;
-								} //if(dou>0)
-							}	  //if(psn!=1)
-							epn++;
-						}
-						if (c == 5)
-						{ //if(c==4)
-							epn = 0;
-							printf("パンドラのダイス始動!!\nダイスを一回振れ!!");
-							d = rand() % 6 + 1;
-							if (d == 1)
-							{
-								printf("ギガドレイン始動!!\nあなたのLPから10ポイント吸い取る!!\n");
-								if (psn != 1)
-								{
-									eh = eh + 10;
-									ph = ph - 10;
-								} //if(psn!=1)
-							}
-							if (d == 2)
-							{ //if(c==1)
-								printf("宇宙魔法、ブラックホール始動!!\n自分のLP1にして、相手に15のダメージ!!\n");
-								eh = 1;
-								if (psn != 1)
-								{
-									ph = ph - 15;
-									if (dou > 0)
-									{
-										ph = ph - 15;
-									} //ih(dou>0)
-								}	  //if(psn!=1)
-							}
-							if (d == 3)
-							{ //if(c==2)
-								printf("相手と自分のLPを入れ替える!\n");
-								ph = ph + eh;
-								eh = ph - eh;
-								ph = ph - eh;
-							}
-							if (d == 4)
-							{ //if(c==3)
-								printf("ゼウスを召喚した!!\nあなたに13のダメージ!!\n");
-								if (psn != 1)
-								{
-									ph = ph - 13;
-									if (dou > 0)
-									{
-										ph = ph - 13;
-									} ///if(dou>0)
-								}	  //if(psn!=1)
-							}
-							if (d == 5)
-							{ //if(c==4)
-								printf("ヒーリング・ノヴァ始動\n相手はLPを10回復!!\n");
-								eh = eh + 10;
-							}
-							if (d == 6)
-							{ //if(c==5)
-								printf("次の相手のターン終了時まで、発生する全てのダメージは2倍になる\n");
-								while (dou < 3)
-								{
-									dou++;
-								} //while(dou<3)
-							}	  //if(c==6)
-						}
-						if (c == 6)
-						{ //if(c==5)
-							printf("クリティカルヒット!!\n");
-							printf("あなたに5のダメージ!!次のあなたのターンをスキップする。\n");
-							if (psn != 1)
-							{
-								ph = ph - 5;
-								if (dou > 0)
-								{
-									ph = ph - 5;
-								} //if(dou>0)
-								pss = 1;
-							} //if(pstn!=1)
-							epn++;
-						} //if(c==6)
+						CriticalDice(&charas[Player], &charas[Enemy]);
 					}
 					if (ep == 2)
 					{ //if(ep==1)
-						printf("相手はマジックダイスを振りました。\n");
-						c = rand() % 6 + 1;
-						if (c == 1)
-						{
-							printf("炎魔法、ファイアーボール発動!!\n");
-							printf("あなたに2のダメージ!!,次にダイスを振るプレイヤーに2のダメージを与える。!");
-							if (psn != 1)
-							{
-								ph = ph - 2;
-								if (dou > 0)
-								{
-									ph = ph - 2;
-								} //if(dou>0)
-							}	  //if(psn!=1)
-							f = 1;
-							epn++;
-						}
-						if (c == 2)
-						{ //if(c==1)
-							printf("雷魔法、サンダーボルト発動!!\n");
-							printf("お互いに4のダメージ!!\n");
-							eh = eh - 4;
-							if (dou > 0)
-							{
-								eh = eh - 4;
-							} //if(dou>0)
-							if (psn != 1)
-							{
-								ph = ph - 4;
-								if (dou > 0)
-								{
-									ph = ph - 4;
-								} //if(dou>0)
-							}	  //if(psn!=1)
-							epn++;
-						}
-						if (c == 3)
-						{ //if(c==2)
-							printf("ミス!、あなたに0のダメージ\n");
-							epn++;
-						}
-						if (c == 4)
-						{ //if(c==3)
-							epn = 0;
-							printf("パンドラのダイス始動!!\nダイスを一回振れ!!\n");
-							d = rand() % 6 + 1;
-							if (d == 1)
-							{
-								printf("ギガドレイン始動!!\nあなたのLPから10ポイント吸い取る!!\n");
-								if (psn != 1)
-								{
-									eh = eh + 10;
-									ph = ph - 10;
-								} //if(psn!=1)
-							}
-							if (d == 2)
-							{ //if(c==1)
-								printf("宇宙魔法、ブラックホール始動!!\n自分のLP1にして、相手に15のダメージ!!\n");
-								eh = 1;
-								if (psn != 1)
-								{
-									ph = ph - 15;
-									if (dou > 0)
-									{
-										ph = ph - 15;
-									} //if(dou>0)
-								}	  //if(psn!=1)
-							}
-							if (d == 3)
-							{ //if(c==2)
-								printf("相手と自分のLPを入れ替える!\n");
-								ph = ph + eh;
-								eh = ph - eh;
-								ph = ph - eh;
-							}
-							if (d == 4)
-							{ //if(c==3)
-								printf("ゼウスを召喚した!!\nあなたに13のダメージ!!\n");
-								if (psn != 1)
-								{
-									ph = ph - 13;
-									if (dou > 0)
-									{
-										ph = ph - 13;
-									} //if(dou>0)
-								}	  //if(psn!=1)
-							}
-							if (d == 5)
-							{ //if(c==4)
-								printf("ヒーリング・ノヴァ始動\n相手はLPを10回復!!\n");
-								eh = eh + 10;
-							}
-							if (d == 6)
-							{ //if(c==5)
-								printf("次の相手のターン終了時まで、発生する全てのダメージは2倍になる\n");
-								while (dou < 3)
-								{
-									dou++;
-								} //while(dou<3)
-							}	  //if(c==6)
-						}
-						if (c == 5)
-						{
-							printf("氷魔法、サークルフロスト発動!!\n");
-							printf("あなたに3のダメージ!!次のあなたのターンをスキップする。\n");
-							if (psn != 1)
-							{
-								ph = ph - 3;
-								if (dou > 0)
-								{
-									ph = ph - 3;
-								} //if(dou>0)
-								pss = 1;
-							} //if(psn!=1)
-							epn++;
-						}
-						if (c == 6)
-						{ //if(c==5)
-							printf("宇宙魔法、メテオ発動!!\n");
-							printf("自身のLPを1にして、あなたにに10のダメージ!!\n");
-							eh = 1;
-							if (psn != 1)
-							{
-								ph = ph - 10;
-								if (dou > 0)
-								{
-									ph = ph - 10;
-								} //if(dou>0)
-							}	  //if(psn!=1)
-							epn++;
-						} //if(c==6)
+						MagicDice(&charas[Player], &charas[Enemy]);
 					}
 					if (ep == 3)
 					{ //if(ep==2)
-						printf("相手はガードダイスを振りました\n");
-						c = rand() % 6 + 1;
-						if (c == 1)
-						{
-							printf("クリティカルヒット!!\n");
-							printf("あなたに4のダメージ!!、次の相手のターンまで相手が受けるダメージは0になる。\n");
-							esn = 1;
-							if (psn != 1)
-							{
-								ph = ph - 4;
-								if (dou > 0)
-								{
-									ph = ph - 4;
-								} //if(dou>0)
-							}	  //if(psn!=1)
-							epn++;
-						}
-						if (c == 2)
-						{ //if(c==1)
-							printf("守りを固めた!!\n(次の相手のターンまで相手が受けるダメージは0になる)\n");
-							esn = 1;
-							epn++;
-						}
-						if (c == 3)
-						{ //if(c==2)
-							epn = 0;
-							printf("パンドラのダイス始動!!\nダイスを一回振れ!!\n");
-							d = rand() % 6 + 1;
-							if (d == 1)
-							{
-								printf("ギガドレイン始動!!\nあなたのLPから10ポイント吸い取る!!\n");
-								if (psn != 1)
-								{
-									eh = eh + 10;
-									ph = ph - 10;
-								} //if(psn!=1)
-							}
-							if (d == 2)
-							{ //if(c==1)
-								printf("宇宙魔法、ブラックホール始動!!\n自分のLP1にして、あなたに15のダメージ!!\n");
-								eh = 1;
-								if (psn != 1)
-								{
-									ph = ph - 15;
-									if (dou > 0)
-									{
-										ph = ph - 15;
-									} //if(dou>0)
-								}	  //if(psn!=1)
-							}
-							if (d == 3)
-							{ //if(c==2)
-								printf("相手と自分のLPを入れ替える!\n");
-								ph = ph + eh;
-								eh = ph - eh;
-								ph = ph - eh;
-							}
-							if (d == 4)
-							{ //if(c==3)
-								printf("ゼウスを召喚した!!\nあなたに13のダメージ!!\n");
-								if (psn != 1)
-								{
-									ph = ph - 13;
-									if (dou > 0)
-									{
-										ph = ph - 13;
-									} //if(dou>0)
-								}	  //if(psn!=1)
-							}
-							if (d == 5)
-							{ //if(c==4)
-								printf("ヒーリング・ノヴァ始動\n相手はLPを10回復!!\n");
-								eh = eh + 10;
-							}
-							if (d == 6)
-							{ //if(c==5)
-								printf("次の相手のターン終了時まで、発生する全てのダメージは2倍になる\n");
-								while (dou < 3)
-								{
-									dou++;
-								} //while(dou<3)
-							}	  //if(c==6)
-						}
-						if (c == 4)
-						{ //if(c==3)
-							printf("ミス!、何も起こらなかった。\n");
-							epn++;
-						}
-						if (c == 5)
-						{ //if(c==4)
-							printf("あなたに1のダメージ!\n");
-							if (psn != 1)
-							{
-								ph = ph - 1;
-								if (dou > 0)
-								{
-									ph = ph - 1;
-								} //if(dou>0)
-							}	  //if(psn!=1)
-							epn++;
-						}
-						if (c == 6)
-						{ //if(c==5)
-							printf("守りを固めた!!\n(次の相手のターンまで、相手が受けるダメージは0になる)\n");
-							esn = 1;
-							epn++;
-						} //if(c==6)
+						GuardDice(&charas[Player], &charas[Enemy]);
 					}
 					if (ep == 4)
 					{ //if(ep==3)
-						printf("相手はヒーリングダイスを振りました\n");
-						c = rand() % 6 + 1;
-						if (c == 1)
-						{
-							printf("ドレイン発動!!\nあなたのLPから4ポイント吸い取る\n");
-							if (psn != 1)
-							{
-								ph = ph - 4;
-								eh = eh + 4;
-							} //if(psn!=1)
-							epn++;
-						}
-						if (c == 2)
-						{ //if(c==1)
-							epn = 0;
-							printf("パンドラのダイス始動!!\nダイスを一回振れ!!\n");
-							d = rand() % 6 + 1;
-							if (d == 1)
-							{
-								printf("ギガドレイン始動!!\nあなたのLPから10ポイント吸い取る!!\n");
-								if (psn != 1)
-								{
-									eh = eh + 10;
-									ph = ph - 10;
-								} //if(psn!=1)
-							}
-							if (d == 2)
-							{ //if(c==1)
-								printf("宇宙魔法、ブラックホール始動!!\n自分のLP1にして、あなたに15のダメージ!!\n");
-								eh = 1;
-								if (psn != 1)
-								{
-									ph = ph - 15;
-									if (dou > 0)
-									{
-										ph = ph - 15;
-									} //if(dou>0)
-								}	  //if(psn!=1)
-							}
-							if (d == 3)
-							{ //if(c==2)
-								printf("相手と自分のLPを入れ替える!\n");
-								ph = ph + eh;
-								eh = ph - eh;
-								ph = ph - eh;
-							}
-							if (d == 4)
-							{ //if(c==3)
-								printf("ゼウスを召喚した!!\nあなたに13のダメージ!!\n");
-								if (psn != 1)
-								{
-									ph = ph - 13;
-									if (dou > 0)
-									{
-										ph = ph - 13;
-									} //if(dou>0)
-								}	  //if(psn!=1)
-							}
-							if (d == 5)
-							{ //if(c==4)
-								printf("ヒーリング・ノヴァ始動\n自分のLPを10回復!!\n");
-								ph = ph + 10;
-							}
-							if (d == 6)
-							{ //if(c==5)
-								printf("次の相手のターン終了時まで、発生する全てのダメージは2倍になる\n");
-								while (dou < 3)
-								{
-									dou++;
-								} //while(dou<3)
-							}	  //if(c==6)
-						}
-						if (c == 3)
-						{ //if(c==2)
-							printf("あなたに2のダメージ!!\n");
-							if (psn != 1)
-							{
-								ph = ph - 2;
-								if (dou > 0)
-								{
-									ph = ph - 2;
-								} //if(dou>0)
-							}	  //if(psn!=1)
-							epn++;
-						}
-						if (c == 4)
-						{ //if(c==3)
-							printf("あいてはLPを3回復!!\n");
-							eh = eh + 3;
-							epn++;
-						}
-						if (c == 5)
-						{ //if(c==4)
-							printf("守りを固めた!!/n");
-							printf("(次の自分のターンまで自身が受けるダメージは0となる)\n");
-							esn = 1;
-							epn++;
-						}
-						if (c == 6)
-						{ //if(c==5)
-							printf("ミス!,何も起こらなかった\n");
-							epn++;
-						} //if(c==6)
-					}	  //if(ep==4)
+						HearingDice(&charas[Player], &charas[Enemy]);
+					} //if(ep==4)
 				}
-				if (eh >= 20 && etd == 1)
+				if (eh >= 20)
 				{ //if(20>eh&&eh=>10&&etd==1)
-					etd = 0;
 					ep = rand() % 2 + 1;
 					if (ep == 1)
 					{
-						printf("相手はクリティカルダイスを振りました。\n");
-						c = rand() % 6 + 1;
-						if (c == 1)
-						{
-							printf("クリティカルヒット!!\n");
-							printf("あなたに7のダメージ!!\n");
-							if (psn != 1)
-							{
-								ph = ph - 7;
-								if (dou > 0)
-								{
-									ph = ph - 7;
-								} //if(dou>0)
-							}	  //if(psn!=1)
-							epn++;
-						}
-						if (c == 2)
-						{ //if(c==1)
-							printf("ミス!あなたに0ダメージ\n");
-							epn++;
-						}
-						if (c == 3)
-						{ //if(c==3)
-							printf("クリティカルヒット!!\n");
-							printf("あなたに5のダメージ!!次のあなたのターンをスキップする。\n");
-							if (psn != 1)
-							{
-								ph = ph - 5;
-								if (dou > 0)
-								{
-									ph = ph - 5;
-								} //if(dou>0)
-								pss = 1;
-							} //if(psn!=1)
-							epn++;
-						}
-						if (c == 4)
-						{ //if(c==3)
-							printf("あなたに2のダメージ\n");
-							if (psn != 1)
-							{
-								ph = ph - 2;
-								if (dou > 0)
-								{
-									ph = ph - 2;
-								} //if(dou>0)
-							}	  //if(psn!=1)
-							epn++;
-						}
-						if (c == 5)
-						{ //if(c==4)
-							epn = 0;
-							printf("パンドラのダイス始動!!\nダイスを一回振れ!!");
-							d = rand() % 6 + 1;
-							if (d == 1)
-							{
-								printf("ギガドレイン始動!!\nあなたのLPから10ポイント吸い取る!!\n");
-								if (psn != 1)
-								{
-									eh = eh + 10;
-									ph = ph - 10;
-								} //if(psn!=1)
-							}
-							if (d == 2)
-							{ //if(c==1)
-								printf("宇宙魔法、ブラックホール始動!!\n自分のLP1にして、あなたに15のダメージ!!\n");
-								eh = 1;
-								if (psn != 1)
-								{
-									ph = ph - 15;
-									if (dou > 0)
-									{
-										ph = ph - 15;
-									} //if(dou>0)
-								}	  //if(psn!=1)
-							}
-							if (d == 3)
-							{ //if(c==2)
-								printf("相手と自分のLPを入れ替える!\n");
-								ph = ph + eh;
-								eh = ph - eh;
-								ph = ph - eh;
-							}
-							if (d == 4)
-							{ //if(c==3)
-								printf("ゼウスを召喚した!!\nあなたに13のダメージ!!\n");
-								if (psn != 1)
-								{
-									ph = ph - 13;
-									if (dou > 0)
-									{
-										ph = ph - 13;
-									} //if(dou>0)
-								}	  //if(psn!=1)
-							}
-							if (d == 5)
-							{ //if(c==4)
-								printf("ヒーリング・ノヴァ始動\n相手はLPを10回復!!\n");
-								eh = eh + 10;
-							}
-							if (d == 6)
-							{ //if(c==5)
-								printf("次の相手のターン終了時まで、発生する全てのダメージは2倍になる\n");
-							} //if(c==6)
-						}
-						if (c == 6)
-						{ //if(c==5)
-							printf("クリティカルヒット!!\n");
-							printf("あなたに5のダメージ!!次のあなたのターンをスキップする。\n");
-							if (psn != 1)
-							{
-								ph = ph - 5;
-								if (dou > 0)
-								{
-									ph = ph - 5;
-								} //if(dou>0)
-								pss = 1;
-							} //if(psn!=1)
-							epn++;
-						} //if(c==6)
+						CriticalDice(&charas[Player], &charas[Enemy]);
 					}
 					if (ep == 2)
 					{ //if(ep==1)
-						printf("相手はマジックダイスを振りました。\n");
-						c = rand() % 6 + 1;
-						if (c == 1)
-						{
-							printf("炎魔法、ファイアーボール発動!!\n");
-							printf("あなたに2のダメージ!!,次にダイスを振るプレイヤーに2のダメージを与える。!");
-							if (psn != 1)
-							{
-								ph = ph - 2;
-								if (dou > 0)
-								{
-									ph = ph - 2;
-								} //if(dou>0)
-							}	  //if(psn!=1)
-							f = 1;
-							epn++;
-						}
-						if (c == 2)
-						{ //if(c==1)
-							printf("雷魔法、サンダーボルト発動!!\n");
-							printf("お互いに4のダメージ!!\n");
-							eh = eh - 4;
-							if (dou > 0)
-							{
-								eh = eh - 4;
-							} //if(dou>0)
-							if (psn != 1)
-							{
-								ph = ph - 4;
-								if (dou > 0)
-								{
-									ph = ph - 4;
-								} //if(dou>0)
-							}	  //if(psn!=1)
-							epn++;
-						}
-						if (c == 3)
-						{ //if(c==2)
-							printf("ミス!、あなたに0のダメージ\n");
-							epn++;
-						}
-						if (c == 4)
-						{ //if(c==3)
-							epn = 0;
-							printf("パンドラのダイス始動!!\nダイスを一回振れ!!\n");
-							d = rand() % 6 + 1;
-							if (d == 1)
-							{
-								printf("ギガドレイン始動!!\nあなたのLPから10ポイント吸い取る!!\n");
-								if (psn != 1)
-								{
-									eh = eh + 10;
-									ph = ph - 10;
-								} //if(psn!=1)
-							}
-							if (d == 2)
-							{ //if(c==1)
-								printf("宇宙魔法、ブラックホール始動!!\n自分のLP1にして、あなたに15のダメージ!!\n");
-								eh = 1;
-								if (psn != 1)
-								{
-									ph = ph - 15;
-									if (dou > 0)
-									{
-										ph = ph - 15;
-									} //if(dou>0)
-								}	  //if(psn!=1)
-							}
-							if (d == 3)
-							{ //if(c==2)
-								printf("相手と自分のLPを入れ替える!\n");
-								ph = ph + eh;
-								eh = ph - eh;
-								ph = ph - eh;
-							}
-							if (d == 4)
-							{ //if(c==3)
-								printf("ゼウスを召喚した!!\nあなたに13のダメージ!!\n");
-								if (psn != 1)
-								{
-									ph = ph - 13;
-									if (dou > 0)
-									{
-										ph = ph - 13;
-									} //if(dou>0)
-								}	  //if(psn!=1)
-							}
-							if (d == 5)
-							{ //if(c==4)
-								printf("ヒーリング・ノヴァ始動\n相手はLPを10回復!!\n");
-								eh = eh + 10;
-							}
-							if (d == 6)
-							{ //if(c==5)
-								printf("次の自分のターン終了時まで、発生する全てのダメージは2倍になる\n");
-								while (dou < 3)
-								{
-									dou++;
-								} //while(dou<3)
-							}	  //if(c==6)
-						}
-						if (c == 5)
-						{
-							printf("氷魔法、サークルフロスト発動!!\n");
-							printf("あなたに3のダメージ!!次のあなたのターンをスキップする。\n");
-							if (psn != 1)
-							{
-								ph = ph - 3;
-								if (dou > 0)
-								{
-									ph = ph - 3;
-								} //if(dou>0)
-								pss = 1;
-							} //if(psn!=1)
-							epn++;
-						}
-						if (c == 6)
-						{ //if(c==5)
-							printf("宇宙魔法、メテオ発動!!\n");
-							printf("自身のLPを1にして、あなたにに10のダメージ!!\n");
-							eh = 1;
-							if (psn != 1)
-							{
-								ph = ph - 10;
-								if (dou > 0)
-								{
-									ph = ph - 10;
-								} //if(dou>0)
-							}	  //if(psn!=1)
-							epn++;
-						} //if(c==6)
-					}	  //if(ep==2)
-				}		  //if(eh>=20)
+						MagicDice(&charas[Player], &charas[Enemy]);
+					} //if(ep==2)
+				}	  //if(eh>=20)
 			}
-			if (epn == 6)
-			{ //if(epn!=6)
-				epn = 0;
-				printf("パンドラのダイス強制始動!!\nダイスを一回振れ!!");
-				d = rand() % 6 + 1;
-				if (d == 1)
-				{
-					printf("ギガドレイン始動!!\nあなたのLPから10ポイント吸い取る!!\n");
-					if (psn != 1)
-					{
-						eh = eh + 10;
-						ph = ph - 10;
-					} //if(psn!=1)
-				}
-				if (d == 2)
-				{ //if(c==1)
-					printf("宇宙魔法、ブラックホール始動!!\n自分のLP1にして、あなたに15のダメージ!!\n");
-					eh = 1;
-					if (psn != 1)
-					{
-						ph = ph - 15;
-						if (dou > 0)
-						{
-							ph = ph - 15;
-						} //if(dou>0)
-					}	  //if(psn!=1)
-				}
-				if (d == 3)
-				{ //if(c==2)
-					printf("相手と自分のLPを入れ替える!\n");
-					ph = ph + eh;
-					eh = ph - eh;
-					ph = ph - eh;
-				}
-				if (d == 4)
-				{ //if(c==3)
-					printf("ゼウスを召喚した!!\nあなたに13のダメージ!!\n");
-					if (psn != 1)
-					{
-						ph = ph - 13;
-						if (dou > 0)
-						{
-							ph = ph - 13;
-						} //if(dou>0)
-					}	  //if(psn!=1)
-				}
-				if (d == 5)
-				{ //if(c==4)
-					printf("ヒーリング・ノヴァ始動\n相手はLPを10回復!!\n");
-					eh = eh + 20;
-				}
-				if (d == 6)
-				{ //if(c==5)
-					printf("次の相手のターン終了時まで、発生する全てのダメージは2倍になる\n");
-					while (dou < 3)
-					{
-						dou++;
-					} //while(dou<3)
-				}	  //if(c==6)
-			}		  //if(epn==6)
+			//if(epn==6)
 		}
-		if (ess == 1)
-		{ //if(ess!=1)
-			printf("\n相手はこのターン行動できなかった。\n");
-			ess = 0;
-		} //if(ess==1)
 		printf("next\n");
 		getchar();
 	} //if(eh>0&&ph>0)
+}
+
+void CriticalDice(CharaData *_target, CharaData *_this)
+{
+	_this->pandoraDiceCount++;
+	printf("%sはクリティカルダイスを振りました。\n", _this->name);
+	c = rand() % 6 + 1;
+	if (c == 1)
+	{
+		printf("クリティカルヒット!!\n");
+		printf("%sに7のダメージ!!\n", _target->name);
+		if (_target->nodamage != 1)
+		{
+			_target->hp -= 7;
+			if (dou > 0)
+			{
+				_target->hp -= 7;
+			} //if(dou>0)
+		}	  //if(esn!=1)
+	}
+	if (c == 2)
+	{ //if(c==
+		printf("ミス!%sに0ダメージ\n", _target->name);
+	}
+	if (c == 3)
+	{ //if(c==2)
+		printf("クリティカルヒット!!\n");
+		printf("%sに5のダメージ!!次の%sのターンをスキップする。\n", _target->name, _target->name);
+		if (_target->nodamage != 1)
+		{
+			_target->hp -= 5;
+			if (dou > 0)
+			{
+				_target->hp -= 5;
+			} //if(dou>0)
+			_target->stan = 1;
+		} //if(esn!=1)
+	}
+	if (c == 4)
+	{ //if(c==3)
+		printf("%sに2のダメージ\n", _target->name);
+		if (_target->nodamage != 1)
+		{
+			_target->hp -= 2;
+			if (dou > 0)
+			{
+				_target->hp -= 2;
+			} //if(dou>0)
+		}	  //if(esn!=1)
+	}
+	if (c == 5)
+	{ //if(c==4)
+		PandoraDice(_target, _this);
+	}
+	if (c == 6)
+	{ //if(c==5)
+		printf("クリティカルヒット!!\n");
+		printf("%sに5のダメージ!!次の%sのターンをスキップする。\n", _target->name);
+		if (_target->nodamage != 1)
+		{
+			_target->hp -= 5;
+			if (dou > 0)
+			{
+				_target->hp -= 5;
+			} //if(dou>0)
+			_target->stan = 1;
+		} //if(esn!=1)
+	}	  //if(c==6)
+}
+
+void MagicDice(CharaData *_target, CharaData *_this)
+{
+	printf("%sはマジックダイスを振りました。\n", _this->name);
+	c = rand() % 6 + 1;
+	if (c == 1)
+	{
+		printf("炎魔法、ファイアーボール発動!!\n");
+		printf("%sに2のダメージ!!,次にダイスを振るプレイヤーに2のダメージを与える。\n", _target->name);
+		if (_target->nodamage != 1)
+		{
+			_target->hp -= 2;
+			if (dou > 0)
+			{
+				_target->hp -= 2;
+			} //if(dou>0)
+		}	  //if(esn!=1)
+		f = 1;
+	}
+	if (c == 2)
+	{ //if(c==1)
+		printf("雷魔法、サンダーボルト発動!!\n");
+		printf("お互いに4のダメージ!!\n");
+		_this->hp -= 4;
+		if (dou > 0)
+		{
+			_this->hp -= 4;
+		} //if(dou>0)
+		if (_target->nodamage != 1)
+		{
+			_target->hp -= 4;
+			if (dou > 0)
+			{
+				_target->hp -= 4;
+			} //if(dou>0)
+		}	  //if(esn!=1)
+	}
+	if (c == 3)
+	{ //if(c==2)
+		printf("ミス!、%sに0のダメージ\n", _target->name);
+	}
+	if (c == 4)
+	{ //if(c==3)
+		PandoraDice(_target, _this);
+	}
+	if (c == 5)
+	{
+		printf("氷魔法、サークルフロスト発動!!\n");
+		printf("%sに3のダメージ!!次の%sのターンをスキップする。\n", _target->name, _target->name);
+		if (_target->nodamage != 1)
+		{
+			_target->hp -= 3;
+			if (dou > 0)
+			{
+				_target->hp -= 3;
+			} //if(dou>0)
+			_target->stan = 1;
+		} //if(esn!=1)
+	}
+	if (c == 6)
+	{ //if(c==5)
+		printf("宇宙魔法、メテオ発動!!\n");
+		printf("%sのLPを1にして、%sに10のダメージ!!\n", _this->name, _target->name);
+		_this->hp = 1;
+		if (_target->nodamage != 1)
+		{
+			_target->hp -= 10;
+			if (dou > 0)
+			{
+				_target->hp -= 10;
+			} //if(dou>0)
+		}	  //if(esn!=1)
+	}		  //if(c==6)
+}
+
+void GuardDice(CharaData *_target, CharaData *_this)
+{
+	printf("%sはガードダイスを振りました。\n", _this->name);
+	c = rand() % 6 + 1;
+	if (c == 1)
+	{
+		printf("クリティカルヒット!!\n");
+		printf("%sに4のダメージ!!、次の%sのターンまで受けるダメージは0になる。\n", _target->name, _this->name);
+		_this->nodamage = 1;
+		if (_target->nodamage != 1)
+		{
+			_target->hp -= 4;
+			if (dou > 0)
+			{
+				_target->hp -= 4;
+			} //if(dou>0)
+		}	  //if(esn!=1)
+	}
+	if (c == 2)
+	{ //if(c==1)
+		printf("%sは守りを固めた!!\n(次の%sのターンまで%sが受けるダメージは0になる)\n", _this->name, _this->name, _this->name);
+		_this->nodamage = 1;
+	}
+	if (c == 3)
+	{ //if(c==2)
+		PandoraDice(_target, _this);
+	}
+	if (c == 4)
+	{ //if(c==3)
+		printf("ミス!、何も起こらなかった。\n");
+	}
+	if (c == 5)
+	{ //if(c==4)
+		printf("%sに1のダメージ!\n", _target->name);
+		if (_target->nodamage != 1)
+		{
+			_target->hp -= 1;
+			if (dou > 0)
+			{
+				_target->hp -= 1;
+			} //if(dou>0)
+		}	  //if(esn!=1)
+	}
+	if (c == 6)
+	{ //if(c==5)
+		printf("%sは守りを固めた!!\n(次の%sのターンまで%sが受けるダメージは0になる)\n", _this->name, _this->name, _this->name);
+		_this->nodamage = 1;
+	} //if(c==6)
+}
+
+void HearingDice(CharaData *_target, CharaData *_this)
+{
+	printf("%sはヒーリングダイスを振りました。\n", _this->name);
+	c = rand() % 6 + 1;
+	if (c == 1)
+	{
+		printf("ドレイン発動!!\n%sのLPから4ポイント吸い取る\n", _target->name);
+		if (_target->nodamage != 1)
+		{
+			_target->hp -= 4;
+			_this->hp += 4;
+		} //if(esn!=1)
+	}
+	if (c == 2)
+	{ //if(c==1)
+		PandoraDice(_target, _this);
+	}
+	if (c == 3)
+	{ //if(c==2)
+		printf("%sに2のダメージ!!\n", _target);
+		if (_target->nodamage != 1)
+		{
+			_target->hp -= 2;
+			if (dou > 0)
+			{
+				_target->hp -= 2;
+			} //if(dou>0)
+		}	  //if(esn!=1)
+	}
+	if (c == 4)
+	{ //if(c==3)
+		printf("%sのLPを3回復!!\n", _this->name);
+		_this->hp += 3;
+	}
+	if (c == 5)
+	{ //if(c==4)
+		printf("%sは守りを固めた!!/n"
+			   "(次の%sのターンまで%sが受けるダメージは0となる)\n",
+			   _this->name, _this->name, _this->name);
+		_this->nodamage = 1;
+	}
+	if (c == 6)
+	{ //if(c==5)
+		printf("ミス!,何も起こらなかった\n");
+	} //if(c==6)
+}
+
+void PandoraDice(CharaData *_target, CharaData *_this)
+{
+	_this->pandoraDiceCount = 0;
+	printf("%sのパンドラのダイス始動!!\nダイスを一回振れ!!\n", _this->name);
+	scanf("\n");
+	d = rand() % 6 + 1;
+	if (d == 1)
+	{
+		printf("ギガドレイン始動!!\n%sのLPから10ポイント吸い取る!!\n", _target->name);
+
+		if (_target->nodamage != 1)
+		{
+			_this->hp += 10;
+			_target->hp -= 10;
+		} //if(esn!=1)
+	}
+	if (d == 2)
+	{ //if(d==1)
+		printf("宇宙魔法、ブラックホール始動!!\n%sのLP1にして、%sに15のダメージ!!\n", _this->name, _target->name);
+
+		_this->hp = 1;
+
+		if (_target->nodamage != 1)
+		{
+			_target->hp -= -15;
+			if (dou > 0)
+			{
+				_target->hp -= -15;
+			} //if(dou>0)
+		}	  //if(esn!=1)
+	}
+	if (d == 3)
+	{ //if(d==2)
+		printf("%sと%sのLPを入れ替える!\n", _target->name, _this->name);
+		_this->hp += _target->hp;
+		_target->hp = _this->hp - _target->hp;
+		_this->hp -= _target->hp;
+	}
+	if (d == 4)
+	{ //if(d==3)
+		printf("%sはゼウスを召喚した!!\n%sに13のダメージ!!\n", _this->name, _target->name);
+
+		if (_target->nodamage != 1)
+		{
+			_target->hp -= 13;
+			if (dou > 0)
+			{
+				_target->hp -= 13;
+			} //if(dou>0)
+		}	  //if(esn!=1)
+	}
+	if (d == 5)
+	{ //if(d==4)
+		printf("ヒーリング・ノヴァ始動\n%sのLPを10回復!!\n", _this->name);
+		_this->hp += 10;
+	}
+	if (d == 6)
+	{ //if(d==5)
+		printf("次の%sのターン終了時まで、発生する全てのダメージは2倍になる\n", _this->name);
+		while (dou < 3)
+		{
+			dou++;
+		} //while(dou<3)
+	}	  //if(d==6)
 }
