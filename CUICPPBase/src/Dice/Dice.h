@@ -10,7 +10,7 @@ class Dice
 {
 public:
     
-    void SetCharactor(Charactor* _charas){thisHang = _charas;}
+    void SetCharactor(Charactor* _charas){thisHave = _charas;}
 
 private:
 
@@ -26,7 +26,7 @@ private:
     void ChangeHP(Charactor *_target);                                        //HPを入れ替える//
     void SetGuard(Charactor *_target);                                                          //ガードさせる//
 
-    Charactor* thisHang = nullptr;
+    Charactor* thisHave = nullptr;
     std::string name;
 };
 
