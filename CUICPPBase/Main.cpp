@@ -72,11 +72,11 @@ void BothPlayerAttack(CharaData *_target, CharaData *_this, int _damage);					//
 void AbsorptionAttack(CharaData *_target, CharaData *_this, int _damage);					//吸収攻撃//
 void SacrificeAttack(CharaData *_target, int _targetDamage, CharaData *_this, int _thisHP); //自身のHPを指定数にして攻撃//
 void FutureAttack(CharaData *_target, FAObject *_obj, int _damage);							//一部攻撃を未来へ飛ばす攻撃//
-char GuardTest(CharaData *_target);															//ガードテスト//
 void DoubleTest(CharaData *_target, int _damage);											//倍ダメージテスト//
 void HealingPoint(CharaData *_target, int _healingPoint);									//回復//
 void ChangeHP(CharaData *_target, CharaData *_this);										//HPを入れ替える//
 void SetGuard(CharaData *_target);															//ガードさせる//
+char GuardTest(CharaData *_target);															//ガードテスト//
 
 
 
