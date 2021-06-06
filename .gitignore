@@ -1,3 +1,9 @@
 *.code-workspace
 *.obj
 *.exe
+*.opendb
+*.db-wal
+*.db-shm
+*.db
+*.sqlite
+*.json
