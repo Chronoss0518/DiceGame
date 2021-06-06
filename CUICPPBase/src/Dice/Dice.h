@@ -6,10 +6,12 @@
 class Charactor;
 class FutureObject;
 
+using DiceFunctions = void(*)(void);
+
 class Dice
 {
 public:
-    
+
     void SetCharactor(Charactor* _charas){thisHave = _charas;}
 
 private:
@@ -23,7 +25,7 @@ private:
     void FutureAttack(Charactor *_target, FutureObject *_obj, int _damage);                     //一部攻撃を未来へ飛ばす攻撃//
     void DoubleTest(Charactor *_target, int _damage);                                           //倍ダメージテスト//
     void HealingPoint(Charactor *_target, int _healingPoint);                                   //回復//
-    void ChangeHP(Charactor *_target);                                        //HPを入れ替える//
+    void ChangeHP(Charactor *_target);                                                          //HPを入れ替える//
     void SetGuard(Charactor *_target);                                                          //ガードさせる//
 
     Charactor* thisHave = nullptr;

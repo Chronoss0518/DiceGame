@@ -1,4 +1,6 @@
 
+#include<ChBaseLibrary.h>
+
 #include"../FutureObject/FutureObject.h"
 #include"../Charactor/Charactor.h"
 #include"Dice.h"
@@ -16,9 +18,9 @@ void Dice::NormalAttack(Charactor *_target, int _damage)
 }
 
 //スタン攻撃//
-void StanAttack(CharaData *_target, int _damage)
+void Dice::StanAttack(Charactor*_target, int _damage)
 {
-	if (GuardTest(_target) == Guard_True)
+	if (_target->IsGuard())
 		return;
 
 	NormalAttack(_target, _damage);
@@ -27,10 +29,10 @@ void StanAttack(CharaData *_target, int _damage)
 }
 
 //アイス攻撃//
-void IceAttack(CharaData *_target, int _damage)
+void Dice::IceAttack(Charactor*_target, int _damage)
 {
 
-	if (GuardTest(_target) == Guard_True)
+	if (_target->IsGuard())
 		return;
 
 	NormalAttack(_target, _damage);
@@ -39,17 +41,17 @@ void IceAttack(CharaData *_target, int _damage)
 }
 
 //両プレイヤーに攻撃//
-void BothPlayerAttack(CharaData *_target, CharaData *_this, int _damage)
+void Dice::BothPlayerAttack(Charactor*_target, int _damage)
 {
-	printf("%sと%sにダメージを与える\n", _this->name, _target->name);
+	printf("%sと%sにダメージを与える\n", thisHave->name.c_str(), _target->name.c_str());
 
-	NormalAttack(_this, _damage);
+	NormalAttack(thisHave, _damage);
 
 	NormalAttack(_target, _damage);
 }
 
 //吸収攻撃//
-void AbsorptionAttack(CharaData *_target, CharaData *_this, int _damage)
+void Dice::AbsorptionAttack(Charactor*_target, int _damage)
 {
 	if (GuardTest(_target) == Guard_True)
 		return;
@@ -60,7 +62,7 @@ void AbsorptionAttack(CharaData *_target, CharaData *_this, int _damage)
 }
 
 //自身のHPを指定数にして攻撃//
-void SacrificeAttack(CharaData *_target, int _targetDamage, CharaData *_this, int _thisHP)
+void Dice::SacrificeAttack(Charactor*_target, int _targetDamage, int _thisHP)
 {
 	printf("%sのLPを%dにして攻撃", _this->name, _thisHP);
 
@@ -73,7 +75,7 @@ void SacrificeAttack(CharaData *_target, int _targetDamage, CharaData *_this, in
 }
 
 //一部攻撃を未来へ飛ばす攻撃//
-void FutureAttack(CharaData *_target, FAObject *_obj, int _damage)
+void Dice::FutureAttack(Charactor*_target, FAObject *_obj, int _damage)
 {
 	if (GuardTest(_target) == Guard_False)
 	{
@@ -84,18 +86,8 @@ void FutureAttack(CharaData *_target, FAObject *_obj, int _damage)
 	_obj->flg = 1;
 }
 
-//ガードテスト//
-char GuardTest(CharaData *_target)
-{
-	if (_target->nodamage < 1)
-		return Guard_False;
-
-	printf("%sは攻撃を防いだ\n", _target->name);
-	return Guard_True;
-}
-
 //倍ダメージテスト//
-void DoubleTest(CharaData *_target, int _damage)
+void Dice::DoubleTest(Charactor*_target, int _damage)
 {
 	if (dou <= 0)
 		return;
@@ -104,14 +96,14 @@ void DoubleTest(CharaData *_target, int _damage)
 }
 
 //回復//
-void HealingPoint(CharaData *_target, int _healingPoint)
+void Dice::HealingPoint(Charactor*_target, int _healingPoint)
 {
 	printf((_healingPoint <= 4 ? "%sのLPを%d回復\n" : "%sのLPを%d回復!!\n"), _target->name, _healingPoint);
 	_target->hp += _healingPoint;
 }
 
 //HPを入れ替える//
-void ChangeHP(CharaData *_target, CharaData *_this)
+void Dice::ChangeHP(Charactor*_target, Charactor*_this)
 {
 	printf("%sと%sのLPを入れ替える!\n", _target->name, _this->name);
 	_this->hp += _target->hp;
@@ -120,7 +112,7 @@ void ChangeHP(CharaData *_target, CharaData *_this)
 }
 
 //ガードさせる//
-void SetGuard(CharaData *_target)
+void Dice::SetGuard(Charactor*_target)
 {
 	printf("%sは守りを固めた!!\n"
 		   "(次の%sのターンまで%sが受けるダメージは0となる)\n",

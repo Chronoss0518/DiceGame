@@ -1,9 +1,36 @@
 #ifndef _Game
 #define _Game
 
-class MainGame
+class MainGame:public ChCpp::BaseFrame
 {
-    void Update();
+public:
+
+    void Init()override;
+
+    void Frame()override;
+
+    void Release()override;
+
+
+private:
+
+    void Helps();
+    
+    void StartDice();
+
+    void Game();
+    
+    void FirstPlayer();
+    void FirstEnemy();
+    
+    void DicePlayer();
+    void DiceEnemy();
+
+    void Result();
+    void PushKeyAction();
+
+
+
 };
 
 #endif
