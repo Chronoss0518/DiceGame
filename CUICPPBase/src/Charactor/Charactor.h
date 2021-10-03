@@ -7,7 +7,6 @@
 
 class Dice;
 
-
 enum class CharactorStatus :unsigned char
 {
 	stan = 0x1,
@@ -30,24 +29,33 @@ public:
 
 	inline void UpGardFlg() { guardFlg = true; }
 
-	void Damage(const int _damage);
+	void Damage(const short _damage);
+
+	void Heal(const short _heal);
+
+	void TurnStart();
+
+	void TurnStunby();
 
 	void ThrowDice();
 
 	void SelectDice();
 
-	void TurnStart();
+	void TurnEnd();
 
 private:
 
 	std::string name;
 	ChStd::Bool guardFlg = false;
-	int lp = 0;
+	short lp = 0;
 	unsigned char status = 0;
 	unsigned char pandoraDiceCount = 0;
 
 	std::vector<std::shared_ptr<Dice>>haveDice;
 
+
+
+	ChPtr::Weak<Charactor>attackTarget;
 };
 
 #endif

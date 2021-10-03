@@ -29,8 +29,8 @@ private:
     void Result();
     void PushKeyAction();
 
-
-
+    unsigned long turnPlayer = 0;
+    s
 };
 
 #endif

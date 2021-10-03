@@ -12,7 +12,7 @@ void Dice::NormalAttack(Charactor *_target, int _damage)
 	if (_target->IsGuard())
 		return;
 
-	printf(_damage <= 4 ? "%sに%dのダメージ\n" : "%sに%dのダメージ!!\n", _target->name, _damage);
+	printf(_damage <= 4 ? "%sに%dのダメージ\n" : "%sに%dのダメージ!!\n", _target->GetName(), _damage);
 	_target->hp -= _damage;
 	DoubleTest(_target, _damage);
 }
