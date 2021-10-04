@@ -6,6 +6,7 @@
 #include<memory>
 
 class Dice;
+class PlayerEffectBase;
 
 enum class CharactorStatus :unsigned char
 {
@@ -39,6 +40,8 @@ public:
 
 	void ThrowDice();
 
+	void SelectTarget();
+
 	void SelectDice();
 
 	void TurnEnd();
@@ -51,9 +54,9 @@ private:
 	unsigned char status = 0;
 	unsigned char pandoraDiceCount = 0;
 
-	std::vector<std::shared_ptr<Dice>>haveDice;
+	std::vector<ChPtr::Shared<Dice>>haveDice;
 
-
+	std::vector<ChPtr::Shared<PlayerEffectBase>>effect;
 
 	ChPtr::Weak<Charactor>attackTarget;
 };

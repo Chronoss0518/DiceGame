@@ -1,5 +1,6 @@
-#ifndef _Game
-#define _Game
+#pragma once
+
+class Charactor;
 
 class MainGame:public ChCpp::BaseFrame
 {
@@ -19,7 +20,19 @@ private:
     void StartDice();
 
     void Game();
-    
+
+    void TurnStart();
+
+    void TurnStunby();
+
+    void ThrowDice();
+
+    void SelectTarget();
+
+    void SelectDice();
+
+    void TurnEnd();
+
     void FirstPlayer();
     void FirstEnemy();
     
@@ -30,7 +43,6 @@ private:
     void PushKeyAction();
 
     unsigned long turnPlayer = 0;
+    std::vector<ChPtr::Shared< Charactor>>charactors;
     
 };
-
-#endif

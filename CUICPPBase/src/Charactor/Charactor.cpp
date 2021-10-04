@@ -5,7 +5,7 @@
 void Charactor::Init(const char* _name, const int _lp)
 {
     name = _name;
-    lp = 30;
+    lp = _lp;
     guardFlg = false;
     status = 0;
     pandoraDiceCount = 0;
@@ -28,6 +28,12 @@ void Charactor::Damage(const short _damage)
 
 }
 
+void Charactor::Heal(const short _heal)
+{
+    printf((_heal <= 4 ? "%s‚ÌLP‚ð%d‰ñ•œ\n" : "%s‚ÌLP‚ð%d‰ñ•œ!!\n"), name.c_str(), _heal);
+    lp += _heal;
+}
+
 void Charactor::TurnStart()
 {
 
@@ -39,6 +45,11 @@ void Charactor::TurnStunby()
 }
 
 void Charactor::ThrowDice()
+{
+
+}
+
+void Charactor::SelectTarget()
 {
 
 }
