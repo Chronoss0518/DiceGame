@@ -1,0 +1,19 @@
+Result		- Charactor
+Game		- Charactor
+		- FeatureObject
+Charactor	- Dice
+		- CharactorEffect
+Dice		- DiceEffect
+DiceEffect
+FeatureObject
+CharactorEffect
+
+ダイスの効果:(f=featureObject,c=charactorEffect)
+
+・特になし(通常攻撃)
+cf・攻撃を外す
+cf・攻撃を防ぐ
+cf・ターンプレイヤーにダメージを与える
+cf・ターンをスキップ
+c・選択が全てランダムになる
+・

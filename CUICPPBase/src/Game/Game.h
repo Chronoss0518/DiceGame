@@ -1,8 +1,14 @@
 #pragma once
 
 class Charactor;
+class FieldObjectBase;
 
-class MainGame:public ChCpp::BaseFrame
+enum class TurnNames:unsigned char
+{
+    TurnStart,TurnStunby, SelectTarget, SelectDice,ThrowDice,DiceEffect,TrueEnd,None
+};
+
+class MainGame :public ChCpp::BaseFrame
 {
 public:
 
@@ -12,37 +18,56 @@ public:
 
     void Release()override;
 
+    void AddFieldObject(const std::string& _str);
+
+    Charactor& GetTurnPlayer() { return *charactors[turnPlayer]; }
+
+    std::vector<ChPtr::Shared<Charactor>> GetCharactorList() { return charactors; }
+
+    std::vector<ChPtr::Shared<FieldObjectBase>> GetFieldObjectList() { return fieldObjects; }
+
+    inline void SetTurnStart() { turnCount = ChStd::EnumCast(TurnNames::TurnStart); }
+
+    inline void SetTurnStunby() { turnCount = ChStd::EnumCast(TurnNames::TurnStunby); }
+
+    inline void SetThrowDice() { turnCount = ChStd::EnumCast(TurnNames::ThrowDice); }
+
+    inline void SetDiceEffect() { turnCount = ChStd::EnumCast(TurnNames::SelectTarget); }
+
+    inline void SetDiceEffect() { turnCount = ChStd::EnumCast(TurnNames::SelectDice); }
+
+    inline void SetDiceEffect() { turnCount = ChStd::EnumCast(TurnNames::DiceEffect); }
+
+    inline void SetTrueEnd() { turnCount = ChStd::EnumCast(TurnNames::TrueEnd); }
 
 private:
 
-    void Helps();
-    
     void StartDice();
-
-    void Game();
 
     void TurnStart();
 
     void TurnStunby();
 
-    void ThrowDice();
-
     void SelectTarget();
 
     void SelectDice();
 
+    void ThrowDice();
+
+    void DiceEffect();
+
     void TurnEnd();
 
-    void FirstPlayer();
-    void FirstEnemy();
-    
-    void DicePlayer();
-    void DiceEnemy();
+    void(MainGame::*turns[7])(void);
 
-    void Result();
-    void PushKeyAction();
+    unsigned char turnCount = 0;
 
-    unsigned long turnPlayer = 0;
-    std::vector<ChPtr::Shared< Charactor>>charactors;
+    unsigned char turnPlayer = 0;
+
+    std::vector<ChPtr::Shared<Charactor>> charactors;
     
+    std::vector<ChPtr::Shared<FieldObjectBase>> fieldObjects;
+
+    ChStd::Bool gameEndFlg = false;
+
 };
