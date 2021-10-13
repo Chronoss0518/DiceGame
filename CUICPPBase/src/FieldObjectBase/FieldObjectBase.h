@@ -3,15 +3,19 @@
 class Charactor;
 class MainGame;
 
+#include"FieldObjectNames_Enum.h"
+
 class FieldObjectBase
 {
 public:
 
-	static ChPtr::Shared<FieldObjectBase> Create(const std::string& _str);
+	static ChPtr::Shared<FieldObjectBase> Create(const FieldObjectNames _names);
 
 	void InitBase(MainGame* _participationGame) { game = _participationGame; }
 
 	virtual void Init(){}
+
+	inline void SetTurn(const unsigned long _turn) { turnCount = _turn; }
 
 	MainGame& GetGame() { return *game; }
 
@@ -45,7 +49,7 @@ protected:
 
 private:
 
-	static std::map<std::string, std::function<ChPtr::Shared<FieldObjectBase>(void)>>createrMap;
+	static ChPtr::Shared<FieldObjectBase>(*createrMap[(unsigned char)FieldObjectNames::None])(void);
 
 	MainGame* game = nullptr;
 
@@ -59,7 +63,7 @@ class FO_Doubles :public FieldObjectBase
 	void Init()override { SetTurnCount(2); }
 };
 
-class FO_FierBall :public FieldObjectBase
+class FO_FireBall :public FieldObjectBase
 {
 	void TurnStunby()override;
 

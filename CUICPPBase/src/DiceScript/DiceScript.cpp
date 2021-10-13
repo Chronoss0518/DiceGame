@@ -2,10 +2,28 @@
 #include<regex>
 
 #include"../Game/Game.h"
+#include"../PandoraDice/PandoraDice.h"
 #include"../Charactor/Charactor.h"
 #include"../CharactorEffectBase/CharactorEffectBase.h"
 #include"../FieldObjectBase/FieldObjectBase.h"
 #include"DiceScript.h"
+
+
+
+void DiceScript::Init()
+{
+	scripts[0] = &DiceScript::Attack;
+	scripts[1] = &DiceScript::CriticalAttack;
+	scripts[2] = &DiceScript::BothPlayerAttack;
+	scripts[3] = &DiceScript::AbsorptionAttack;
+	scripts[4] = &DiceScript::SacrificeAttack;
+	scripts[5] = &DiceScript::CreateFieldObject;
+	scripts[6] = &DiceScript::CreateCharactorEffectToUser;
+	scripts[7] = &DiceScript::CreateCharactorEffectToTarget;
+	scripts[8] = &DiceScript::HealingPoint;
+	scripts[9] = &DiceScript::ChangeLP;
+	scripts[10] = &DiceScript::ThrowPandoraDice;
+}
 
 void DiceScript::Func(Charactor& _user)
 {
@@ -31,6 +49,8 @@ std::string DiceScript::CreateTexter(Charactor& _user)
 
 	out = std::regex_replace(effectText.c_str(), std::regex("{u}"), _user.GetName().c_str());
 	out = std::regex_replace(effectText.c_str(), std::regex("{t}"), target.GetName().c_str());
+
+	return out;
 
 }
 
@@ -95,7 +115,26 @@ void DiceScript::CreateFieldObject(Charactor& _user)
 {
 	for (auto&& str : createFieldObjectNames)
 	{
-		_user.GetParticipationGame().AddFieldObject(str);
+		_user.GetParticipationGame().AddFieldObject(str, setTurns);
+	}
+}
+
+void DiceScript::CreateCharactorEffectToUser(Charactor& _user)
+{
+	auto&& target = *_user.GetAttackCharactor();
+
+	for (auto&& str : createCharactorEffectToUserNames)
+	{
+		target.AddCharactorEffect(str, setTurns);
+	}
+}
+
+void DiceScript::CreateCharactorEffectToTarget(Charactor& _user)
+{
+
+	for (auto&& str : createCharactorEffectToTargetNames)
+	{
+		_user.AddCharactorEffect(str, setTurns);
 	}
 }
 
@@ -109,4 +148,9 @@ void DiceScript::HealingPoint(Charactor& _user)
 void DiceScript::ChangeLP(Charactor& _user)
 {
 	_user.ChangeLPToAttackTarget();
+}
+
+void DiceScript::ThrowPandoraDice(Charactor& _user)
+{
+	_user.ThrowPandoraDice();
 }

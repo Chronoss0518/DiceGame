@@ -3,9 +3,29 @@
 class FieldObjectBase;
 class CharactorEffectBase;
 
+#include"../CharactorEffectBase/CharactorEffectNames_Enum.h"
+#include"../FieldObjectBase/FieldObjectNames_Enum.h"
+
+enum class DiceScriptNames :unsigned char
+{
+    Attack,
+    CriticalAttack,
+    BothPlayerAttack,
+    AbsorptionAttack,
+    SacrificeAttack,
+    CreateFieldObject,
+    CreateCharactorEffectToUser,
+    CreateCharactorEffectToTarget,
+    HealingPoint,
+    ChangeLP,
+    ThrowPandoraDice
+};
+
 class DiceScript
 {
 public:
+
+    void Init();
 
     void Func(Charactor& _user);
 
@@ -15,30 +35,25 @@ public:
 
     inline void SetHealPoint(const short _healPoint) { heal = _healPoint; }
 
+    inline void SetLPs(const short _lp) { setLP = _lp; }
+
+    inline void SetTurns(const short _turn) { setTurns = _turn; }
+
     inline void SetEffectText(const std::string& _text) { effectText = _text; }
 
-    inline void AddScript(const unsigned char _script) { script.push_back(_script); }
+    inline void AddScript(const DiceScriptNames _script) { script.push_back(ChStd::EnumCast(_script)); }
 
-    inline void AddCreateFieldObjectName(const std::string& _name) { createFieldObjectNames.push_back(_name); }
+    inline void AddCreateFieldObjectName(const FieldObjectNames _name) { createFieldObjectNames.push_back(_name); }
 
-    inline void AddCreateCharactorEffectName(const std::string& _name) { createCharactorEffectNames.push_back(_name); }
+    inline void AddCreateCharactorEffectToUserName(const CharactorEffectNames _name) { createCharactorEffectToUserNames.push_back(_name); }
+
+    inline void AddCreateCharactorEffectToTargetName(const CharactorEffectNames _name) { createCharactorEffectToTargetNames.push_back(_name); }
 
 private:
 
     std::string CreateTexter(Charactor& _user);
 
-    void(DiceScript::* scripts[9])(Charactor& _user) =
-    {
-        Attack,
-        CriticalAttack,
-        BothPlayerAttack,
-        AbsorptionAttack,
-        SacrificeAttack,
-        CreateFieldObject,
-        CreateCharactorEffect,
-        HealingPoint,
-        ChangeLP
-    };
+    void(DiceScript::* scripts[11])(Charactor& _user);
 
     //通常の攻撃//
     void Attack(Charactor& _user);
@@ -65,7 +80,9 @@ private:
     void CreateFieldObject(Charactor& _user);
 
     //CharactorEffectの作成//
-    void CreateCharactorEffect(Charactor& _user);
+    void CreateCharactorEffectToUser(Charactor& _user);
+
+    void CreateCharactorEffectToTarget(Charactor& _user);
 
     //回復//
     void HealingPoint(Charactor& _user);
@@ -75,13 +92,18 @@ private:
 
     //ガードさせる//
 
+    //パンドラダイスを起動//
+    void ThrowPandoraDice(Charactor& _user);
+
 private:
 
     short damage = 0;
     short heal = 0;
     short setLP = 0;
-    std::vector<std::string> createFieldObjectNames;
-    std::vector<std::string> createCharactorEffectNames;
+    unsigned long setTurns = 0;
+    std::vector<FieldObjectNames> createFieldObjectNames;
+    std::vector<CharactorEffectNames> createCharactorEffectToUserNames;
+    std::vector<CharactorEffectNames> createCharactorEffectToTargetNames;
     std::string effectText = "";
     std::vector<unsigned char>script;
 

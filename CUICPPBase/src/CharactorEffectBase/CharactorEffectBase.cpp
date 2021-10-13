@@ -5,17 +5,17 @@
 #include"CharactorEffectBase.h"
 
 
-std::map<std::string, std::function<ChPtr::Shared<CharactorEffectBase>(void)>>CharactorEffectBase::createrMap
-=
-{
-	{"Double",[]()->ChPtr::Shared<CharactorEffectBase> {return ChPtr::Make_S<C_AttackDouble>(); }},
-	{"Guard",[]()->ChPtr::Shared<CharactorEffectBase> {return ChPtr::Make_S<C_GuardEffect>(); }},
-	{"Stan",[]()->ChPtr::Shared<CharactorEffectBase> {return ChPtr::Make_S<C_StanEffect>(); }}
+ChPtr::Shared<CharactorEffectBase>(*CharactorEffectBase::createrMap[(unsigned char)CharactorEffectNames::None])(void)
+={
+	[]()->ChPtr::Shared<CharactorEffectBase> {return ChPtr::Make_S<C_AttackDouble>(); },
+	[]()->ChPtr::Shared<CharactorEffectBase> {return ChPtr::Make_S<C_GuardEffect>(); },
+	[]()->ChPtr::Shared<CharactorEffectBase> {return ChPtr::Make_S<C_StanEffect>(); },
+	[]()->ChPtr::Shared<CharactorEffectBase> {return ChPtr::Make_S<C_Ice>(); }
 };
 
-ChPtr::Shared<CharactorEffectBase> CharactorEffectBase::Create(const std::string& _str)
+ChPtr::Shared<CharactorEffectBase> CharactorEffectBase::Create(const CharactorEffectNames _names)
 {
-	return createrMap[_str]();
+	return _names != CharactorEffectNames::None ? CharactorEffectBase::createrMap[ChStd::EnumCast(_names)]() : nullptr;
 }
 
 void C_AttackDouble::Init()
@@ -48,6 +48,8 @@ void C_GuardEffect::Init()
 short C_GuardEffect::PointMath(const short _point)
 {
 
+	if (_point <= 0) return _point;
+
 	printf("%sは攻撃をガードした\n", GetCharactor().GetName().c_str());
 
 	SetDeathFlgTrue();
@@ -64,6 +66,20 @@ void C_StanEffect::Init()
 void C_StanEffect::TurnStunby()
 {
 	printf("\n%sはこのターン行動できません\n", GetCharactor().GetName().c_str());
+
+	GetCharactor().GetParticipationGame().SetTrueEnd();
+
+	SetDeathFlgTrue();
+}
+
+void C_Ice::Init()
+{
+	printf("%sを凍らせた!!\n次の%sのターンをスキップする。\n", GetCharactor().GetName().c_str(), GetCharactor().GetName().c_str());
+}
+
+void C_Ice::TurnStunby()
+{
+	printf("\n%sはこのターン凍り付いていて行動できません\n", GetCharactor().GetName().c_str());
 
 	GetCharactor().GetParticipationGame().SetTrueEnd();
 

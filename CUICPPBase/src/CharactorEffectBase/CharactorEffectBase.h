@@ -2,15 +2,19 @@
 
 class Charactor;
 
+#include"CharactorEffectNames_Enum.h"
+
 class CharactorEffectBase
 {
 public:
 
-	static ChPtr::Shared<CharactorEffectBase> Create(const std::string& _str);
+	static ChPtr::Shared<CharactorEffectBase> Create(const CharactorEffectNames _names);
 
 	void InitBase(Charactor* _thisHaver) { haver = _thisHaver; }
 
-	virtual void Init(){}
+	virtual void Init() {}
+
+	inline void SetTurn(const unsigned long _turn) { turnCount = _turn; }
 
 	Charactor& GetCharactor() { return *haver; }
 
@@ -30,7 +34,7 @@ public:
 
 	virtual void ThrowDice() {}
 
-	virtual void DiceEffect(){}
+	virtual void DiceEffect() {}
 
 	virtual void TurnEnd() {}
 
@@ -40,7 +44,7 @@ protected:
 
 private:
 
-	static std::map<std::string, std::function<ChPtr::Shared<CharactorEffectBase>(void)>>createrMap;
+	static ChPtr::Shared<CharactorEffectBase>(*createrMap[(unsigned char)CharactorEffectNames::None])(void);
 
 	Charactor* haver = nullptr;
 
@@ -65,6 +69,13 @@ class C_GuardEffect:public CharactorEffectBase
 };
 
 class C_StanEffect : public CharactorEffectBase
+{
+	void Init()override;
+
+	void TurnStunby()override;
+};
+
+class C_Ice : public CharactorEffectBase
 {
 	void Init()override;
 

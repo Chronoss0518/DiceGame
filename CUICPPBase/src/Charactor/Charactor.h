@@ -1,36 +1,44 @@
 #ifndef _Charactor
 #define _Charactor
 
-#include<string>
-#include<vector>
-#include<memory>
-
 class MainGame;
 class Dice;
+class PandoraDice;
 class CharactorEffectBase;
 
-enum class SkipFlgName :unsigned char
-{
-	TurnStart = 1,
-	TurnStunby = 2,
-	SelectTarget = 4,
-	SelectDice = 8,
-	ThrowDice = 16,
-	DiceEffect = 32,
-	TurnEnd = 64
-};
+#include"../CharactorEffectBase/CharactorEffectNames_Enum.h"
+#include"../Controller/ControllerBase.h"
 
 class Charactor
 {
+private:
+
+	void TestData_Dice();
+
 public:
 
 	void Init(const char* _name, const int _lp = 30);
 
-	inline void AddCharactorEffect(ChPtr::Shared<CharactorEffectBase>& _effect) { effect.push_back(_effect); }
+	void AddCharactorEffect(const CharactorEffectNames _name, const unsigned long _turnCount);
 
 	inline void SetParticipationGame(MainGame* _game) { participationGame = _game; }
 
 	inline void SetName(const std::string& _name) { name = _name; }
+
+	inline void SetLP(const int _lp) { lp = _lp; }
+
+	inline void SetActionSkipTrue() { skipFlg = true; }
+
+	inline void SetActionSkipFalse() { skipFlg = false; }
+
+	void SetDiceCount(const unsigned char _count);
+
+	template<class Con>
+	inline void SetController()
+	{
+		controller = ChPtr::Make_S<std::enable_if<std::is_base_of<ControllerBase, Con>, Con>>();
+		controller->Init(this);
+	}
 
 	inline std::string GetName() { return name; }
 
@@ -38,11 +46,11 @@ public:
 
 	MainGame& GetParticipationGame();
 
-	ChPtr::Shared<Charactor> GetAttackCharactor() { return attackTarget.lock(); }
+	inline ChPtr::Shared<Charactor> GetAttackCharactor() { return attackTarget.lock(); }
 
-	ChStd::Bool IsDeath() { return (lp <= 0); }
+	inline std::vector<ChPtr::Shared<Dice>> GetDiceList() { return haveDice; };
 
-	inline void SetLP(const int _lp) { lp = _lp; }
+	inline ChStd::Bool IsDeath() { return (lp <= 0); }
 
 	short Damage(const short _damage);
 
@@ -52,49 +60,38 @@ public:
 
 	void ChangeLPToAttackTarget();
 
-	void TurnStart();
+	void ThrowPandoraDice();
 
-	//inline void TurnStartSkip() { skipFlg.SetBitTrue(ChStd::EnumCast(SkipFlgName::TurnStart)); }
+	void TurnStart();
 
 	void TurnStunby();
 
-	//inline void TurnStartSkip() { skipFlg.SetBitTrue(ChStd::EnumCast(SkipFlgName::TurnStunby)); }
-
 	void SelectTarget();
-
-	inline void TurnStartSkip() { skipFlg.SetBitTrue(ChStd::EnumCast(SkipFlgName::SelectTarget)); }
 
 	void SelectDice();
 
-	inline void TurnStartSkip() { skipFlg.SetBitTrue(ChStd::EnumCast(SkipFlgName::SelectDice)); }
-
 	void ThrowDice();
-
-	inline void TurnStartSkip() { skipFlg.SetBitTrue(ChStd::EnumCast(SkipFlgName::ThrowDice)); }
 
 	void DiceEffect();
 
-	inline void TurnStartSkip() { skipFlg.SetBitTrue(ChStd::EnumCast(SkipFlgName::DiceEffect)); }
-
 	void TurnEnd();
-
-	//inline void TurnStartSkip() { skipFlg.SetBitTrue(ChStd::EnumCast(SkipFlgName::TurnEnd)); }
 
 private:
 
-	std::string name;
+	std::string name = "";
 	short lp = 0;
-	unsigned char pandoraDiceCount = 0;
-
 	unsigned char targetCharactor = 0;
-	unsigned char targetDice = 0;
 
-	ChCpp::BitBool skipFlg = ChCpp::BitBool(1);
+	//プレイヤーの行動を強制的にスキップさせるフラグ
+	ChStd::Bool skipFlg = false;
 
 	std::vector<ChPtr::Shared<Dice>>haveDice;
-	ChPtr::Shared<Dice> pandraDice = nullptr;
+	ChPtr::Shared<PandoraDice> pandoraDice = nullptr;
+	ChPtr::Weak<Dice>throwDice;
 
 	std::vector<ChPtr::Shared<CharactorEffectBase>>effect;
+
+	ChPtr::Shared<ControllerBase>controller = nullptr;
 
 	ChPtr::Weak<Charactor>attackTarget;
 

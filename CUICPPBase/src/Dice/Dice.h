@@ -11,21 +11,19 @@ public:
 
     inline void SetDiceCount(const unsigned char _count) { count = _count <= 5 ? _count : 0; }
 
-    void AddCreateDice(
-        const std::vector<unsigned char>& _script, 
-        const std::string& _text,
-        const short _damage = 0,
-        const short _heal = 0,
-        const std::vector<std::string>& _CFONames = std::vector<std::string>(),
-        const std::vector<std::string>& _CCENames = std::vector<std::string>());
+    inline void SetName(const std::string& _name) { name = _name; }
+
+    inline std::string GetName() { return name; }
+
+    void AddDiceScript(ChPtr::Shared<DiceScript>& _sDice);
 
     void LoadDice(const std::string& _outFile);
 
-    void DiceEffect();
+    virtual void DiceEffect();
 
-private:
+protected:
 
-    ChPtr::Shared<DiceScript>dices[6];
+    std::vector<ChPtr::Shared<DiceScript>>dices;
 
     unsigned char count = 0;
 

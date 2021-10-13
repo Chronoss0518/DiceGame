@@ -8,27 +8,42 @@
 
 void MainGame::Init()
 {
-	turns[0] = StartDice;
-	turns[1] = TurnStunby;
-	turns[2] = ThrowDice;
-	turns[3] = SelectTarget;
-	turns[4] = SelectDice;
-	turns[5] = DiceEffect;
-	turns[6] = TurnEnd;
+	turns[0] = &MainGame::TurnStart;
+	turns[1] = &MainGame::TurnStunby;
+	turns[2] = &MainGame::ThrowDice;
+	turns[3] = &MainGame::SelectTarget;
+	turns[4] = &MainGame::SelectDice;
+	turns[5] = &MainGame::DiceEffect;
+	turns[6] = &MainGame::TurnEnd;
+
+	{
+
+		auto obj = ChPtr::Make_S<Charactor>();
+		obj->SetName("player");
+		obj->SetParticipationGame(this);
+		charactors.push_back(obj);
+
+	}
+
+	{
+
+		auto obj = ChPtr::Make_S<Charactor>();
+		obj->SetName("enemy");
+		obj->SetParticipationGame(this);
+		
+		charactors.push_back(obj);
+
+	}
+
+	printf("ゲーム開始!!\n");
+
+	StartDice();
 }
 
 void MainGame::Frame()
 {
-	StartDice();
-
-	while (!gameEndFlg)
-	{
-
-		for (turnCount = 0; turnCount < sizeof(turns); turnCount++)
-		{
-			(this->*turns[turnCount])();
-		}
-	}
+	(this->*turns[turnCount])();
+	charactors[turnPlayer]->SetActionSkipFalse();
 }
 
 void MainGame::Release()
@@ -36,20 +51,63 @@ void MainGame::Release()
 
 }
 
-void MainGame::AddFieldObject(const std::string& _str)
+void MainGame::AddFieldObject(const FieldObjectNames _name, const unsigned long _turnCount)
 {
-	fieldObjects.push_back(FieldObjectBase::Create(_str));
+	auto&& obj = FieldObjectBase::Create(_name);
+
+	if (obj == nullptr)return;
+
+	obj->InitBase(this);
+
+	obj->Init();
+
+	obj->SetTurn(_turnCount);
+
+	fieldObjects.push_back(obj);
 }
 
 void MainGame::StartDice()
 {
+	unsigned char maxPoint = -1;
+	unsigned char charactorNo = -1;
+
+	for (unsigned char i = 0; i < charactors.size(); i++)
+	{
+
+		printf("%sさん、ダイスを振ってください\n", charactors[i]->GetName().c_str());
+		unsigned char tmpPoint = rand() % 20;
+		printf("出た目は%dです。\n", tmpPoint);
+
+		if (tmpPoint == maxPoint)
+		{
+			printf("%sさんと%s産の数値が同じです。\n全員振りなおします。\n",
+				charactors[i]->GetName().c_str(),
+				charactors[charactorNo]->GetName().c_str());
+
+			maxPoint = -1;
+			charactorNo = -1;
+			i = 0;
+			continue;
+		}
+
+		if (charactorNo < charactors.size() && (maxPoint > tmpPoint && maxPoint < 20))continue;
+		
+		maxPoint = tmpPoint;
+		charactorNo = i;
+
+		printf("%sさんが最高得点を出しました。",charactors[i]->GetName().c_str());
+
+	}
+
+	turnPlayer = charactorNo;
+
+	printf("%sさんがStartPlayerになりました。", charactors[turnPlayer]->GetName().c_str());
+
 
 }
 
 void MainGame::TurnStart()
 {
-
-
 	for (auto&& obj = fieldObjects.begin(); obj == fieldObjects.end(); obj++)
 	{
 		(*obj)->TurnStart();
