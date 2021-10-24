@@ -18,11 +18,17 @@ public:
 
 	Charactor& GetCharactor() { return *haver; }
 
+	virtual CharactorEffectNames GetType() = 0;
+
 	virtual short PointMath(const short _point) { return _point; }
 
 	ChStd::Bool IsDeath() { return deathFlg; }
 
 	void CountDown() { turnCount = turnCount > 0 ? turnCount - 1 : 0; }
+
+	virtual void Update() {}
+
+	virtual void Draw(){}
 
 	virtual void TurnStart() {}
 
@@ -59,6 +65,9 @@ class C_AttackDouble :public CharactorEffectBase
 	void Init()override;
 
 	short PointMath(const short _point)override;
+
+	CharactorEffectNames GetType()override { return CharactorEffectNames::Double; }
+
 };
 
 class C_GuardEffect:public CharactorEffectBase
@@ -66,6 +75,9 @@ class C_GuardEffect:public CharactorEffectBase
 	void Init()override;
 
 	short PointMath(const short _point)override;
+
+	CharactorEffectNames GetType()override { return CharactorEffectNames::Guard; }
+
 };
 
 class C_StanEffect : public CharactorEffectBase
@@ -73,6 +85,9 @@ class C_StanEffect : public CharactorEffectBase
 	void Init()override;
 
 	void TurnStunby()override;
+
+	CharactorEffectNames GetType()override { return CharactorEffectNames::Stan; }
+
 };
 
 class C_Ice : public CharactorEffectBase
@@ -80,4 +95,7 @@ class C_Ice : public CharactorEffectBase
 	void Init()override;
 
 	void TurnStunby()override;
+
+	CharactorEffectNames GetType()override { return CharactorEffectNames::Ice; }
+
 };

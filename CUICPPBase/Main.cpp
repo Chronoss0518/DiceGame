@@ -9,6 +9,11 @@ int main(void)
 	srand(timeGetTime());
 
 	ChCpp::FrameList().SetFrame<MainGame>("Game");
+	
+	for (unsigned long i = 0; i < 10; i++)
+	{
 
-	ChCpp::FrameList().Update();
+		ChCpp::FrameList().Update();
+
+	}
 }

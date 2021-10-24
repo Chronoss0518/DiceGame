@@ -22,11 +22,13 @@ public:
 
     void AddFieldObject(const FieldObjectNames _name, const unsigned long _turnCount);
 
+    inline void AddTurnCount() { turnCount = (turnCount + 1) % ChStd::EnumCast(TurnNames::None); }
+
     inline void SetTurnCount(const unsigned char _turnCount) { turnCount = _turnCount < ChStd::EnumCast(TurnNames::None) ? _turnCount : turnCount; }
 
     Charactor& GetTurnPlayer() { return *charactors[turnPlayer]; }
 
-    inline unsigned char GetTurnCount() { return turnCount; }
+    inline TurnNames GetTurnCount() { return static_cast<TurnNames>(turnCount); }
 
     std::vector<ChPtr::Shared<Charactor>> GetCharactorList() { return charactors; }
 
@@ -51,6 +53,10 @@ public:
     inline void TurnCountUps() { turnCount = (turnCount + 1) % ChStd::EnumCast(TurnNames::None); }
 
 private:
+
+    void Update();
+
+    void Draw();
 
     void StartDice();
 

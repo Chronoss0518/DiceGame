@@ -11,10 +11,6 @@ class CharactorEffectBase;
 
 class Charactor
 {
-private:
-
-	void TestData_Dice();
-
 public:
 
 	void Init(const char* _name, const int _lp = 30);
@@ -36,13 +32,11 @@ public:
 	template<class Con>
 	inline void SetController()
 	{
-		controller = ChPtr::Make_S<std::enable_if<std::is_base_of<ControllerBase, Con>, Con>>();
-		controller->Init(this);
+		controller = ChPtr::Make_S<std::enable_if<std::is_base_of<ControllerBase, Con>::value, Con>::type>();
+		//controller->Init(this);
 	}
 
 	inline std::string GetName() { return name; }
-
-	inline unsigned char GetTargetCharactorNo() { return targetCharactor; }
 
 	MainGame& GetParticipationGame();
 
@@ -76,11 +70,19 @@ public:
 
 	void TurnEnd();
 
+	void Update();
+
+	void Draw();
+
+	void TestData_Dice();
+
 private:
 
 	std::string name = "";
 	short lp = 0;
+
 	unsigned char targetCharactor = 0;
+	unsigned char targetDice = 0;
 
 	//プレイヤーの行動を強制的にスキップさせるフラグ
 	ChStd::Bool skipFlg = false;

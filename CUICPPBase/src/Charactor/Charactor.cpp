@@ -14,7 +14,7 @@ void Charactor::TestData_Dice()
 		auto dice = ChPtr::Make_S<Dice>();
 
 		dice->Init(this);
-
+		
 		dice->SetName("クリティカルダイス");
 
 		{
@@ -411,7 +411,7 @@ short Charactor::Damage(const short _damage)
 
 	short damage = _damage;
 
-	for (auto&& obj = effect.begin(); obj == effect.end(); obj)
+	for (auto&& obj = effect.begin(); obj != effect.end(); obj)
 	{
 		damage = (*obj)->PointMath(damage);
 
@@ -428,7 +428,7 @@ short Charactor::Damage(const short _damage)
 	{
 		auto&& FObjeList = participationGame->GetFieldObjectList();
 
-		for (auto&& obj = FObjeList.begin(); obj == FObjeList.end(); obj++)
+		for (auto&& obj = FObjeList.begin(); obj != FObjeList.end(); obj++)
 		{
 			damage = (*obj)->PointMath(damage);
 
@@ -449,7 +449,7 @@ short Charactor::CriticalDamage(const short _damage)
 
 	short damage = _damage;
 
-	for (auto&& obj = effect.begin(); obj == effect.end(); obj)
+	for (auto&& obj = effect.begin(); obj != effect.end(); obj)
 	{
 		short tmpDamage = damage;
 
@@ -463,7 +463,7 @@ short Charactor::CriticalDamage(const short _damage)
 	{
 		auto&& FObjeList = participationGame->GetFieldObjectList();
 
-		for (auto&& obj = FObjeList.begin(); obj == FObjeList.end(); obj++)
+		for (auto&& obj = FObjeList.begin(); obj != FObjeList.end(); obj++)
 		{
 			short tmpDamage = damage;
 			damage = (*obj)->PointMath(damage);
@@ -516,39 +516,65 @@ void Charactor::TurnStart()
 {
 	printf("%sのターンです\n", name.c_str());
 
-	for (auto&& obj = effect.begin(); obj == effect.end(); obj++)
+	for (auto&& obj = effect.begin(); obj != effect.end(); obj++)
 	{
 		(*obj)->TurnStart();
 	}
 
+	if (!controller->Decision())return;
+
+	participationGame->AddTurnCount();
 }
 
 void Charactor::TurnStunby()
 {
 
-	for (auto&& obj = effect.begin(); obj == effect.end(); obj++)
+	for (auto&& obj = effect.begin(); obj != effect.end(); obj++)
 	{
 		(*obj)->TurnStunby();
 	}
 
+	if (!controller->Decision())return;
+
+	participationGame->AddTurnCount();
 }
 
 void Charactor::SelectTarget()
 {
-	for (auto&& obj = effect.begin(); obj == effect.end(); obj++)
+	for (auto&& obj = effect.begin(); obj != effect.end(); obj++)
 	{
 		(*obj)->SelectTarget();
 	}
 
 	if (skipFlg)return;
 
+	auto cList = participationGame->GetCharactorList();
+
+	if (controller->Decision())
+	{
+		attackTarget = cList[targetCharactor];
+
+		participationGame->AddTurnCount();
+	}
+
+	if (controller->Up())
+	{
+		targetCharactor++;
+		targetCharactor %= cList.size();
+	}
+
+	if (controller->Down())
+	{
+		targetCharactor--;
+		targetCharactor %= cList.size();
+	}
 
 }
 
 void Charactor::SelectDice()
 {
 
-	for (auto&& obj = effect.begin(); obj == effect.end(); obj++)
+	for (auto&& obj = effect.begin(); obj != effect.end(); obj++)
 	{
 		(*obj)->SelectDice();
 	}
@@ -563,25 +589,48 @@ void Charactor::SelectDice()
 		return;
 	}
 
+	if (controller->Decision())
+	{
+		throwDice = haveDice[targetDice];
+
+		participationGame->AddTurnCount();
+	}
+
+	if (controller->Up())
+	{
+		targetDice++;
+		targetDice %= haveDice.size();
+	}
+
+	if (controller->Down())
+	{
+		targetDice--;
+		targetDice %= haveDice.size();
+	}
+
 }
 
 void Charactor::ThrowDice()
 {
 	unsigned char throwCount = rand() % 6;
 
-	for (auto&& obj = effect.begin(); obj == effect.end(); obj++)
+	for (auto&& obj = effect.begin(); obj != effect.end(); obj++)
 	{
 		(*obj)->ThrowDice();
 	}
 
 	if (skipFlg)return;
 
+	if (!controller->ThrowDice())return;
+
 	throwDice.lock()->SetDiceCount(throwCount);
+
+	participationGame->AddTurnCount();
 }
 
 void Charactor::DiceEffect()
 {
-	for (auto&& obj = effect.begin(); obj == effect.end(); obj++)
+	for (auto&& obj = effect.begin(); obj != effect.end(); obj++)
 	{
 		(*obj)->DiceEffect();
 	}
@@ -589,12 +638,16 @@ void Charactor::DiceEffect()
 	if (skipFlg)return;
 
 	throwDice.lock()->DiceEffect();
+
+	if (!controller->Decision())return;
+
+	participationGame->AddTurnCount();
 }
 
 void Charactor::TurnEnd()
 {
 
-	for (auto&& obj = effect.begin(); obj == effect.end(); obj)
+	for (auto&& obj = effect.begin(); obj != effect.end(); obj)
 	{
 		(*obj)->TurnEnd();
 
@@ -607,5 +660,9 @@ void Charactor::TurnEnd()
 		effect.erase(obj);
 
 	}
+
+	if (!controller->Decision())return;
+
+	participationGame->AddTurnCount();
 
 }

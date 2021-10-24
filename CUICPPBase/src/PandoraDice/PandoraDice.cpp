@@ -8,7 +8,7 @@
 
 ChStd::Bool PandoraDice::IsThrow()
 {
-	auto game = user->GetParticipationGame();
+	auto& game = user->GetParticipationGame();
 
 	pandoraCount++;
 	return 0 == (pandoraCount % game.GetPandoraCount());

@@ -1,9 +1,6 @@
-﻿  CharactorEffectBase.cpp
-  Charactor.cpp
+﻿  Charactor.cpp
   DiceScript.cpp
   Dice.cpp
-  FieldObjectBase.cpp
-  Game.cpp
   PandoraDice.cpp
   コードを生成中...
   ChWin_MDd.lib(ChWinMouse.obj) : MSIL .netmodule または /GL を伴ってコンパイルされたモジュールが見つかりました。/LTCG を使用して再開始してください。リンカーのパフォーマンスを向上させるためには、コマンドラインに /LTCG を追加してください。

@@ -19,11 +19,17 @@ public:
 
 	MainGame& GetGame() { return *game; }
 
+	virtual FieldObjectNames GetType() = 0;
+
 	virtual short PointMath(const short _point) { return _point; }
 
 	ChStd::Bool IsDeath() { return (turnCount <= 0); }
 
 	void CountDown() { turnCount = turnCount > 0 ? turnCount - 1 : 0; }
+
+	virtual void Update(){}
+
+	virtual void Draw(){}
 
 	virtual void TurnStart(){}
 
@@ -61,6 +67,8 @@ class FO_Doubles :public FieldObjectBase
 	short PointMath(const short _point)override;
 
 	void Init()override { SetTurnCount(2); }
+
+	inline FieldObjectNames GetType()override { return FieldObjectNames::Doubles; }
 };
 
 class FO_FireBall :public FieldObjectBase
@@ -68,4 +76,6 @@ class FO_FireBall :public FieldObjectBase
 	void TurnStunby()override;
 
 	void Init()override { SetTurnCount(1); }
+
+	inline FieldObjectNames GetType()override { return FieldObjectNames::FireBall; }
 };

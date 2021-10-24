@@ -3,6 +3,8 @@
 
 #include"../Charactor/Charactor.h"
 #include"../FieldObjectBase/FieldObjectBase.h"
+#include"../Controller/Player/PlayerController.h"
+#include"../Controller/CPU/CPUController.h"
 #include "Game.h"
 
 
@@ -19,19 +21,24 @@ void MainGame::Init()
 	{
 
 		auto obj = ChPtr::Make_S<Charactor>();
-		obj->SetName("player");
+		obj->Init("player", 30);
 		obj->SetParticipationGame(this);
+		obj->SetController<PlayerController>();
+
 		charactors.push_back(obj);
+		obj->TestData_Dice();
 
 	}
 
 	{
 
 		auto obj = ChPtr::Make_S<Charactor>();
-		obj->SetName("enemy");
+		obj->Init("enemy", 30);
 		obj->SetParticipationGame(this);
+		obj->SetController<LVNormalCPUController>();
 		
 		charactors.push_back(obj);
+		obj->TestData_Dice();
 
 	}
 
@@ -42,8 +49,8 @@ void MainGame::Init()
 
 void MainGame::Frame()
 {
-	(this->*turns[turnCount])();
 	charactors[turnPlayer]->SetActionSkipFalse();
+	(this->*turns[turnCount])();
 }
 
 void MainGame::Release()
@@ -80,7 +87,7 @@ void MainGame::StartDice()
 
 		if (tmpPoint == maxPoint)
 		{
-			printf("%sさんと%s産の数値が同じです。\n全員振りなおします。\n",
+			printf("%sさんと%sさんの数値が同じです。\n全員振りなおします。\n",
 				charactors[i]->GetName().c_str(),
 				charactors[charactorNo]->GetName().c_str());
 
@@ -108,7 +115,7 @@ void MainGame::StartDice()
 
 void MainGame::TurnStart()
 {
-	for (auto&& obj = fieldObjects.begin(); obj == fieldObjects.end(); obj++)
+	for (auto&& obj = fieldObjects.begin(); obj != fieldObjects.end(); obj++)
 	{
 		(*obj)->TurnStart();
 	}
@@ -117,8 +124,7 @@ void MainGame::TurnStart()
 
 void MainGame::TurnStunby()
 {
-
-	for (auto&& obj = fieldObjects.begin(); obj == fieldObjects.end(); obj++)
+	for (auto&& obj = fieldObjects.begin(); obj != fieldObjects.end(); obj++)
 	{
 		(*obj)->TurnStart();
 
@@ -129,8 +135,7 @@ void MainGame::TurnStunby()
 
 void MainGame::SelectTarget()
 {
-
-	for (auto&& obj = fieldObjects.begin(); obj == fieldObjects.end(); obj++)
+	for (auto&& obj = fieldObjects.begin(); obj != fieldObjects.end(); obj++)
 	{
 		(*obj)->SelectTarget();
 
@@ -142,8 +147,7 @@ void MainGame::SelectTarget()
 
 void MainGame::SelectDice()
 {
-
-	for (auto&& obj = fieldObjects.begin(); obj == fieldObjects.end(); obj++)
+	for (auto&& obj = fieldObjects.begin(); obj != fieldObjects.end(); obj++)
 	{
 		(*obj)->SelectDice();
 
@@ -156,7 +160,7 @@ void MainGame::SelectDice()
 void MainGame::ThrowDice()
 {
 
-	for (auto&& obj = fieldObjects.begin(); obj == fieldObjects.end(); obj++)
+	for (auto&& obj = fieldObjects.begin(); obj != fieldObjects.end(); obj++)
 	{
 		(*obj)->ThrowDice();
 
@@ -167,7 +171,7 @@ void MainGame::ThrowDice()
 
 void MainGame::DiceEffect()
 {
-	for (auto&& obj = fieldObjects.begin(); obj == fieldObjects.end(); obj++)
+	for (auto&& obj = fieldObjects.begin(); obj != fieldObjects.end(); obj++)
 	{
 		(*obj)->DiceEffect();
 
@@ -181,7 +185,7 @@ void MainGame::TurnEnd()
 
 	charactors[turnPlayer]->TurnEnd();
 
-	for (auto&& obj = fieldObjects.begin(); obj == fieldObjects.end(); obj)
+	for (auto&& obj = fieldObjects.begin(); obj != fieldObjects.end(); obj)
 	{
 		(*obj)->TurnEnd();
 		(*obj)->CountDown();

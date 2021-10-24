@@ -7,6 +7,8 @@ class Dice
 {
 public:
 
+    inline Dice(){}
+
     inline void Init(Charactor* _user) { user = _user; }
 
     inline void SetDiceCount(const unsigned char _count) { count = _count <= 5 ? _count : 0; }
@@ -28,5 +30,5 @@ protected:
     unsigned char count = 0;
 
     Charactor* user = nullptr;
-    std::string name = nullptr;
+    std::string name = "";
 };

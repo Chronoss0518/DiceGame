@@ -2,23 +2,46 @@
 
 class Charactor;
 
+enum class ButtonFlgNames :unsigned char
+{
+	Up, Down, Decision, ThrowDice, Cancel
+};
+
 class ControllerBase
 {
 public:
 
-	inline void Init(Charactor* _user) { user = _user; }
+	inline virtual void Init(Charactor* _user) { user = _user; }
 
-	virtual ChStd::Bool Up() = 0;
+	ChStd::Bool Up();
 
-	virtual ChStd::Bool Down() = 0;
+	ChStd::Bool Down();
 
-	virtual ChStd::Bool Decision() = 0;
+	ChStd::Bool Decision();
 
-	virtual ChStd::Bool ThrowDice() = 0;
+	ChStd::Bool ThrowDice();
 
-	virtual ChStd::Bool Cancel() = 0;
+	ChStd::Bool Cancel();
+
+	virtual void Update() = 0;
+
+protected:
+
+	void SetTrueUpFlg();
+
+	void SetTrueDownFlg();
+
+	void SetTrueDecisionFlg();
+
+	void SetTrueThrowDiceFlg();
+
+	void SetTrueCancelFlg();
+
+	Charactor& GetUser();
 
 private:
+
+	ChCpp::BitBool flgs = ChCpp::BitBool(1);
 
 	Charactor* user = nullptr;
 

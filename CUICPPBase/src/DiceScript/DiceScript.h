@@ -17,8 +17,10 @@ enum class DiceScriptNames :unsigned char
     CreateCharactorEffectToUser,
     CreateCharactorEffectToTarget,
     HealingPoint,
+    HealingPointForTarget,
     ChangeLP,
-    ThrowPandoraDice
+    ThrowPandoraDice,
+    None
 };
 
 class DiceScript
@@ -53,7 +55,7 @@ private:
 
     std::string CreateTexter(Charactor& _user);
 
-    void(DiceScript::* scripts[11])(Charactor& _user);
+    void(DiceScript::* scripts[(unsigned char)DiceScriptNames::None])(Charactor& _user);
 
     //’Êí‚ÌUŒ‚//
     void Attack(Charactor& _user);
@@ -86,6 +88,8 @@ private:
 
     //‰ñ•œ//
     void HealingPoint(Charactor& _user);
+
+    void HealingPointForTarget(Charactor& _user);
 
     //HP‚ğ“ü‚ê‘Ö‚¦‚é//
     void ChangeLP(Charactor& _user);

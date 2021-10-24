@@ -21,15 +21,13 @@ void DiceScript::Init()
 	scripts[6] = &DiceScript::CreateCharactorEffectToUser;
 	scripts[7] = &DiceScript::CreateCharactorEffectToTarget;
 	scripts[8] = &DiceScript::HealingPoint;
-	scripts[9] = &DiceScript::ChangeLP;
-	scripts[10] = &DiceScript::ThrowPandoraDice;
+	scripts[9] = &DiceScript::HealingPointForTarget;
+	scripts[10] = &DiceScript::ChangeLP;
+	scripts[11] = &DiceScript::ThrowPandoraDice;
 }
 
 void DiceScript::Func(Charactor& _user)
 {
-
-	auto&& target = *_user.GetAttackCharactor();
-
 	std::string text = CreateTexter(_user);
 
 	printf(text.c_str());
@@ -142,6 +140,12 @@ void DiceScript::CreateCharactorEffectToTarget(Charactor& _user)
 void DiceScript::HealingPoint(Charactor& _user)
 {
 	_user.Heal(heal);
+}
+
+void DiceScript::HealingPointForTarget(Charactor& _user)
+{
+	auto&& target = *_user.GetAttackCharactor();
+	target.Heal(heal);
 }
 
 //HP‚ð“ü‚ê‘Ö‚¦‚é//
