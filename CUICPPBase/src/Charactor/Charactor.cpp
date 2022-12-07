@@ -501,7 +501,6 @@ short Charactor::Heal(const short _heal)
 
 void Charactor::ChangeLPToAttackTarget()
 {
-
 	auto&& target = *attackTarget.lock();
 
 	printf("%s‚Æ%s‚ÌLP‚ğ“ü‚ê‘Ö‚¦‚é!\n", name.c_str(), target.name.c_str());
@@ -515,6 +514,8 @@ void Charactor::ChangeLPToAttackTarget()
 void Charactor::TurnStart()
 {
 	printf("%s‚Ìƒ^[ƒ“‚Å‚·\n", name.c_str());
+
+	std::getchar();
 
 	for (auto&& obj = effect.begin(); obj != effect.end(); obj++)
 	{

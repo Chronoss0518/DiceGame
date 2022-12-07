@@ -44,6 +44,8 @@ void MainGame::Init()
 
 	printf("ゲーム開始!!\n");
 
+	std::getchar();
+
 	StartDice();
 }
 
@@ -82,14 +84,22 @@ void MainGame::StartDice()
 	{
 
 		printf("%sさん、ダイスを振ってください\n", charactors[i]->GetName().c_str());
+
+		std::getchar();
+
 		unsigned char tmpPoint = rand() % 20;
 		printf("出た目は%dです。\n", tmpPoint);
+
+
+		std::getchar();
 
 		if (tmpPoint == maxPoint)
 		{
 			printf("%sさんと%sさんの数値が同じです。\n全員振りなおします。\n",
 				charactors[i]->GetName().c_str(),
 				charactors[charactorNo]->GetName().c_str());
+
+			std::getchar();
 
 			maxPoint = -1;
 			charactorNo = -1;
@@ -104,13 +114,14 @@ void MainGame::StartDice()
 
 		printf("%sさんが最高得点を出しました。",charactors[i]->GetName().c_str());
 
+		std::getchar();
 	}
 
 	turnPlayer = charactorNo;
 
 	printf("%sさんがStartPlayerになりました。", charactors[turnPlayer]->GetName().c_str());
 
-
+	std::getchar();
 }
 
 void MainGame::TurnStart()
@@ -127,7 +138,6 @@ void MainGame::TurnStunby()
 	for (auto&& obj = fieldObjects.begin(); obj != fieldObjects.end(); obj++)
 	{
 		(*obj)->TurnStart();
-
 	}
 
 	charactors[turnPlayer]->TurnStunby();
@@ -138,7 +148,6 @@ void MainGame::SelectTarget()
 	for (auto&& obj = fieldObjects.begin(); obj != fieldObjects.end(); obj++)
 	{
 		(*obj)->SelectTarget();
-
 	}
 
 	charactors[turnPlayer]->SelectTarget();
@@ -150,7 +159,6 @@ void MainGame::SelectDice()
 	for (auto&& obj = fieldObjects.begin(); obj != fieldObjects.end(); obj++)
 	{
 		(*obj)->SelectDice();
-
 	}
 
 	charactors[turnPlayer]->SelectDice();
@@ -163,7 +171,6 @@ void MainGame::ThrowDice()
 	for (auto&& obj = fieldObjects.begin(); obj != fieldObjects.end(); obj++)
 	{
 		(*obj)->ThrowDice();
-
 	}
 
 	charactors[turnPlayer]->ThrowDice();
@@ -174,7 +181,6 @@ void MainGame::DiceEffect()
 	for (auto&& obj = fieldObjects.begin(); obj != fieldObjects.end(); obj++)
 	{
 		(*obj)->DiceEffect();
-
 	}
 
 	charactors[turnPlayer]->DiceEffect();
@@ -197,7 +203,6 @@ void MainGame::TurnEnd()
 		}
 
 		fieldObjects.erase(obj);
-
 	}
 
 	unsigned long deathCount = 0;
